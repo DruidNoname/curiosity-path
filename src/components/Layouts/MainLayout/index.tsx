@@ -16,7 +16,6 @@ const MainLayout: React.FC<Props> = ({ children }) => {
 
     return (
         <ErrorBoundary componentName={'MainLayout'}>
-
             <Box className={styles.MainLayout}>
                 <Header title={'Журнал открытой миру'}/>
                 <Container maxWidth="lg" className={styles.Content}>

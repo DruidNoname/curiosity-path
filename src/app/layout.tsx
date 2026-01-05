@@ -1,8 +1,7 @@
-// app/layout.tsx
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../styles/index.css'
-import ClientLayout from '@/components/Layouts/ClientLayout'
+import ClientLayout from './ClientLayout'
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] })
