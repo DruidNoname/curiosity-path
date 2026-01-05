@@ -1,0 +1,7 @@
+.PostPreview {
+    padding: 16px;
+
+    &:not(:last-of-type) {
+        margin-bottom: 16px;
+    }
+}

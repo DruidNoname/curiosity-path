@@ -1,0 +1,78 @@
+:root {
+  --desktop-height-toolbar: 80px;
+  --mobile-height-toolbar: 66px;
+
+  --desktop-padding-content: 50px;
+  --tablet-padding-content: 30px;
+  --mobile-padding-content: 20px;
+
+
+  /*//colors*/
+  --page-color: #EDF1F2;
+
+  --primary-color: #164BCF;
+  --primary-color-hover: #0E3EB7;
+  --secondary-color: #E6E8E9;
+  --secondary-color-hover: #1C282E3D;
+  --tertiary-color: #164BCF14;
+
+  /*//button colors*/
+  --button-bg-gray: #F5F6F8;
+  --success-color: #118D57;
+  --warning-color: #B76E00;
+  --error-color: #B71D18;
+  --error-color-rbg: 211, 47, 47;
+
+  --error-color-bg: #FF5630;
+
+  --error-bgc: #FFE4DE;
+  --warning-bgc: #FFF1D6;
+  --success-bgc: #DBF6E5;
+  --primary-bgc: #D9E2F7;
+  --secondary-bgc: #F7F9FA;
+
+  /*//text colors*/
+  --text-primary-color: #1C252E;
+  --text-secondary-color: #637381;
+  --text-tertiary-color: #919EAB;
+  --text-brand-color: #2046A6;
+  --text-brand-color-hover: #164BCF29;
+
+  /*//card colors*/
+  --primary-gradient: linear-gradient(180deg, #0B2669 0%, #0E3EB7 100%);
+  --error-gradient: linear-gradient(180deg, #CF3816 0%, #FF5630 100%);
+  --warning-gradient: linear-gradient(180deg, #E09908 0%, #FFAB00 100%);
+  --success-gradient: linear-gradient(180deg, #0F9C43 0%, #22C55E 100%);
+
+  --box-shadow-card: 0px 4px 12px -4px #919EAB33;
+
+  --border-radius-large: 20px;
+  --border-radius-base: 12px;
+  --border-radius-small: 8px;
+
+  /*//Typography*/
+
+  --h1-font-size: 64px;
+  --h1-line-height: 80px;
+
+  --h2-font-size: 48px;
+  --h2-line-height: 64px;
+
+  --h3-font-size: 32px;
+  --h3-line-height: 48px;
+
+  --h4-font-size: 24px;
+  --h4-line-height: 36px;
+
+  --h5-font-size: 20px;
+  --h5-line-height: 28px;
+
+  --body1-font-size: 16px;
+  --body1-line-height: 24px;
+
+  --body2-font-size: 14px;
+  --body2-line-height: 20px;
+
+  --caption-font-size: 12px;
+  --caption-line-height: 16px;
+}
