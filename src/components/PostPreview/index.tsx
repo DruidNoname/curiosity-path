@@ -13,9 +13,7 @@ type Props = {
 const PostPreview: React.FC<Props> = ({ post }) => {
     // Безопасное получение данных
     const title = post.title?.rendered || 'Без названия';
-
     const date = post.date ? new Date(post.date).toLocaleDateString() : '';
-    const link = post.link;
 
     const getCleanExcerpt = (html: string, maxLength = 150): string => {
         if (!html) return '';
@@ -44,13 +42,15 @@ const PostPreview: React.FC<Props> = ({ post }) => {
             ? structured.substring(0, maxLength).replace(/\s+\S*$/, '...')
             : structured;
     };
-    const excerpt = getCleanExcerpt(post.excerpt?.rendered || '', 150);
+    const excerpt = getCleanExcerpt(post.excerpt?.rendered || '', 350);
 
     return (
         <ErrorBoundary componentName={'PostReview'}>
             <Card key={post.id} className={styles.PostPreview}>
-                <Typography variant="h4" component="h4">
+                <Typography variant="h5" component="h5">
+                    <Link href={post.slug}>
                     { title }
+                    </Link>
                 </Typography>
 
                 { date &&
@@ -58,11 +58,11 @@ const PostPreview: React.FC<Props> = ({ post }) => {
                 }
 
                 {excerpt && (
-                    <Typography variant="body1" component="div">
+                    <Typography variant="body1" component="p" sx={{ mt: 5, mb: 3 }}>
                         {  excerpt }
                     </Typography>
                 )}
-                <Link className={styles.buttonLink} href={link}>
+                <Link className={styles.ButtonLink} href={post.slug}>
                     Читать далее
                 </Link>
             </Card>

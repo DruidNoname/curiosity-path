@@ -293,12 +293,12 @@ export const deadSpaceTheme = createTheme({
                     backdropFilter: 'blur(20px)',
                     border: `1px solid ${alpha('#7ad0f0', 0.2)}`,
                     borderRadius: 8,
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                        borderColor: alpha('#7ad0f0', 0.4),
-                        boxShadow: `0 8px 32px ${alpha('#7ad0f0', 0.25)}`,
-                        transform: 'translateY(-2px)',
-                    },
+                    // transition: 'all 0.3s ease',
+                    // '&:hover': {
+                    //     borderColor: alpha('#7ad0f0', 0.4),
+                    //     boxShadow: `0 8px 32px ${alpha('#7ad0f0', 0.25)}`,
+                    //     transform: 'translateY(-2px)',
+                    // },
                 },
             },
         },
@@ -744,9 +744,9 @@ export const deadSpaceLightTheme = createTheme({
                 root: {
                     backgroundColor: '#ffffff',
                     border: `1px solid ${alpha('#4da0c0', 0.2)}`,
-                    '&:hover': {
-                        borderColor: alpha('#4da0c0', 0.4),
-                    },
+                    // '&:hover': {
+                    //     borderColor: alpha('#4da0c0', 0.4),
+                    // },
                 },
             },
         },

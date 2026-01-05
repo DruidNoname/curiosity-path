@@ -44,7 +44,26 @@
   --warning-gradient: linear-gradient(180deg, #E09908 0%, #FFAB00 100%);
   --success-gradient: linear-gradient(180deg, #0F9C43 0%, #22C55E 100%);
 
-  --box-shadow-card: 0px 4px 12px -4px #919EAB33;
+  --dead-space-blue: #7ad0f0;
+
+  /* Тени с предвычисленными alpha значениями */
+  --shadow-dead-space-1: none;
+  --shadow-dead-space-2: 0 2px 8px rgba(122, 208, 240, 0.15);
+  --shadow-dead-space-3: 0 4px 16px rgba(122, 208, 240, 0.2);
+  --shadow-dead-space-4: 0 8px 24px rgba(122, 208, 240, 0.25);
+  --shadow-dead-space-5: 0 12px 32px rgba(122, 208, 240, 0.3);
+  --shadow-dead-space-6: 0 16px 40px rgba(122, 208, 240, 0.35);
+
+  /* Массив теней для использования в JavaScript */
+  --dead-space-shadows:
+          var(--shadow-dead-space-1),
+          var(--shadow-dead-space-2),
+          var(--shadow-dead-space-3),
+          var(--shadow-dead-space-4),
+          var(--shadow-dead-space-5),
+          var(--shadow-dead-space-6);
+
+  --box-shadow-card: var(--shadow-dead-space-2),var(--shadow-dead-space-3), var(--shadow-dead-space-4);
 
   --border-radius-large: 20px;
   --border-radius-base: 12px;

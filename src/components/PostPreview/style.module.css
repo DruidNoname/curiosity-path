@@ -5,3 +5,7 @@
         margin-bottom: 16px;
     }
 }
+
+.ButtonLink {
+    font-size: var(--body2-font-size);
+}
