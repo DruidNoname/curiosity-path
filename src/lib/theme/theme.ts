@@ -172,7 +172,12 @@ export const deadSpaceTheme = createTheme({
                     fontStyle: 'normal',
                     fontWeight: '300 700',
                     fontDisplay: 'swap',
-                    src: 'local("Roboto Mono"), url(https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap)',
+                    src: `
+            local('Roboto Mono'),
+            local('RobotoMono-Regular'),
+            url('/fonts/roboto-mono/RobotoMono-VariableFont_wght.ttf') format('truetype-variations'),
+            url('/fonts/roboto-mono/RobotoMono-VariableFont_wght.ttf') format('truetype')
+          `,
                 },
             },
         },
