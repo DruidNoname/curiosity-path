@@ -1,6 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-
-const API_URL = 'http://localhost:8000/wp-json/wp/v2/posts';
+import {API_URL} from "./const";
 
 // Функции для префетчинга на сервере
 export async function prefetchPosts(queryClient: QueryClient) {

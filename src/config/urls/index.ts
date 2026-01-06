@@ -2,7 +2,6 @@ export const urls = {
     get base() {
         return process.env.NEXT_PUBLIC_BASE_URL || '';
     },
-    // Геттеры вместо прямого доступа
 
     get graphql() {
         return process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL || '';
