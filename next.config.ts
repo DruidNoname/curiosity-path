@@ -1,7 +1,32 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    reactStrictMode: true,
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+    // Для React 19 оптимизации
+    experimental: {
+        reactCompiler: false, // ← Пока отключите если используете
+        optimizeCss: true,
+        turbo: {
+            resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.json']
+        }
+    },
 
-export default nextConfig;
+    // Для MUI и Emotion
+    compiler: {
+        emotion: true,
+    },
+
+    images: {
+        unoptimized: false,
+    },
+
+    typescript: {
+        ignoreBuildErrors: false,
+    },
+
+    eslint: {
+        ignoreDuringBuilds: false,
+    }
+}
+
+module.exports = nextConfig

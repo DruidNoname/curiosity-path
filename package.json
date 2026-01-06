@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -19,10 +19,9 @@
     "@tanstack/react-query-devtools": "^5.91.2",
     "@types/sanitize-html": "^2.16.0",
     "date-fns": "^4.1.0",
-    "next": "16.1.1",
+    "next": "15.2.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-router-dom": "^7.11.0",
     "sanitize-html": "^2.17.0"
   },
   "devDependencies": {
@@ -31,12 +30,15 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9",
-    "eslint-config-next": "16.1.1",
+    "eslint-config-next": "15.2.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "tailwindcss": "^4",
     "typescript": "^5.9.3",
     "wp-types": "^4.69.0"
+  },
+  "engines": {
+    "node": ">=18.17.0"
   }
 }
