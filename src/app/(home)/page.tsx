@@ -46,7 +46,9 @@ const MainPage: React.FC = () => {
                 {posts?.map((post: WP_REST_API_Post) => (
                     <PostPreview post={post} key={post.id}/>
                 ))}
+
                 <Divider sx={{ mb: 4 }} />
+
                 <p>Постов: {posts?.length || 0}</p>
             </Box>
         </ErrorBoundary>

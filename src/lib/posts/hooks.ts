@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
+import {urls} from "@/config/urls";
 
-const API_URL = 'http://localhost:8000/wp-json/wp/v2/posts';
+const API_URL = `${urls.api}/wp/v2/posts`;
 
 // Хук для получения всех постов
 export function usePosts(options = {}) {

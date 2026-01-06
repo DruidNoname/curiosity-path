@@ -12,11 +12,12 @@ build/
 dist/
 
 # Production
-src/env/
+env/
 .env
 .env.local
 .env.*.local
 *.env
+.env.production
 
 # Logs
 *.log
