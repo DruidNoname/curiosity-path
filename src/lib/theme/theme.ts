@@ -60,7 +60,7 @@ const deadSpaceBaseTheme = createTheme({
         },
     },
     typography: {
-        fontFamily: '"Roboto Mono", "Courier New", monospace', // Моноширинный шрифт как в интерфейсе
+        fontFamily: 'var(--font-roboto-mono), "Courier New", monospace',
         h1: {
             fontSize: '2.5rem',
             fontWeight: 700,

@@ -1,10 +1,8 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import '../styles/index.css'
 import ClientLayout from './ClientLayout'
 import ErrorBoundary from "@/components/ErrorBoundary";
-
-const inter = Inter({ subsets: ['latin', 'cyrillic'] })
+import { robotoMono } from '@/assets/fonts/robotoMono';
 
 export const metadata: Metadata = {
     title: 'Журнал открытой миру',
@@ -16,8 +14,8 @@ interface RootLayoutProps {
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
     return (
-        <html lang="ru">
-        <body className={inter.className}>
+        <html lang="ru" className={robotoMono.variable}>
+        <body>
         <ErrorBoundary componentName={'RootLayout'}>
             <ClientLayout>
                 {children}

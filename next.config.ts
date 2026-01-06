@@ -5,7 +5,7 @@ const nextConfig = {
     // Для React 19 оптимизации
     experimental: {
         reactCompiler: false, // ← Пока отключите если используете
-        optimizeCss: true,
+        optimizeCss: false,
         turbo: {
             resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.json']
         }
