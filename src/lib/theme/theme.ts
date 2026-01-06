@@ -291,22 +291,6 @@ export const deadSpaceTheme = createTheme({
                 },
             },
         },
-        MuiCard: {
-            styleOverrides: {
-                root: {
-                    backgroundColor: alpha('#1a2830', 0.7),
-                    backdropFilter: 'blur(20px)',
-                    border: `1px solid ${alpha('#7ad0f0', 0.2)}`,
-                    borderRadius: 8,
-                    // transition: 'all 0.3s ease',
-                    // '&:hover': {
-                    //     borderColor: alpha('#7ad0f0', 0.4),
-                    //     boxShadow: `0 8px 32px ${alpha('#7ad0f0', 0.25)}`,
-                    //     transform: 'translateY(-2px)',
-                    // },
-                },
-            },
-        },
         MuiInputBase: {
             styleOverrides: {
                 root: {
@@ -741,17 +725,6 @@ export const deadSpaceLightTheme = createTheme({
                 root: {
                     backgroundColor: '#ffffff',
                     border: `1px solid ${alpha('#4da0c0', 0.2)}`,
-                },
-            },
-        },
-        MuiCard: {
-            styleOverrides: {
-                root: {
-                    backgroundColor: '#ffffff',
-                    border: `1px solid ${alpha('#4da0c0', 0.2)}`,
-                    // '&:hover': {
-                    //     borderColor: alpha('#4da0c0', 0.4),
-                    // },
                 },
             },
         },

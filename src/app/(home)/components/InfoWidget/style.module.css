@@ -1,0 +1,10 @@
+.InfoWidget {
+    padding: 30px 50px;
+    margin-bottom: 40px;
+    border-color: rgba(122, 208, 240, 0.4);
+    box-shadow: var(--dead-space-shadows);
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

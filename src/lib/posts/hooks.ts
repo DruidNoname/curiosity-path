@@ -1,19 +1,41 @@
-import { useQuery } from '@tanstack/react-query';
-import {urls} from "@/config/urls";
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import {API_URL} from "./const";
 
-const API_URL = `${urls.api}/wp/v2/posts`;
+export interface PostsCountResponse {
+    count: number;
+    status?: string;
+}
+
+export interface PostsCountError {
+    message: string;
+    code?: string;
+    data?: {
+        status: number;
+    };
+}
+
 
 // Хук для получения всех постов
-export function usePosts(options = {}) {
+export function usePosts(page = 1, perPage = 10) {
     return useQuery({
-        queryKey: ['posts'],
+        queryKey: ['posts', page, perPage],
         queryFn: async () => {
-            const res = await fetch(API_URL);
+            const res = await fetch(`${API_URL}?page=${page}&per_page=${perPage}`);
             if (!res.ok) throw new Error('Ошибка при получении постов');
-            return res.json();
+
+            const total = res.headers.get('X-WP-Total') || '0';
+            const totalPages = res.headers.get('X-WP-TotalPages')  || '1';
+            const posts = await res.json();
+
+            return {
+                posts,
+                total: parseInt(total, 10),
+                totalPages: parseInt(totalPages, 10),
+                currentPage: page,
+                perPage: perPage
+            };
         },
-        staleTime: 1000 * 60 * 5, // 5 минут
-        ...options,
+        staleTime: 1000 * 60 * 5
     });
 }
 

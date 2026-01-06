@@ -1,83 +1,58 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
-import js from '@eslint/js';
-import globals from 'globals';
-import reactPlugin from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from 'typescript-eslint';
-import prettierPlugin from 'eslint-plugin-prettier';
-import pluginQuery from '@tanstack/eslint-plugin-query';
+import { defineConfig } from "eslint/config";
+import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const eslintConfig = defineConfig([
-  // Next.js configurations
-  ...nextVitals,
-  ...nextTs,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+  recommendedConfig: js.configs.recommended,
+});
 
-  // Base TypeScript ESLint configuration
+export default defineConfig([
+  // Next.js конфиги
+  ...compat.extends("next/core-web-vitals"),
+
+  // TypeScript
+  ...compat.extends(
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ),
+
+  // React
+  ...compat.extends(
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended"
+  ),
+
+  // TanStack Query
+  ...compat.extends(
+      "@tanstack/eslint-plugin-query/recommended"
+  ),
+
+  // Правила
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-    ],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-    },
-    plugins: {
-      'react': reactPlugin,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-      'prettier': prettierPlugin,
-      '@tanstack/query': pluginQuery,
-      'i18next': i18next,
-    },
     rules: {
-      // React rules
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
-
-      // TypeScript rules
+      // TypeScript
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/no-unused-vars": ["error", {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }],
 
-      // Style rules
-      "semi": ["error", "always"],
+      // React
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
 
-      // TanStack Query rules
-      '@tanstack/query/exhaustive-deps': 'error',
-
-      // Import restrictions
+      // Импорты
       "no-restricted-imports": [
         "error",
         {
-          "patterns": ["@mui/*/*/*"]
+          "patterns": ["@mui/*/*/*", "src/*"]
         }
       ],
-
-      // You can add any rules that override Next.js defaults here
     },
   },
-
-  // Global ignores
-  globalIgnores([
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-    "dist/**",
-    "node_modules/**",
-  ]),
 ]);
-
-export default eslintConfig;
