@@ -1,139 +1,27 @@
 import { createTheme, alpha } from '@mui/material/styles';
+import { deadSpaceBaseTheme } from "./dsBaseTheme";
+import { darkThemeColors } from "./darkThemeColors";
+import { lightThemeColors } from "./lightThemeColors";
+declare module '@mui/material/styles' {
+    interface Palette {
+        custom?: {
+            customColor?: string;
+        };
+    }
+    interface PaletteOptions {
+        custom?: {
+            customColor?: string;
+        };
+    }
+}
 
-const deadSpaceBaseTheme = createTheme({
-    palette: {
-        mode: 'dark' as const,
-        primary: {
-            main: '#7ad0f0',           // Голубой - основной цвет интерфейса как на скриншоте
-            light: '#a0e0ff',
-            dark: '#4da0c0',
-            contrastText: '#0a0a0a',
-        },
-        secondary: {
-            main: '#ff8c42',           // Оранжевый для кнопок и акцентов
-            light: '#ffb074',
-            dark: '#cc7034',
-            contrastText: '#0a0a0a',
-        },
-        info: {
-            main: '#4da0c0',           // Темный голубой для информации
-            light: '#7ad0f0',
-            dark: '#3a78a0',
-        },
-        warning: {
-            main: '#ffaa42',           // Оранжевый для предупреждений
-            light: '#ffcc7a',
-            dark: '#cc8834',
-        },
-        error: {
-            main: '#ff5555',           // Красный для ошибок
-            light: '#ff8888',
-            dark: '#cc4444',
-        },
-        success: {
-            main: '#42cc7a',           // Зеленый для успеха
-            light: '#7affaa',
-            dark: '#34a062',
-        },
-        background: {
-            default: '#0a1419',        // Темный голубовато-серый фон
-            paper: '#1a2830',          // Полупрозрачные панели
-        },
-        text: {
-            primary: '#e6f7ff',        // Светлый голубой текст
-            secondary: '#a0e0ff',      // Голубой вторичный текст
-            disabled: '#607080',       // Серо-голубой для неактивных
-        },
-        divider: alpha('#7ad0f0', 0.2), // Полупрозрачные разделители
-        action: {
-            active: '#7ad0f0',
-            hover: alpha('#7ad0f0', 0.08),
-            hoverOpacity: 0.08,
-            selected: alpha('#7ad0f0', 0.16),
-            selectedOpacity: 0.16,
-            disabled: '#607080',
-            disabledBackground: alpha('#607080', 0.12),
-            disabledOpacity: 0.38,
-            focus: alpha('#7ad0f0', 0.12),
-            focusOpacity: 0.12,
-            activatedOpacity: 0.24,
-        },
-    },
-    typography: {
-        fontFamily: 'var(--font-roboto-mono), "Courier New", monospace',
-        h1: {
-            fontSize: '2.5rem',
-            fontWeight: 700,
-            color: '#a0e0ff',
-            letterSpacing: '0.5px',
-        },
-        h2: {
-            fontSize: '2rem',
-            fontWeight: 600,
-            color: '#a0e0ff',
-            letterSpacing: '0.25px',
-        },
-        h3: {
-            fontSize: '1.75rem',
-            fontWeight: 600,
-            color: '#7ad0f0',
-        },
-        h4: {
-            fontSize: '1.5rem',
-            fontWeight: 500,
-            color: '#7ad0f0',
-        },
-        h5: {
-            fontSize: '1.25rem',
-            fontWeight: 500,
-            color: '#e6f7ff',
-        },
-        h6: {
-            fontSize: '1rem',
-            fontWeight: 500,
-            color: '#a0e0ff',
-        },
-        body1: {
-            fontSize: '1rem',
-            lineHeight: 1.6,
-            color: '#e6f7ff',
-        },
-        body2: {
-            fontSize: '0.875rem',
-            color: '#a0e0ff',
-        },
-        button: {
-            textTransform: 'uppercase',
-            fontWeight: 600,
-            letterSpacing: '1px',
-            fontSize: '0.875rem',
-        },
-        caption: {
-            color: '#88aacc',
-            fontSize: '0.75rem',
-            letterSpacing: '0.25px',
-        },
-        overline: {
-            color: '#7ad0f0',
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            letterSpacing: '1px',
-            textTransform: 'uppercase',
-        },
-    },
-    shape: {
-        borderRadius: 4,               // Умеренные скругления
-    },
-});
-
-// Тени с голубым свечением
 const deadSpaceBlueShadows = [
     'none',
-    `0 2px 8px ${alpha('#7ad0f0', 0.15)}`,
-    `0 4px 16px ${alpha('#7ad0f0', 0.2)}`,
-    `0 8px 24px ${alpha('#7ad0f0', 0.25)}`,
-    `0 12px 32px ${alpha('#7ad0f0', 0.3)}`,
-    `0 16px 40px ${alpha('#7ad0f0', 0.35)}`,
+    `0 2px 8px ${alpha(darkThemeColors.primary.main, 0.15)}`,
+    `0 4px 16px ${alpha(darkThemeColors.primary.main, 0.2)}`,
+    `0 8px 24px ${alpha(darkThemeColors.primary.main, 0.25)}`,
+    `0 12px 32px ${alpha(darkThemeColors.primary.main, 0.3)}`,
+    `0 16px 40px ${alpha(darkThemeColors.primary.main, 0.35)}`,
     ...Array(19).fill('none'),
 ] as const;
 
@@ -143,29 +31,99 @@ export const deadSpaceTheme = createTheme({
     components: {
         MuiCssBaseline: {
             styleOverrides: {
+                ':root': {
+                    // Определяем CSS переменные в HEX (для обычного использования)
+                    '--color-primary-main': darkThemeColors.primary.main,
+                    '--color-primary-light': darkThemeColors.primary.light,
+                    '--color-primary-dark': darkThemeColors.primary.dark,
+                    '--color-primary-contrast': darkThemeColors.primary.contrastText,
+                    '--color-secondary-main': darkThemeColors.secondary.main,
+                    '--color-secondary-light': darkThemeColors.secondary.light,
+                    '--color-secondary-dark': darkThemeColors.secondary.dark,
+                    '--color-secondary-contrast': darkThemeColors.secondary.contrastText,
+                    '--color-background-default': darkThemeColors.background.default,
+                    '--color-background-paper': darkThemeColors.background.paper,
+                    '--color-text-primary': darkThemeColors.text.primary,
+                    '--color-text-secondary': darkThemeColors.text.secondary,
+                    '--color-text-disabled': darkThemeColors.text.disabled,
+                    '--color-action-active': darkThemeColors.action.active,
+                    '--color-action-disabled': darkThemeColors.action.disabled,
+
+                    // Добавляем RGB переменные для использования с rgba()
+                    '--color-primary-main-rgb': '122, 208, 240',
+                    '--color-primary-light-rgb': '160, 224, 255',
+                    '--color-primary-dark-rgb': '77, 160, 192',
+                    '--color-secondary-main-rgb': '255, 140, 66',
+                    '--color-secondary-light-rgb': '255, 176, 116',
+                    '--color-secondary-dark-rgb': '204, 112, 52',
+                    '--color-background-default-rgb': '10, 20, 25',
+                    '--color-background-paper-rgb': '26, 40, 48',
+                    '--color-text-primary-rgb': '230, 247, 255',
+                    '--color-text-secondary-rgb': '160, 224, 255',
+                    '--color-text-disabled-rgb': '96, 112, 128',
+
+                    // Дополнительные переменные для теней
+                    '--shadow-widget': '0 4px 16px rgba(var(--color-primary-main-rgb), 0.2)',
+                    '--shadow-widget-hover': '0 6px 20px rgba(var(--color-primary-main-rgb), 0.3)',
+                },
+                ':root.theme-light': {
+                    // Обновляем переменные для светлой темы
+                    '--color-primary-main': lightThemeColors.primary.main,
+                    '--color-primary-light': lightThemeColors.primary.light,
+                    '--color-primary-dark': lightThemeColors.primary.dark,
+                    '--color-primary-contrast': lightThemeColors.primary.contrastText,
+                    '--color-secondary-main': lightThemeColors.secondary.main,
+                    '--color-secondary-light': lightThemeColors.secondary.light,
+                    '--color-secondary-dark': lightThemeColors.secondary.dark,
+                    '--color-secondary-contrast': lightThemeColors.secondary.contrastText,
+                    '--color-background-default': lightThemeColors.background.default,
+                    '--color-background-paper': lightThemeColors.background.paper,
+                    '--color-text-primary': lightThemeColors.text.primary,
+                    '--color-text-secondary': lightThemeColors.text.secondary,
+                    '--color-text-disabled': lightThemeColors.text.disabled,
+                    '--color-action-active': lightThemeColors.action.active,
+                    '--color-action-disabled': lightThemeColors.action.disabled,
+
+                    // RGB переменные для светлой темы
+                    '--color-primary-main-rgb': '45, 122, 156',
+                    '--color-primary-light-rgb': '77, 160, 192',
+                    '--color-primary-dark-rgb': '30, 92, 122',
+                    '--color-secondary-main-rgb': '204, 112, 52',
+                    '--color-secondary-light-rgb': '255, 140, 66',
+                    '--color-secondary-dark-rgb': '168, 88, 42',
+                    '--color-background-default-rgb': '240, 247, 250',
+                    '--color-background-paper-rgb': '255, 255, 255',
+                    '--color-text-primary-rgb': '26, 40, 48',
+                    '--color-text-secondary-rgb': '45, 122, 156',
+                    '--color-text-disabled-rgb': '136, 153, 170',
+
+                    // Тени для светлой темы
+                    '--shadow-widget': '0 4px 16px rgba(var(--color-primary-main-rgb), 0.15)',
+                    '--shadow-widget-hover': '0 6px 20px rgba(var(--color-primary-main-rgb), 0.25)',
+                },
                 body: {
-                    backgroundColor: '#0a1419',
-                    backgroundImage: 'radial-gradient(circle at 50% 0%, #1a2830 0%, #0a1419 100%)',
-                    scrollbarColor: `${alpha('#7ad0f0', 0.3)} #0a1419`,
+                    backgroundColor: darkThemeColors.background.default,
+                    backgroundImage: `radial-gradient(circle at 50% 0%, ${darkThemeColors.background.paper} 0%, ${darkThemeColors.background.default} 100%)`,
+                    scrollbarColor: `${alpha(darkThemeColors.primary.main, 0.3)} ${darkThemeColors.background.default}`,
                     '&::-webkit-scrollbar': {
                         width: '8px',
                         backgroundColor: 'transparent',
                     },
                     '&::-webkit-scrollbar-track': {
-                        backgroundColor: alpha('#1a2830', 0.5),
+                        backgroundColor: alpha(darkThemeColors.background.paper, 0.5),
                         borderRadius: '4px',
                     },
                     '&::-webkit-scrollbar-thumb': {
-                        backgroundColor: alpha('#7ad0f0', 0.3),
+                        backgroundColor: alpha(darkThemeColors.primary.main, 0.3),
                         borderRadius: '4px',
                         '&:hover': {
-                            backgroundColor: alpha('#7ad0f0', 0.5),
+                            backgroundColor: alpha(darkThemeColors.primary.main, 0.5),
                         },
                     },
                 },
                 '::selection': {
-                    backgroundColor: alpha('#7ad0f0', 0.3),
-                    color: '#e6f7ff',
+                    backgroundColor: alpha(darkThemeColors.primary.main, 0.3),
+                    color: darkThemeColors.text.primary,
                 },
                 '@font-face': {
                     fontFamily: 'Roboto Mono',
@@ -173,11 +131,11 @@ export const deadSpaceTheme = createTheme({
                     fontWeight: '300 700',
                     fontDisplay: 'swap',
                     src: `
-            local('Roboto Mono'),
-            local('RobotoMono-Regular'),
-            url('/fonts/roboto-mono/RobotoMono-VariableFont_wght.ttf') format('truetype-variations'),
-            url('/fonts/roboto-mono/RobotoMono-VariableFont_wght.ttf') format('truetype')
-          `,
+                        local('Roboto Mono'),
+                        local('RobotoMono-Regular'),
+                        url('/fonts/roboto-mono/RobotoMono-VariableFont_wght.ttf') format('truetype-variations'),
+                        url('/fonts/roboto-mono/RobotoMono-VariableFont_wght.ttf') format('truetype')
+                    `,
                 },
             },
         },
@@ -199,14 +157,14 @@ export const deadSpaceTheme = createTheme({
                 {
                     props: { variant: 'contained', color: 'primary' },
                     style: {
-                        background: `linear-gradient(135deg, ${alpha('#7ad0f0', 0.9)} 0%, ${alpha('#4da0c0', 0.9)} 100%)`,
+                        background: `linear-gradient(135deg, ${alpha(darkThemeColors.primary.main, 0.9)} 0%, ${alpha(darkThemeColors.primary.dark, 0.9)} 100%)`,
                         backdropFilter: 'blur(10px)',
-                        border: `1px solid ${alpha('#7ad0f0', 0.3)}`,
-                        boxShadow: `0 4px 16px ${alpha('#7ad0f0', 0.25)}`,
+                        border: `1px solid ${alpha(darkThemeColors.primary.main, 0.3)}`,
+                        boxShadow: `0 4px 16px ${alpha(darkThemeColors.primary.main, 0.25)}`,
                         '&:hover': {
-                            background: `linear-gradient(135deg, ${alpha('#a0e0ff', 0.9)} 0%, ${alpha('#7ad0f0', 0.9)} 100%)`,
-                            boxShadow: `0 6px 20px ${alpha('#7ad0f0', 0.35)}`,
-                            border: `1px solid ${alpha('#7ad0f0', 0.5)}`,
+                            background: `linear-gradient(135deg, ${alpha(darkThemeColors.primary.light, 0.9)} 0%, ${alpha(darkThemeColors.primary.main, 0.9)} 100%)`,
+                            boxShadow: `0 6px 20px ${alpha(darkThemeColors.primary.main, 0.35)}`,
+                            border: `1px solid ${alpha(darkThemeColors.primary.main, 0.5)}`,
                         },
                         '&:active': {
                             transform: 'translateY(0)',
@@ -216,47 +174,47 @@ export const deadSpaceTheme = createTheme({
                 {
                     props: { variant: 'contained', color: 'secondary' },
                     style: {
-                        background: `linear-gradient(135deg, ${alpha('#ff8c42', 0.9)} 0%, ${alpha('#cc7034', 0.9)} 100%)`,
+                        background: `linear-gradient(135deg, ${alpha(darkThemeColors.secondary.main, 0.9)} 0%, ${alpha(darkThemeColors.secondary.dark, 0.9)} 100%)`,
                         backdropFilter: 'blur(10px)',
-                        border: `1px solid ${alpha('#ff8c42', 0.3)}`,
-                        boxShadow: `0 4px 16px ${alpha('#ff8c42', 0.25)}`,
+                        border: `1px solid ${alpha(darkThemeColors.secondary.main, 0.3)}`,
+                        boxShadow: `0 4px 16px ${alpha(darkThemeColors.secondary.main, 0.25)}`,
                         '&:hover': {
-                            background: `linear-gradient(135deg, ${alpha('#ffb074', 0.9)} 0%, ${alpha('#ff8c42', 0.9)} 100%)`,
-                            boxShadow: `0 6px 20px ${alpha('#ff8c42', 0.35)}`,
-                            border: `1px solid ${alpha('#ff8c42', 0.5)}`,
+                            background: `linear-gradient(135deg, ${alpha(darkThemeColors.secondary.light, 0.9)} 0%, ${alpha(darkThemeColors.secondary.main, 0.9)} 100%)`,
+                            boxShadow: `0 6px 20px ${alpha(darkThemeColors.secondary.main, 0.35)}`,
+                            border: `1px solid ${alpha(darkThemeColors.secondary.main, 0.5)}`,
                         },
                     },
                 },
                 {
                     props: { variant: 'outlined', color: 'primary' },
                     style: {
-                        backgroundColor: alpha('#1a2830', 0.5),
-                        border: `1px solid ${alpha('#7ad0f0', 0.3)}`,
-                        color: '#a0e0ff',
+                        backgroundColor: alpha(darkThemeColors.background.paper, 0.5),
+                        border: `1px solid ${alpha(darkThemeColors.primary.main, 0.3)}`,
+                        color: darkThemeColors.primary.light,
                         '&:hover': {
-                            backgroundColor: alpha('#7ad0f0', 0.1),
-                            border: `1px solid ${alpha('#7ad0f0', 0.5)}`,
+                            backgroundColor: alpha(darkThemeColors.primary.main, 0.1),
+                            border: `1px solid ${alpha(darkThemeColors.primary.main, 0.5)}`,
                         },
                     },
                 },
                 {
                     props: { variant: 'outlined', color: 'secondary' },
                     style: {
-                        backgroundColor: alpha('#1a2830', 0.5),
-                        border: `1px solid ${alpha('#ff8c42', 0.3)}`,
-                        color: '#ffb074',
+                        backgroundColor: alpha(darkThemeColors.background.paper, 0.5),
+                        border: `1px solid ${alpha(darkThemeColors.secondary.main, 0.3)}`,
+                        color: darkThemeColors.secondary.light,
                         '&:hover': {
-                            backgroundColor: alpha('#ff8c42', 0.1),
-                            border: `1px solid ${alpha('#ff8c42', 0.5)}`,
+                            backgroundColor: alpha(darkThemeColors.secondary.main, 0.1),
+                            border: `1px solid ${alpha(darkThemeColors.secondary.main, 0.5)}`,
                         },
                     },
                 },
                 {
                     props: { variant: 'text' },
                     style: {
-                        color: '#7ad0f0',
+                        color: darkThemeColors.primary.main,
                         '&:hover': {
-                            backgroundColor: alpha('#7ad0f0', 0.08),
+                            backgroundColor: alpha(darkThemeColors.primary.main, 0.08),
                         },
                     },
                 },
@@ -265,9 +223,9 @@ export const deadSpaceTheme = createTheme({
         MuiAppBar: {
             styleOverrides: {
                 root: {
-                    backgroundColor: alpha('#1a2830', 0.8),
+                    backgroundColor: alpha(darkThemeColors.background.paper, 0.8),
                     backdropFilter: 'blur(20px)',
-                    borderBottom: `1px solid ${alpha('#7ad0f0', 0.2)}`,
+                    borderBottom: `1px solid ${alpha(darkThemeColors.primary.main, 0.2)}`,
                     boxShadow: `0 2px 8px ${alpha('#000000', 0.3)}`,
                 },
             },
@@ -275,39 +233,39 @@ export const deadSpaceTheme = createTheme({
         MuiPaper: {
             styleOverrides: {
                 root: {
-                    backgroundColor: alpha('#1a2830', 0.7),
+                    backgroundColor: alpha(darkThemeColors.background.paper, 0.7),
                     backdropFilter: 'blur(20px)',
-                    border: `1px solid ${alpha('#7ad0f0', 0.2)}`,
+                    border: `1px solid ${alpha(darkThemeColors.primary.main, 0.2)}`,
                     borderRadius: 8,
                 },
                 elevation1: {
-                    boxShadow: `0 2px 8px ${alpha('#7ad0f0', 0.15)}`,
+                    boxShadow: `0 2px 8px ${alpha(darkThemeColors.primary.main, 0.15)}`,
                 },
                 elevation2: {
-                    boxShadow: `0 4px 16px ${alpha('#7ad0f0', 0.2)}`,
+                    boxShadow: `0 4px 16px ${alpha(darkThemeColors.primary.main, 0.2)}`,
                 },
                 elevation3: {
-                    boxShadow: `0 8px 24px ${alpha('#7ad0f0', 0.25)}`,
+                    boxShadow: `0 8px 24px ${alpha(darkThemeColors.primary.main, 0.25)}`,
                 },
             },
         },
         MuiInputBase: {
             styleOverrides: {
                 root: {
-                    backgroundColor: alpha('#1a2830', 0.5),
+                    backgroundColor: alpha(darkThemeColors.background.paper, 0.5),
                     backdropFilter: 'blur(10px)',
-                    border: `1px solid ${alpha('#7ad0f0', 0.2)}`,
+                    border: `1px solid ${alpha(darkThemeColors.primary.main, 0.2)}`,
                     borderRadius: 4,
                     transition: 'all 0.2s ease',
                     '&.Mui-focused': {
-                        borderColor: alpha('#7ad0f0', 0.5),
-                        boxShadow: `0 0 0 2px ${alpha('#7ad0f0', 0.1)}`,
+                        borderColor: alpha(darkThemeColors.primary.main, 0.5),
+                        boxShadow: `0 0 0 2px ${alpha(darkThemeColors.primary.main, 0.1)}`,
                     },
                 },
                 input: {
-                    color: '#e6f7ff',
+                    color: darkThemeColors.text.primary,
                     '&::placeholder': {
-                        color: alpha('#a0e0ff', 0.6),
+                        color: alpha(darkThemeColors.primary.light, 0.6),
                     },
                 },
             },
@@ -316,15 +274,15 @@ export const deadSpaceTheme = createTheme({
             styleOverrides: {
                 root: {
                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: alpha('#7ad0f0', 0.3),
+                        borderColor: alpha(darkThemeColors.primary.main, 0.3),
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: alpha('#7ad0f0', 0.5),
+                        borderColor: alpha(darkThemeColors.primary.main, 0.5),
                         borderWidth: '2px',
                     },
                 },
                 notchedOutline: {
-                    borderColor: alpha('#7ad0f0', 0.2),
+                    borderColor: alpha(darkThemeColors.primary.main, 0.2),
                     borderWidth: '1px',
                 },
             },
@@ -339,34 +297,34 @@ export const deadSpaceTheme = createTheme({
                     backdropFilter: 'blur(10px)',
                 },
                 colorPrimary: {
-                    backgroundColor: alpha('#7ad0f0', 0.2),
-                    color: '#a0e0ff',
-                    border: `1px solid ${alpha('#7ad0f0', 0.3)}`,
+                    backgroundColor: alpha(darkThemeColors.primary.main, 0.2),
+                    color: darkThemeColors.primary.light,
+                    border: `1px solid ${alpha(darkThemeColors.primary.main, 0.3)}`,
                 },
                 colorSecondary: {
-                    backgroundColor: alpha('#ff8c42', 0.2),
-                    color: '#ffb074',
-                    border: `1px solid ${alpha('#ff8c42', 0.3)}`,
+                    backgroundColor: alpha(darkThemeColors.secondary.main, 0.2),
+                    color: darkThemeColors.secondary.light,
+                    border: `1px solid ${alpha(darkThemeColors.secondary.main, 0.3)}`,
                 },
                 colorInfo: {
-                    backgroundColor: alpha('#4da0c0', 0.2),
-                    color: '#7ad0f0',
-                    border: `1px solid ${alpha('#4da0c0', 0.3)}`,
+                    backgroundColor: alpha(darkThemeColors.info.main, 0.2),
+                    color: darkThemeColors.info.light,
+                    border: `1px solid ${alpha(darkThemeColors.info.main, 0.3)}`,
                 },
                 colorWarning: {
-                    backgroundColor: alpha('#ffaa42', 0.2),
-                    color: '#ffcc7a',
-                    border: `1px solid ${alpha('#ffaa42', 0.3)}`,
+                    backgroundColor: alpha(darkThemeColors.warning.main, 0.2),
+                    color: darkThemeColors.warning.light,
+                    border: `1px solid ${alpha(darkThemeColors.warning.main, 0.3)}`,
                 },
                 colorError: {
-                    backgroundColor: alpha('#ff5555', 0.2),
-                    color: '#ff8888',
-                    border: `1px solid ${alpha('#ff5555', 0.3)}`,
+                    backgroundColor: alpha(darkThemeColors.error.main, 0.2),
+                    color: darkThemeColors.error.light,
+                    border: `1px solid ${alpha(darkThemeColors.error.main, 0.3)}`,
                 },
                 colorSuccess: {
-                    backgroundColor: alpha('#42cc7a', 0.2),
-                    color: '#7affaa',
-                    border: `1px solid ${alpha('#42cc7a', 0.3)}`,
+                    backgroundColor: alpha(darkThemeColors.success.main, 0.2),
+                    color: darkThemeColors.success.light,
+                    border: `1px solid ${alpha(darkThemeColors.success.main, 0.3)}`,
                 },
             },
         },
@@ -379,24 +337,24 @@ export const deadSpaceTheme = createTheme({
                     border: '1px solid transparent',
                 },
                 standardInfo: {
-                    backgroundColor: alpha('#4da0c0', 0.15),
-                    borderColor: alpha('#7ad0f0', 0.3),
-                    color: '#a0e0ff',
+                    backgroundColor: alpha(darkThemeColors.info.main, 0.15),
+                    borderColor: alpha(darkThemeColors.primary.main, 0.3),
+                    color: darkThemeColors.primary.light,
                 },
                 standardSuccess: {
-                    backgroundColor: alpha('#42cc7a', 0.15),
-                    borderColor: alpha('#7affaa', 0.3),
-                    color: '#7affaa',
+                    backgroundColor: alpha(darkThemeColors.success.main, 0.15),
+                    borderColor: alpha(darkThemeColors.success.light, 0.3),
+                    color: darkThemeColors.success.light,
                 },
                 standardWarning: {
-                    backgroundColor: alpha('#ffaa42', 0.15),
-                    borderColor: alpha('#ffcc7a', 0.3),
-                    color: '#ffcc7a',
+                    backgroundColor: alpha(darkThemeColors.warning.main, 0.15),
+                    borderColor: alpha(darkThemeColors.warning.light, 0.3),
+                    color: darkThemeColors.warning.light,
                 },
                 standardError: {
-                    backgroundColor: alpha('#ff5555', 0.15),
-                    borderColor: alpha('#ff8888', 0.3),
-                    color: '#ff8888',
+                    backgroundColor: alpha(darkThemeColors.error.main, 0.15),
+                    borderColor: alpha(darkThemeColors.error.light, 0.3),
+                    color: darkThemeColors.error.light,
                 },
             },
         },
@@ -406,17 +364,17 @@ export const deadSpaceTheme = createTheme({
                     padding: '8px',
                 },
                 switchBase: {
-                    color: alpha('#607080', 0.5),
+                    color: alpha(darkThemeColors.text.disabled, 0.5),
                     '&.Mui-checked': {
-                        color: '#7ad0f0',
+                        color: darkThemeColors.primary.main,
                     },
                     '&.Mui-checked + .MuiSwitch-track': {
-                        backgroundColor: '#7ad0f0',
+                        backgroundColor: darkThemeColors.primary.main,
                         opacity: 0.8,
                     },
                 },
                 track: {
-                    backgroundColor: alpha('#607080', 0.3),
+                    backgroundColor: alpha(darkThemeColors.text.disabled, 0.3),
                     opacity: 0.8,
                     borderRadius: '10px',
                 },
@@ -428,13 +386,13 @@ export const deadSpaceTheme = createTheme({
         MuiLinearProgress: {
             styleOverrides: {
                 root: {
-                    backgroundColor: alpha('#1a2830', 0.5),
+                    backgroundColor: alpha(darkThemeColors.background.paper, 0.5),
                     borderRadius: 4,
                     height: '6px',
                     overflow: 'hidden',
                 },
                 bar: {
-                    background: 'linear-gradient(90deg, #7ad0f0, #4da0c0)',
+                    background: `linear-gradient(90deg, ${darkThemeColors.primary.main}, ${darkThemeColors.primary.dark})`,
                     borderRadius: 4,
                 },
             },
@@ -442,14 +400,14 @@ export const deadSpaceTheme = createTheme({
         MuiCircularProgress: {
             styleOverrides: {
                 root: {
-                    color: '#7ad0f0',
+                    color: darkThemeColors.primary.main,
                 },
             },
         },
         MuiDivider: {
             styleOverrides: {
                 root: {
-                    borderColor: alpha('#7ad0f0', 0.2),
+                    borderColor: alpha(darkThemeColors.primary.main, 0.2),
                     borderWidth: '1px',
                 },
             },
@@ -457,9 +415,9 @@ export const deadSpaceTheme = createTheme({
         MuiCheckbox: {
             styleOverrides: {
                 root: {
-                    color: alpha('#607080', 0.7),
+                    color: alpha(darkThemeColors.text.disabled, 0.7),
                     '&.Mui-checked': {
-                        color: '#7ad0f0',
+                        color: darkThemeColors.primary.main,
                     },
                 },
             },
@@ -467,9 +425,9 @@ export const deadSpaceTheme = createTheme({
         MuiRadio: {
             styleOverrides: {
                 root: {
-                    color: alpha('#607080', 0.7),
+                    color: alpha(darkThemeColors.text.disabled, 0.7),
                     '&.Mui-checked': {
-                        color: '#7ad0f0',
+                        color: darkThemeColors.primary.main,
                     },
                 },
             },
@@ -477,11 +435,11 @@ export const deadSpaceTheme = createTheme({
         MuiTabs: {
             styleOverrides: {
                 root: {
-                    borderBottom: `1px solid ${alpha('#7ad0f0', 0.2)}`,
+                    borderBottom: `1px solid ${alpha(darkThemeColors.primary.main, 0.2)}`,
                     minHeight: '48px',
                 },
                 indicator: {
-                    backgroundColor: '#7ad0f0',
+                    backgroundColor: darkThemeColors.primary.main,
                     height: '2px',
                 },
                 flexContainer: {
@@ -497,7 +455,7 @@ export const deadSpaceTheme = createTheme({
                     minHeight: '48px',
                     padding: '12px 16px',
                     '&.Mui-selected': {
-                        color: '#a0e0ff',
+                        color: darkThemeColors.primary.light,
                     },
                 },
             },
@@ -505,14 +463,14 @@ export const deadSpaceTheme = createTheme({
         MuiLink: {
             styleOverrides: {
                 root: {
-                    color: '#7ad0f0',
+                    color: darkThemeColors.primary.main,
                     textDecoration: 'none',
                     fontWeight: 500,
                     borderBottom: '1px solid transparent',
                     transition: 'all 0.2s ease',
                     '&:hover': {
-                        color: '#a0e0ff',
-                        borderBottom: `1px solid ${alpha('#7ad0f0', 0.5)}`,
+                        color: darkThemeColors.primary.light,
+                        borderBottom: `1px solid ${alpha(darkThemeColors.primary.main, 0.5)}`,
                     },
                 },
             },
@@ -520,10 +478,10 @@ export const deadSpaceTheme = createTheme({
         MuiIconButton: {
             styleOverrides: {
                 root: {
-                    color: '#a0e0ff',
+                    color: darkThemeColors.primary.light,
                     '&:hover': {
-                        backgroundColor: alpha('#7ad0f0', 0.1),
-                        color: '#7ad0f0',
+                        backgroundColor: alpha(darkThemeColors.primary.main, 0.1),
+                        color: darkThemeColors.primary.main,
                     },
                 },
             },
@@ -531,13 +489,13 @@ export const deadSpaceTheme = createTheme({
         MuiTableCell: {
             styleOverrides: {
                 root: {
-                    borderBottom: `1px solid ${alpha('#7ad0f0', 0.1)}`,
+                    borderBottom: `1px solid ${alpha(darkThemeColors.primary.main, 0.1)}`,
                     padding: '16px',
                 },
                 head: {
                     fontWeight: 600,
-                    color: '#a0e0ff',
-                    backgroundColor: alpha('#1a2830', 0.5),
+                    color: darkThemeColors.primary.light,
+                    backgroundColor: alpha(darkThemeColors.background.paper, 0.5),
                 },
             },
         },
@@ -545,10 +503,10 @@ export const deadSpaceTheme = createTheme({
             styleOverrides: {
                 root: {
                     '&:hover': {
-                        backgroundColor: alpha('#7ad0f0', 0.05),
+                        backgroundColor: alpha(darkThemeColors.primary.main, 0.05),
                     },
                     '&.Mui-selected': {
-                        backgroundColor: alpha('#7ad0f0', 0.1),
+                        backgroundColor: alpha(darkThemeColors.primary.main, 0.1),
                     },
                 },
             },
@@ -556,18 +514,18 @@ export const deadSpaceTheme = createTheme({
         MuiDrawer: {
             styleOverrides: {
                 paper: {
-                    backgroundColor: alpha('#1a2830', 0.9),
+                    backgroundColor: alpha(darkThemeColors.background.paper, 0.9),
                     backdropFilter: 'blur(20px)',
-                    borderRight: `1px solid ${alpha('#7ad0f0', 0.2)}`,
+                    borderRight: `1px solid ${alpha(darkThemeColors.primary.main, 0.2)}`,
                 },
             },
         },
         MuiMenu: {
             styleOverrides: {
                 paper: {
-                    backgroundColor: alpha('#1a2830', 0.9),
+                    backgroundColor: alpha(darkThemeColors.background.paper, 0.9),
                     backdropFilter: 'blur(20px)',
-                    border: `1px solid ${alpha('#7ad0f0', 0.2)}`,
+                    border: `1px solid ${alpha(darkThemeColors.primary.main, 0.2)}`,
                     boxShadow: `0 8px 32px ${alpha('#000000', 0.4)}`,
                 },
             },
@@ -575,18 +533,18 @@ export const deadSpaceTheme = createTheme({
         MuiTooltip: {
             styleOverrides: {
                 tooltip: {
-                    backgroundColor: alpha('#1a2830', 0.9),
+                    backgroundColor: alpha(darkThemeColors.background.paper, 0.9),
                     backdropFilter: 'blur(10px)',
-                    border: `1px solid ${alpha('#7ad0f0', 0.2)}`,
-                    color: '#e6f7ff',
+                    border: `1px solid ${alpha(darkThemeColors.primary.main, 0.2)}`,
+                    color: darkThemeColors.text.primary,
                     fontSize: '0.75rem',
                     padding: '8px 12px',
                     maxWidth: '300px',
                 },
                 arrow: {
-                    color: alpha('#1a2830', 0.9),
+                    color: alpha(darkThemeColors.background.paper, 0.9),
                     '&:before': {
-                        border: `1px solid ${alpha('#7ad0f0', 0.2)}`,
+                        border: `1px solid ${alpha(darkThemeColors.primary.main, 0.2)}`,
                     },
                 },
             },
@@ -594,19 +552,19 @@ export const deadSpaceTheme = createTheme({
         MuiSlider: {
             styleOverrides: {
                 root: {
-                    color: '#7ad0f0',
+                    color: darkThemeColors.primary.main,
                     height: '4px',
                 },
                 track: {
                     border: 'none',
                 },
                 rail: {
-                    backgroundColor: alpha('#607080', 0.3),
+                    backgroundColor: alpha(darkThemeColors.text.disabled, 0.3),
                 },
                 thumb: {
-                    backgroundColor: '#7ad0f0',
+                    backgroundColor: darkThemeColors.primary.main,
                     '&:hover': {
-                        boxShadow: `0 0 0 8px ${alpha('#7ad0f0', 0.16)}`,
+                        boxShadow: `0 0 0 8px ${alpha(darkThemeColors.primary.main, 0.16)}`,
                     },
                 },
             },
@@ -614,27 +572,27 @@ export const deadSpaceTheme = createTheme({
         MuiSelect: {
             styleOverrides: {
                 select: {
-                    backgroundColor: alpha('#1a2830', 0.5),
+                    backgroundColor: alpha(darkThemeColors.background.paper, 0.5),
                     backdropFilter: 'blur(10px)',
                 },
                 icon: {
-                    color: '#a0e0ff',
+                    color: darkThemeColors.primary.light,
                 },
             },
         },
         MuiDialog: {
             styleOverrides: {
                 paper: {
-                    backgroundColor: alpha('#1a2830', 0.9),
+                    backgroundColor: alpha(darkThemeColors.background.paper, 0.9),
                     backdropFilter: 'blur(30px)',
-                    border: `1px solid ${alpha('#7ad0f0', 0.2)}`,
+                    border: `1px solid ${alpha(darkThemeColors.primary.main, 0.2)}`,
                 },
             },
         },
         MuiBackdrop: {
             styleOverrides: {
                 root: {
-                    backgroundColor: alpha('#0a1419', 0.8),
+                    backgroundColor: alpha(darkThemeColors.background.default, 0.8),
                     backdropFilter: 'blur(4px)',
                 },
             },
@@ -642,80 +600,127 @@ export const deadSpaceTheme = createTheme({
     },
 });
 
-// Светлая версия (опционально)
-
+// Светлая версия темы
 export const deadSpaceLightTheme = createTheme({
     ...deadSpaceTheme,
     palette: {
+        ...deadSpaceTheme.palette,
         mode: 'light',
         primary: {
-            main: '#2d7a9c',           // Темнее для лучшей читаемости в светлой теме
-            light: '#4da0c0',
-            dark: '#1e5c7a',
-            contrastText: '#ffffff',
+            main: lightThemeColors.primary.main,
+            light: lightThemeColors.primary.light,
+            dark: lightThemeColors.primary.dark,
+            contrastText: lightThemeColors.primary.contrastText,
         },
         secondary: {
-            main: '#cc7034',
-            light: '#ff8c42',
-            dark: '#a8582a',
-            contrastText: '#ffffff',
+            main: lightThemeColors.secondary.main,
+            light: lightThemeColors.secondary.light,
+            dark: lightThemeColors.secondary.dark,
+            contrastText: lightThemeColors.secondary.contrastText,
         },
         background: {
-            default: '#f0f7fa',
-            paper: '#ffffff',
+            default: lightThemeColors.background.default,
+            paper: lightThemeColors.background.paper,
         },
         text: {
-            primary: '#1a2830',        // Темный для светлой темы
-            secondary: '#2d7a9c',      // Темный голубой
-            disabled: '#8899aa',
+            primary: lightThemeColors.text.primary,
+            secondary: lightThemeColors.text.secondary,
+            disabled: lightThemeColors.text.disabled,
         },
+        action: {
+            ...deadSpaceTheme.palette.action,
+            active: lightThemeColors.action.active,
+            disabled: lightThemeColors.action.disabled,
+        },
+        divider: alpha(lightThemeColors.primary.main, 0.2),
     },
     typography: {
-        ...deadSpaceBaseTheme.typography,
+        ...deadSpaceTheme.typography,
         h1: {
-            ...deadSpaceBaseTheme.typography.h1,
-            color: '#1a2830',          // Темный заголовок
+            ...deadSpaceTheme.typography.h1,
+            color: lightThemeColors.text.primary,
         },
         h2: {
-            ...deadSpaceBaseTheme.typography.h2,
-            color: '#1a2830',          // Темный заголовок
+            ...deadSpaceTheme.typography.h2,
+            color: lightThemeColors.text.primary,
         },
         h3: {
-            ...deadSpaceBaseTheme.typography.h3,
-            color: '#2d7a9c',          // Темный голубой
+            ...deadSpaceTheme.typography.h3,
+            color: lightThemeColors.text.secondary,
         },
         h4: {
-            ...deadSpaceBaseTheme.typography.h4,
-            color: '#2d7a9c',          // Темный голубой
+            ...deadSpaceTheme.typography.h4,
+            color: lightThemeColors.text.secondary,
         },
         h5: {
-            ...deadSpaceBaseTheme.typography.h5,
-            color: '#1a2830',          // Темный текст
+            ...deadSpaceTheme.typography.h5,
+            color: lightThemeColors.text.primary,
         },
         h6: {
-            ...deadSpaceBaseTheme.typography.h6,
-            color: '#2d7a9c',          // Темный голубой
+            ...deadSpaceTheme.typography.h6,
+            color: lightThemeColors.text.secondary,
         },
         body1: {
-            ...deadSpaceBaseTheme.typography.body1,
-            color: '#1a2830',          // Темный текст
+            ...deadSpaceTheme.typography.body1,
+            color: lightThemeColors.text.primary,
         },
         body2: {
-            ...deadSpaceBaseTheme.typography.body2,
-            color: '#2d7a9c',          // Темный голубой
+            ...deadSpaceTheme.typography.body2,
+            color: lightThemeColors.text.secondary,
         },
         overline: {
-            ...deadSpaceBaseTheme.typography.overline,
-            color: '#2d7a9c',          // Темный голубой
+            ...deadSpaceTheme.typography.overline,
+            color: lightThemeColors.text.secondary,
         },
     },
     components: {
+        ...deadSpaceTheme.components,
+        MuiCssBaseline: {
+            styleOverrides: {
+                ':root.theme-light': {
+                    // CSS переменные для светлой темы
+                    '--color-primary-main': lightThemeColors.primary.main,
+                    '--color-primary-light': lightThemeColors.primary.light,
+                    '--color-primary-dark': lightThemeColors.primary.dark,
+                    '--color-primary-contrast': lightThemeColors.primary.contrastText,
+                    '--color-secondary-main': lightThemeColors.secondary.main,
+                    '--color-secondary-light': lightThemeColors.secondary.light,
+                    '--color-secondary-dark': lightThemeColors.secondary.dark,
+                    '--color-secondary-contrast': lightThemeColors.secondary.contrastText,
+                    '--color-background-default': lightThemeColors.background.default,
+                    '--color-background-paper': lightThemeColors.background.paper,
+                    '--color-text-primary': lightThemeColors.text.primary,
+                    '--color-text-secondary': lightThemeColors.text.secondary,
+                    '--color-text-disabled': lightThemeColors.text.disabled,
+                    '--color-action-active': lightThemeColors.action.active,
+                    '--color-action-disabled': lightThemeColors.action.disabled,
+                },
+                body: {
+                    backgroundColor: lightThemeColors.background.default,
+                    backgroundImage: 'none',
+                    scrollbarColor: `${alpha(lightThemeColors.primary.main, 0.3)} ${lightThemeColors.background.default}`,
+                    '&::-webkit-scrollbar-track': {
+                        backgroundColor: alpha(lightThemeColors.primary.light, 0.1),
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: alpha(lightThemeColors.primary.main, 0.3),
+                        '&:hover': {
+                            backgroundColor: alpha(lightThemeColors.primary.main, 0.5),
+                        },
+                    },
+                },
+                '::selection': {
+                    backgroundColor: alpha(lightThemeColors.primary.main, 0.2),
+                    color: lightThemeColors.text.primary,
+                },
+            },
+        },
         MuiAppBar: {
             styleOverrides: {
                 root: {
-                    backgroundColor: '#ffffff',
-                    color: '#1a2830',  // Темный текст на белом фоне
-                    borderBottom: `1px solid ${alpha('#4da0c0', 0.2)}`,
+                    backgroundColor: lightThemeColors.background.paper,
+                    color: lightThemeColors.text.primary,
+                    borderBottom: `1px solid ${alpha(lightThemeColors.primary.light, 0.2)}`,
                     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
                 },
             },
@@ -723,17 +728,26 @@ export const deadSpaceLightTheme = createTheme({
         MuiPaper: {
             styleOverrides: {
                 root: {
-                    backgroundColor: '#ffffff',
-                    border: `1px solid ${alpha('#4da0c0', 0.2)}`,
+                    backgroundColor: lightThemeColors.background.paper,
+                    border: `1px solid ${alpha(lightThemeColors.primary.light, 0.2)}`,
+                },
+                elevation1: {
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
+                },
+                elevation2: {
+                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
+                },
+                elevation3: {
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
                 },
             },
         },
         MuiLink: {
             styleOverrides: {
                 root: {
-                    color: '#2d7a9c',
+                    color: lightThemeColors.text.secondary,
                     '&:hover': {
-                        color: '#1e5c7a',
+                        color: lightThemeColors.primary.dark,
                     },
                 },
             },
@@ -741,10 +755,10 @@ export const deadSpaceLightTheme = createTheme({
         MuiIconButton: {
             styleOverrides: {
                 root: {
-                    color: '#2d7a9c',
+                    color: lightThemeColors.text.secondary,
                     '&:hover': {
-                        backgroundColor: alpha('#2d7a9c', 0.1),
-                        color: '#1e5c7a',
+                        backgroundColor: alpha(lightThemeColors.text.secondary, 0.1),
+                        color: lightThemeColors.primary.dark,
                     },
                 },
             },
@@ -752,7 +766,7 @@ export const deadSpaceLightTheme = createTheme({
         MuiTableCell: {
             styleOverrides: {
                 head: {
-                    color: '#2d7a9c',
+                    color: lightThemeColors.text.secondary,
                     backgroundColor: '#f8fcfd',
                 },
             },
@@ -761,7 +775,7 @@ export const deadSpaceLightTheme = createTheme({
             styleOverrides: {
                 root: {
                     '&.Mui-selected': {
-                        color: '#1e5c7a',  // Темнее для читаемости
+                        color: lightThemeColors.primary.dark,
                     },
                 },
             },
@@ -769,14 +783,14 @@ export const deadSpaceLightTheme = createTheme({
         MuiChip: {
             styleOverrides: {
                 colorPrimary: {
-                    backgroundColor: alpha('#2d7a9c', 0.1),
-                    color: '#1e5c7a',
-                    border: `1px solid ${alpha('#2d7a9c', 0.3)}`,
+                    backgroundColor: alpha(lightThemeColors.primary.main, 0.1),
+                    color: lightThemeColors.primary.dark,
+                    border: `1px solid ${alpha(lightThemeColors.primary.main, 0.3)}`,
                 },
                 colorSecondary: {
-                    backgroundColor: alpha('#cc7034', 0.1),
-                    color: '#a8582a',
-                    border: `1px solid ${alpha('#cc7034', 0.3)}`,
+                    backgroundColor: alpha(lightThemeColors.secondary.main, 0.1),
+                    color: lightThemeColors.secondary.dark,
+                    border: `1px solid ${alpha(lightThemeColors.secondary.main, 0.3)}`,
                 },
             },
         },
@@ -785,21 +799,21 @@ export const deadSpaceLightTheme = createTheme({
                 {
                     props: { variant: 'contained', color: 'primary' },
                     style: {
-                        background: `linear-gradient(135deg, #2d7a9c 0%, #1e5c7a 100%)`,
-                        color: '#ffffff',
+                        background: `linear-gradient(135deg, ${lightThemeColors.primary.main} 0%, ${lightThemeColors.primary.dark} 100%)`,
+                        color: lightThemeColors.primary.contrastText,
                         '&:hover': {
-                            background: `linear-gradient(135deg, #3a8ab3 0%, #2d7a9c 100%)`,
+                            background: `linear-gradient(135deg, ${lightThemeColors.primary.light} 0%, ${lightThemeColors.primary.main} 100%)`,
                         },
                     },
                 },
                 {
                     props: { variant: 'outlined', color: 'primary' },
                     style: {
-                        border: `1px solid ${alpha('#2d7a9c', 0.3)}`,
-                        color: '#2d7a9c',
+                        border: `1px solid ${alpha(lightThemeColors.primary.main, 0.3)}`,
+                        color: lightThemeColors.primary.main,
                         '&:hover': {
-                            backgroundColor: alpha('#2d7a9c', 0.05),
-                            border: `1px solid ${alpha('#2d7a9c', 0.5)}`,
+                            backgroundColor: alpha(lightThemeColors.primary.main, 0.05),
+                            border: `1px solid ${alpha(lightThemeColors.primary.main, 0.5)}`,
                         },
                     },
                 },
@@ -808,7 +822,18 @@ export const deadSpaceLightTheme = createTheme({
         MuiTabs: {
             styleOverrides: {
                 indicator: {
-                    backgroundColor: '#2d7a9c',
+                    backgroundColor: lightThemeColors.primary.main,
+                },
+            },
+        },
+        MuiInputBase: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: alpha(lightThemeColors.background.paper, 0.8),
+                    border: `1px solid ${alpha(lightThemeColors.primary.main, 0.2)}`,
+                },
+                input: {
+                    color: lightThemeColors.text.primary,
                 },
             },
         },

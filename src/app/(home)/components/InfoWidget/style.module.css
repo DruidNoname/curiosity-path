@@ -1,10 +1,46 @@
 .InfoWidget {
     padding: 30px 50px;
     margin-bottom: 40px;
-    border-color: rgba(122, 208, 240, 0.4);
-    box-shadow: var(--dead-space-shadows);
+
+    /* Используем RGB переменные */
+    border: 1px solid rgba(var(--color-primary-main-rgb), 0.4);
+
+    /* Используем переменные для теней */
+    box-shadow:
+            var(--shadow-widget),
+            inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.1);
+
+    background-color: rgba(var(--color-background-paper-rgb), 0.7);
+    backdrop-filter: blur(20px);
     text-align: right;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.InfoWidget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+            90deg,
+            transparent,
+            var(--color-primary-main),
+            transparent
+    );
+}
+
+.InfoWidget:hover {
+    border-color: rgba(var(--color-primary-main-rgb), 0.6);
+    box-shadow:
+            var(--shadow-widget-hover),
+            inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.2);
+    transform: translateY(-2px);
 }
