@@ -6,6 +6,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import {Box, Divider} from "@mui/material";
 import {usePosts} from "@/lib/posts/hooks";
 import InfoWidget from "@/app/(home)/components/InfoWidget";
+import Loader from "@/ui/Loader";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -17,11 +18,6 @@ const MainPage: React.FC = () => {
         isError,
         error
     } = usePosts(page, perPage);
-
-    // Обработка загрузки
-    if (isLoading) {
-        return <div>Загрузка постов...</div>;
-    }
 
     // Обработка ошибки
     if (isError) {
@@ -37,11 +33,15 @@ const MainPage: React.FC = () => {
     return (
         <ErrorBoundary componentName={'MainPage'}>
             <Box sx={{ mb: 4 }}>
-                <InfoWidget count={ total }/>
+                <InfoWidget count={ total } isLoading={ isLoading }/>
 
-                {posts?.map((post: WP_REST_API_Post) => (
-                    <PostPreview post={post} key={post.id}/>
-                ))}
+                { isLoading ?
+                    <Loader/>
+                    :
+                    posts?.map((post: WP_REST_API_Post) => (
+                        <PostPreview post={post} key={post.id}/>
+                    ))
+                }
             </Box>
         </ErrorBoundary>
     );
