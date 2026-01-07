@@ -3,7 +3,7 @@ import React from "react";
 import { WP_REST_API_Post } from 'wp-types';
 import PostPreview from "@/components/PostPreview";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import {Box, Divider} from "@mui/material";
+import {Box, Divider, Typography} from "@mui/material";
 import {usePosts} from "@/lib/posts/hooks";
 import InfoWidget from "@/app/(home)/components/InfoWidget";
 import Loader from "@/ui/Loader";
@@ -19,11 +19,6 @@ const MainPage: React.FC = () => {
         error
     } = usePosts(page, perPage);
 
-    // Обработка ошибки
-    if (isError) {
-        return <div>Ошибка: {error?.message}</div>;
-    }
-
     const {
         posts = [],
         total = 0,
@@ -33,7 +28,7 @@ const MainPage: React.FC = () => {
     return (
         <ErrorBoundary componentName={'MainPage'}>
             <Box sx={{ mb: 4 }}>
-                <InfoWidget count={ total } isLoading={ isLoading }/>
+                <InfoWidget count={ total } isLoading={ isLoading } isError={isError} />
 
                 { isLoading ?
                     <Loader/>
@@ -41,6 +36,17 @@ const MainPage: React.FC = () => {
                     posts?.map((post: WP_REST_API_Post) => (
                         <PostPreview post={post} key={post.id}/>
                     ))
+                }
+                { isError &&
+                    <>
+                        <Typography variant="body1" component="p">
+                            А бек не завезли.
+                        </Typography>
+                        <Divider/>
+                        <Typography variant="body2" component="p">
+                            Ошибка: {error?.message}
+                        </Typography>
+                    </>
                 }
             </Box>
         </ErrorBoundary>

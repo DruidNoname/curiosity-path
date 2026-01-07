@@ -7,8 +7,9 @@ import Skeleton from "@/ui/Skeleton";
 type Props = {
     count: number;
     isLoading: boolean;
+    isError: boolean;
 }
-const InfoWidget: React.FC<Props> = ( { count, isLoading }) => {
+const InfoWidget: React.FC<Props> = ( { count, isLoading, isError }) => {
 
     return (
         <ErrorBoundary componentName={'InfoWidget'}>
@@ -35,6 +36,11 @@ const InfoWidget: React.FC<Props> = ( { count, isLoading }) => {
                             `Всего постов: ${count}`
                         )}
                     </Typography>
+                    { isError &&
+                        <Typography variant="body1" component="p">
+                                У самурая нет цели... Только ожидание бека.
+                        </Typography>
+                    }
                 </Box>
             </Card>
         </ErrorBoundary>
