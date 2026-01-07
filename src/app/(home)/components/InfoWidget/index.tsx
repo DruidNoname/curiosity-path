@@ -2,11 +2,13 @@ import React from "react";
 import styles from "./style.module.css";
 import {Box, Card, Typography} from "@mui/material";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import Skeleton from "@/ui/Skeleton";
 
 type Props = {
     count: number;
+    isLoading: boolean;
 }
-const InfoWidget: React.FC<Props> = ( { count }) => {
+const InfoWidget: React.FC<Props> = ( { count, isLoading }) => {
 
     return (
         <ErrorBoundary componentName={'InfoWidget'}>
@@ -26,11 +28,12 @@ const InfoWidget: React.FC<Props> = ( { count }) => {
                     >
                         Путевые заметки мирохода Curiosity
                     </Typography>
-                    <Typography
-                        variant="body1"
-                        component="p"
-                    >
-                        { `Всего постов: ${count}` }
+                    <Typography variant="body1" component="p">
+                        {isLoading ? (
+                            <Skeleton width={200} sx={{ ml: 'auto' }}/>
+                        ) : (
+                            `Всего постов: ${count}`
+                        )}
                     </Typography>
                 </Box>
             </Card>

@@ -1,4 +1,4 @@
-// @type {import('next').NextConfig}
+/** @type {import('next').NextConfig} */
 
 const nextConfig = {
     reactStrictMode: true,
@@ -48,7 +48,34 @@ const nextConfig = {
             (process.env.NODE_ENV === 'production'
                 ? 'https://curiosity-path.ru'
                 : 'http://localhost:3000'),
+    },
+
+    // Добавьте эту секцию для поддержки SVG
+    webpack(config: any) {
+        config.module.rules.push({
+            test: /\.svg$/,
+            use: [{
+                loader: '@svgr/webpack',
+                options: {
+                    svgo: true,
+                    svgoConfig: {
+                        plugins: [{
+                            name: 'preset-default',
+                            params: {
+                                overrides: {
+                                    removeViewBox: false, // сохраняем viewBox
+                                },
+                            },
+                        }],
+                    },
+                },
+            }],
+        });
+
+        return config;
     }
 }
+
+module.exports = nextConfig;
 
 module.exports = nextConfig

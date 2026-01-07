@@ -22,3 +22,17 @@ img {
   vertical-align: middle;
 }
 
+.RadialLoader {
+  height: 150px;
+  pointer-events: none;
+  animation: LoaderAnimation 1s linear infinite;
+}
+
+@keyframes LoaderAnimation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
