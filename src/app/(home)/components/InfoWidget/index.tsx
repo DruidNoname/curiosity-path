@@ -32,15 +32,12 @@ const InfoWidget: React.FC<Props> = ( { count, isLoading, isError }) => {
                     <Typography variant="body1" component="p">
                         {isLoading ? (
                             <Skeleton width={200} sx={{ ml: 'auto' }}/>
+                        ) : isError ? (
+                            'У самурая нет цели... Только ожидание бека.'
                         ) : (
                             `Всего постов: ${count}`
                         )}
                     </Typography>
-                    { isError &&
-                        <Typography variant="body1" component="p">
-                                У самурая нет цели... Только ожидание бека.
-                        </Typography>
-                    }
                 </Box>
             </Card>
         </ErrorBoundary>
