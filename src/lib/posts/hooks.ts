@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import {API_URL} from "./const";
+import {POSTS_URL} from "./const";
 
 export interface PostsCountResponse {
     count: number;
@@ -20,7 +20,7 @@ export function usePosts(page = 1, perPage = 10) {
     return useQuery({
         queryKey: ['posts', page, perPage],
         queryFn: async () => {
-            const res = await fetch(`${API_URL}?page=${page}&per_page=${perPage}`);
+            const res = await fetch(`${POSTS_URL}?page=${page}&per_page=${perPage}`);
             if (!res.ok) throw new Error('Ошибка при получении постов');
 
             const total = res.headers.get('X-WP-Total') || '0';
@@ -44,7 +44,7 @@ export function usePost(slug: string, options = {}) {
     return useQuery({
         queryKey: ['posts', slug],
         queryFn: async () => {
-            const res = await fetch(`${API_URL}?slug=${slug}`);
+            const res = await fetch(`${POSTS_URL}?slug=${slug}`);
             if (!res.ok) throw new Error('Ошибка при получении поста');
             const posts = await res.json();
             return posts[0] || null; // WordPress возвращает массив
@@ -60,7 +60,7 @@ export function usePostById(id: number, options = {}) {
     return useQuery({
         queryKey: ['posts', id],
         queryFn: async () => {
-            const res = await fetch(`${API_URL}/${id}`);
+            const res = await fetch(`${POSTS_URL}/${id}`);
             if (!res.ok) throw new Error('Ошибка при получении поста');
             return res.json();
         },
