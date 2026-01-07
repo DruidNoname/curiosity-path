@@ -1,12 +1,8 @@
 .InfoWidget {
     padding: 30px 50px;
     margin-bottom: 40px;
-
-    /* Используем RGB переменные */
     border: 1px solid rgba(var(--color-primary-main-rgb), 0.4);
-
-    /* Используем переменные для теней */
-    box-shadow:
+        box-shadow:
             var(--shadow-widget),
             inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.1);
 
@@ -20,6 +16,7 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
+    min-height: 315px;
 }
 
 .InfoWidget::before {
@@ -37,10 +34,18 @@
     );
 }
 
-.InfoWidget:hover {
-    border-color: rgba(var(--color-primary-main-rgb), 0.6);
-    box-shadow:
-            var(--shadow-widget-hover),
-            inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.2);
-    transform: translateY(-2px);
+.InfoWidget::after {
+    content: '';
+    position: absolute;
+    top: 30px;
+    left: 50px;
+    width: 35%;
+    height: 100%;
+    background-image: url(@/assets/images/curiosity.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    filter:
+            drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25))
+            drop-shadow(0 6px 12px rgba(var(--color-primary-main-rgb, 122, 208, 240), 0.3))
+            drop-shadow(0 0 15px rgba(var(--color-primary-light-rgb, 160, 224, 255), 0.2));
 }
