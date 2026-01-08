@@ -12,9 +12,9 @@ export const urls = {
     // В продакшене
     prod: {
         site: 'https://curiosity-path.ru',
-        wp: 'http://suffer.curiosity-path.ru',
-        wpApi: 'http://suffer.curiosity-path.ru/wp-json/wp/v2',
-        wpGraphql: 'http://suffer.curiosity-path.ru/graphql',
+        wp: 'https://suffer.curiosity-path.ru',
+        wpApi: 'https://suffer.curiosity-path.ru/wp-json/wp/v2',
+        wpGraphql: 'https://suffer.curiosity-path.ru/graphql',
     },
 
     // Автоматически выбираем правильные URL
