@@ -7,9 +7,15 @@ import {Box, Divider, Typography} from "@mui/material";
 import {usePosts} from "@/lib/posts/hooks";
 import InfoWidget from "@/app/(home)/components/InfoWidget";
 import Loader from "@/ui/Loader";
+import Pagination from "@/ui/Pagination";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
+
+    // const [pagination, setPagination] = React.useState<PaginationState>({
+    //     pageIndex: 0,
+    //     pageSize: pageSize || 10,
+    // });
     const perPage = 10;
 
     const {
@@ -33,9 +39,21 @@ const MainPage: React.FC = () => {
                 { isLoading ?
                     <Loader/>
                     :
-                    posts?.map((post: WP_REST_API_Post) => (
-                        <PostPreview post={post} key={post.id}/>
-                    ))
+                    <>
+                        { posts?.map((post: WP_REST_API_Post) => (
+                            <PostPreview post={post} key={post.id}/>
+                        ))
+                        }
+                        <Pagination
+                            sx={{ mt: 3 }}
+                            count={Math.ceil(total / perPage) || 1}
+                            page={page}
+                            onChange={(_e, page) => {
+                                setPage(page);
+                            }}
+                            disabled={isLoading}
+                        />
+                    </>
                 }
                 { isError &&
                     <>
