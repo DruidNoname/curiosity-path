@@ -62,7 +62,7 @@ img {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: fit-content;
+  max-width: 500px;
 
   img {
     border: 3px solid rgba(77, 160, 192, 0.2);
@@ -71,6 +71,8 @@ img {
     border-bottom-right-radius: 0;
   }
 }
+
+
 .wp-caption-text {
   width: 100%;
   padding: 8px 15px;
