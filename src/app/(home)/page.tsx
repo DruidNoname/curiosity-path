@@ -12,10 +12,6 @@ import Pagination from "@/ui/Pagination";
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
 
-    // const [pagination, setPagination] = React.useState<PaginationState>({
-    //     pageIndex: 0,
-    //     pageSize: pageSize || 10,
-    // });
     const perPage = 10;
 
     const {

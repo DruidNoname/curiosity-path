@@ -8,6 +8,19 @@
   box-sizing: border-box;
 }
 
+p {
+  padding-bottom: 16px;
+}
+
+ul, ol {
+  margin-left: 30px;
+  padding-bottom: 16px;
+}
+
+li {
+  padding-bottom: 8px;
+}
+
 body {
   font-family: "Manrope", sans-serif;
   color: var(--text-primary-color);
@@ -36,3 +49,18 @@ img {
     transform: rotate(360deg);
   }
 }
+
+/*WP styles*/
+.aentry-post__img--text-width:has(.aligncenter) {
+  text-align: center;
+}
+
+.aentry-post__img--text-width:has(.alignleft) {
+  text-align: left;
+}
+
+.aentry-post__img--text-width:has(.alignright) {
+  text-align: right;
+}
+
+
