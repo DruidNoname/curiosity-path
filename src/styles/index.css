@@ -51,8 +51,10 @@ img {
 }
 
 /*WP styles*/
-.aentry-post__img--text-width:has(.aligncenter) {
-  text-align: center;
+
+.aligncenter {
+  display: block;
+  margin: 0 auto;
 }
 
 .aentry-post__img--text-width:has(.alignleft) {
