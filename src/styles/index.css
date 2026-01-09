@@ -63,7 +63,9 @@ img {
   justify-content: center;
   align-items: center;
   max-width: 500px;
+}
 
+.wp-caption {
   img {
     border: 3px solid rgba(77, 160, 192, 0.2);
     border-radius: 6px;
@@ -71,7 +73,6 @@ img {
     border-bottom-right-radius: 0;
   }
 }
-
 
 .wp-caption-text {
   width: 100%;
