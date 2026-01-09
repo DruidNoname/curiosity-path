@@ -87,10 +87,12 @@ img {
 
 .alignleft {
   float: left;
+  margin-right: 24px;
 }
 
 .alignright {
   float: right;
+  margin-left: 24px;
 }
 
 .aentry-post__figure,
