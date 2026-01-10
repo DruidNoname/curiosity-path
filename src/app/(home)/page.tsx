@@ -8,6 +8,8 @@ import {usePosts} from "@/lib/posts/hooks";
 import InfoWidget from "@/app/(home)/components/InfoWidget";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
+import {urls} from "@/config/urls";
+import Tags from "@/app/(home)/components/Tags";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -41,7 +43,7 @@ const MainPage: React.FC = () => {
                         ))
                         }
                         <Pagination
-                            sx={{ mt: 3 }}
+                            sx={{ mt: 3, mb: 4 }}
                             count={Math.ceil(total / perPage) || 1}
                             page={page}
                             onChange={(_e, page) => {
@@ -49,6 +51,8 @@ const MainPage: React.FC = () => {
                             }}
                             disabled={isLoading}
                         />
+
+                        <Tags/>
                     </>
                 }
                 { isError &&
