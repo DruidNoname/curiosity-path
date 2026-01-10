@@ -52,6 +52,12 @@ img {
 
 /*WP styles*/
 
+.aligncenter,
+.alignleft,
+.alignright {
+  margin-bottom: 28px;
+}
+
 .aligncenter {
   display: block;
   margin: 20px auto 28px;
@@ -87,13 +93,17 @@ img {
 
 
 .alignleft {
-  float: left;
-  margin-right: 24px;
+  @media (min-width: 500px) {
+    float: left;
+    margin-right: 24px;
+  }
 }
 
 .alignright {
-  float: right;
-  margin-left: 24px;
+  @media (min-width: 500px) {
+    float: right;
+    margin-left: 24px;
+  }
 }
 
 .aentry-post__figure,
