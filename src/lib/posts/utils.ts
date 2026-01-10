@@ -15,6 +15,9 @@ interface HeightDifferenceOptions {
     includeStopElement?: boolean; // Включать ли стоп-элемент в подсчёт
 }
 
+//это надо убрать, добавить функцию, где в случае, если после
+// картинки выровненной идёт другая картинка, забрать теги между ними
+// и обернуть в разметку с float
 export const getHeightDifference = (
     html: string,
     options: HeightDifferenceOptions = {}
@@ -229,13 +232,13 @@ export const getCleanEntry = (html: string): string => {
     // Удаляем лишние пробелы
     result = result.trim();
 
-    console.log(getHeightDifference(
-        result,
-        {
-            startSelector: '.alignright', // Элемент начала отсчёта (картинка/фигура)
-            stopSelector: '.aligncenter', // Класс элемента, на котором останавливаемся
-        }
-    ));
+    // console.log(getHeightDifference(
+    //     result,
+    //     {
+    //         startSelector: '.alignright', // Элемент начала отсчёта (картинка/фигура)
+    //         stopSelector: '.aligncenter', // Класс элемента, на котором останавливаемся
+    //     }
+    // ));
 
     return result;
 };
