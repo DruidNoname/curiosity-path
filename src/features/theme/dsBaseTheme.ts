@@ -1,5 +1,5 @@
 import {alpha, createTheme} from "@mui/material/styles";
-import {darkThemeColors} from "@/lib/theme/darkThemeColors";
+import {darkThemeColors} from "@/features/theme/darkThemeColors";
 
 export const deadSpaceBaseTheme = createTheme({
     cssVariables: true,

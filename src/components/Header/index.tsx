@@ -7,7 +7,7 @@ import {
     Toolbar,
     Typography,
 } from '@mui/material';
-import {useThemeContext} from "@/lib/theme/context";
+import {useThemeContext} from "@/features/theme/context";
 import { Brightness4, Brightness7 } from '@mui/icons-material'
 
 
