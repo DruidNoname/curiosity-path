@@ -1,36 +1,33 @@
+'use client';
+
 import React from 'react';
-import { Box, CircularProgress, Alert } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import {useTags} from "@/lib/tags/hooks";
+import Skeleton from "@/ui/Skeleton";
+import { WP_REST_API_Tag } from 'wp-types';
 
 const Tags: React.FC = () => {
-    // Используем хук useTags
     const { data, isLoading, isError, error } = useTags();
-
-    if (isLoading) {
-        return (
-            <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
-                <CircularProgress size={20} />
-                <span>Загрузка тегов...</span>
-            </Box>
-        );
-    }
-
-    if (isError) {
-        return (
-            <Box sx={{ mb: 4 }}>
-                <Alert severity="error">
-                    Ошибка загрузки тегов: {error?.message}
-                </Alert>
-            </Box>
-        );
-    }
-
-    // Получаем строку с именами тегов
-    const tagNames = data?.tags?.map((tag: any) => tag.name).join(', ') || '';
+    const tagElements = data?.tags?.map((tag: WP_REST_API_Tag, index: number, array: WP_REST_API_Tag[]) => (
+        <span key={tag.id}>
+            <Link href={`tag/${tag.slug}` || tag.link}>
+                {tag.name}
+            </Link>
+            {index < array.length - 1 && ', '}
+        </span>
+    ));
 
     return (
         <Box sx={{ mb: 4 }}>
-            {`Доступные теги (${data?.count || 0}): ${tagNames}`}
+            {isLoading ? (
+                <Skeleton width={200} sx={{ ml: 'auto' }}/>
+            ) : isError ? (
+                `Ошибка загрузки тегов: ${error?.message}`
+                ) : (
+                <>
+                    {`Доступные теги (${data?.count || 0}): `} { tagElements }
+                </>
+            )}
         </Box>
     );
 };

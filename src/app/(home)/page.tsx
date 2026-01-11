@@ -8,20 +8,18 @@ import {usePosts} from "@/lib/posts/hooks";
 import InfoWidget from "@/app/(home)/components/InfoWidget";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
-import {urls} from "@/config/urls";
 import Tags from "@/app/(home)/components/Tags";
+import {PER_PAGE} from "@/lib/posts/const";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
-
-    const perPage = 10;
 
     const {
         data,
         isLoading,
         isError,
         error
-    } = usePosts(page, perPage);
+    } = usePosts(page, PER_PAGE);
 
     const {
         posts = [],
@@ -44,7 +42,7 @@ const MainPage: React.FC = () => {
                         }
                         <Pagination
                             sx={{ mt: 3, mb: 4 }}
-                            count={Math.ceil(total / perPage) || 1}
+                            count={Math.ceil(total / PER_PAGE) || 1}
                             page={page}
                             onChange={(_e, page) => {
                                 setPage(page);
@@ -60,7 +58,7 @@ const MainPage: React.FC = () => {
                         <Typography variant="body1" component="p">
                             А бек не завезли.
                         </Typography>
-                        <Divider/>
+                        <Divider sx={{ mx: 4 }} />
                         <Typography variant="body2" component="p">
                             Ошибка: {error?.message}
                         </Typography>

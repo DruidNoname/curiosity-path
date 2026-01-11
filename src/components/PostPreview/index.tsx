@@ -20,7 +20,7 @@ const PostPreview: React.FC<Props> = ({ post }) => {
             <Card key={post.id} className={styles.PostPreview}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 3 }}>
                 <Typography variant="h5" component="h5">
-                    <Link href={post.slug}>
+                    <Link href={`/${post.slug}`}>
                     { title }
                     </Link>
                 </Typography>

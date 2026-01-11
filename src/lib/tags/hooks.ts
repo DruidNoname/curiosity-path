@@ -9,22 +9,8 @@ export function useTags() {
 
             const tags = await res.json();
 
-            // Создаём карту тегов для удобного доступа
-            const tagsMap = Object.fromEntries(
-                tags.map((tag: any) => [
-                    tag.id,
-                    {
-                        name: tag.name,
-                        slug: tag.slug,
-                        description: tag.description || '',
-                        count: tag.count || 0
-                    }
-                ])
-            );
-
             return {
                 tags,           // Массив всех тегов
-                tagsMap,        // Карта {id: {name, slug}}
                 count: tags.length
             };
         },
