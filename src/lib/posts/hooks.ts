@@ -1,5 +1,6 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import {POSTS_URL} from "./const";
+import {PER_PAGE, POSTS_URL} from "./const";
+import {fetchPostsByTag} from "@/lib/posts/api";
 
 export interface PostsCountResponse {
     count: number;
@@ -68,3 +69,13 @@ export function usePostById(id: number, options = {}) {
         ...options,
     });
 }
+
+export function usePostsByTag(tagSlug: string, page: number = 1, perPage: number = PER_PAGE) {
+    return useQuery({
+        queryKey: ['posts', 'tag', tagSlug, page, perPage],
+        queryFn: () => fetchPostsByTag(tagSlug, page, perPage),
+        enabled: !!tagSlug,
+        staleTime: 5 * 60 * 1000, // 5 минут
+        // keepPreviousData: true,
+    });
+};

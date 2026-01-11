@@ -159,7 +159,7 @@ export const getCleanEntry = (html: string): string => {
     let result = sanitizeHtml(html, {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat([
             'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-            'img', 'figure', 'figcaption', 'pre', 'code', 'p'
+            'img', 'figure', 'figcaption', 'pre', 'code', 'p', 'del'
         ]),
         allowedAttributes: {
             ...sanitizeHtml.defaults.allowedAttributes,
