@@ -3,11 +3,11 @@ import React from 'react';
 import styles from './style.module.css';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Box, Button, Container, Divider, Typography} from "@mui/material";
-import { usePost } from "@/lib/posts/hooks";
+import { usePost } from "@/features/posts/hooks";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter } from 'next/navigation';
 import Skeleton from "@/ui/Skeleton";
-import { getCleanEntry} from "@/lib/posts/utils";
+import { getCleanEntry} from "@/features/posts/utils";
 
 interface PostProps {
     params: Promise<{ slug: string }>;

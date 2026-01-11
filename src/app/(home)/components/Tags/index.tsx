@@ -2,12 +2,13 @@
 
 import React from 'react';
 import { Box, Link } from "@mui/material";
-import {useTags} from "@/lib/tags/hooks";
+import {useTags} from "@/features/tags/hooks";
 import Skeleton from "@/ui/Skeleton";
 import { WP_REST_API_Tag } from 'wp-types';
 
 const Tags: React.FC = () => {
     const { data, isLoading, isError, error } = useTags();
+
     const tagElements = data?.tags?.map((tag: WP_REST_API_Tag, index: number, array: WP_REST_API_Tag[]) => (
         <span key={tag.id}>
             <Link href={`tag/${tag.slug}` || tag.link}>

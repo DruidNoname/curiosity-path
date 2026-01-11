@@ -4,7 +4,7 @@ import styles from './style.module.css';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { WP_REST_API_Post } from 'wp-types';
 import {Card, Typography, Link, Box} from "@mui/material";
-import {createExcerpt} from "@/lib/posts/utils";
+import {createExcerpt} from "@/features/posts/utils";
 
 type Props = {
     post: WP_REST_API_Post

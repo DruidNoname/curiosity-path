@@ -2,9 +2,9 @@
 
 import React from 'react'
 import MainLayout from "@/components/Layouts/MainLayout"
-import { QueryClientProvider } from '@/lib/query'
-import { ThemeProvider } from '@/lib/theme'
-import {getQueryClient} from "@/lib/query/";
+import { QueryClientProvider } from '@/features/query'
+import { ThemeProvider } from '@/features/theme'
+import {getQueryClient} from "@/features/query/";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
     const queryClient = getQueryClient();

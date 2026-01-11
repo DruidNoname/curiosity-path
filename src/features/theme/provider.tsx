@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo, ReactNode } from 'react';
 import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
 import { ThemeContext } from './context';
 import { darkTheme, lightTheme } from './index';
-import { ThemeContextType } from "@/lib/theme/types";
+import { ThemeContextType } from "@/features/theme/types";
 
 interface ThemeProviderProps {
     children: ReactNode;

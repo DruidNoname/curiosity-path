@@ -6,39 +6,35 @@ import { WP_REST_API_Post, WP_REST_API_Tag } from 'wp-types';
 import PostPreview from "@/components/PostPreview";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Box, Divider, Typography, Chip, Breadcrumbs } from "@mui/material";
-import { usePostsByTag } from "@/lib/posts/hooks";
+import { usePostsByTag } from "@/features/posts/hooks";
 import InfoWidget from "@/app/(home)/components/InfoWidget";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
 import Link from 'next/link';
 import HomeIcon from '@mui/icons-material/Home';
 import TagIcon from '@mui/icons-material/Tag';
-import { PER_PAGE } from "@/lib/posts/const";
+import { PER_PAGE } from "@/features/posts/const";
+import {useTag} from "@/features/tags/hooks";
 
 const TagPage: React.FC = () => {
     const params = useParams();
     const slug = params?.slug as string;
 
     const [page, setPage] = useState(1);
-    const [tagInfo, setTagInfo] = useState<WP_REST_API_Tag | null>(null);
 
-    // Хук для получения постов по тегу (нужно создать)
     const {
-        data: postsData,
+        data: tagData,
         isLoading,
         isError,
         error
-    } = usePostsByTag(slug, page, PER_PAGE);
+    } = useTag(slug);
 
-    // Получаем информацию о теге
-    useEffect(() => {
-        if (slug) {
-            fetch(`/api/tags/${slug}`)
-                .then(res => res.json())
-                .then(data => setTagInfo(data))
-                .catch(console.error);
-        }
-    }, [slug]);
+    const {
+        data: postsData,
+        isLoading: isPostsLoading,
+        isError: isPostsError,
+        error: postsError
+    } = usePostsByTag(slug, page, PER_PAGE);
 
     const {
         posts = [],
@@ -67,7 +63,7 @@ const TagPage: React.FC = () => {
         );
     }
 
-    console.log(tagInfo);
+    console.log(tagData);
 
     return (
         <ErrorBoundary componentName={'TagPage'}>
@@ -81,30 +77,30 @@ const TagPage: React.FC = () => {
                             size="small"
                         />
                         <Typography variant="h4" component="h1">
-                            {tagInfo?.name || decodeURIComponent(slug)}
+                            {tagData?.name || decodeURIComponent(slug)}
                         </Typography>
                     </Box>
 
-                    {tagInfo?.description && (
+                    {tagData?.description && (
                         <Typography
                             variant="body1"
                             color="text.secondary"
                             sx={{ mt: 1, mb: 2 }}
                         >
-                            {tagInfo.description}
+                            {tagData?.description}
                         </Typography>
                     )}
 
                     <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
                         <Typography variant="body2" color="text.secondary">
-                            ID: {tagInfo?.id || '—'}
+                            ID: {tagData?.id || '—'}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             Постов: {total}
                         </Typography>
-                        {tagInfo?.count && (
+                        {tagData?.count && (
                             <Typography variant="body2" color="text.secondary">
-                                Всего в базе: {tagInfo.count}
+                                Всего в базе: {tagData.count}
                             </Typography>
                         )}
                     </Box>
@@ -115,7 +111,7 @@ const TagPage: React.FC = () => {
                 {/*    count={total}*/}
                 {/*    isLoading={isLoading}*/}
                 {/*    isError={isError}*/}
-                {/*    customText={`постов с тегом "${tagInfo?.name || decodeURIComponent(slug)}"`}*/}
+                {/*    customText={`постов с тегом "${name || decodeURIComponent(slug)}"`}*/}
                 {/*/>*/}
 
                 {/* Загрузка при пагинации */}

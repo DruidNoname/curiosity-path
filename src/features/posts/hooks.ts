@@ -1,24 +1,18 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import {PER_PAGE, POSTS_URL} from "./const";
-import {fetchPostsByTag} from "@/lib/posts/api";
+import {fetchPostsByTag} from "@/features/posts/api";
+import {WP_REST_API_Post} from "wp-types";
 
-export interface PostsCountResponse {
-    count: number;
-    status?: string;
-}
+interface PostsResponse {
+    posts: WP_REST_API_Post[],
+    total: number,
+    totalPages: number,
+    currentPage: number,
+    perPage: number
+};
 
-export interface PostsCountError {
-    message: string;
-    code?: string;
-    data?: {
-        status: number;
-    };
-}
-
-
-// Хук для получения всех постов
-export function usePosts(page = 1, perPage = 10) {
-    return useQuery({
+export const usePosts = (page  = 1, perPage  = PER_PAGE) => {
+    return useQuery<PostsResponse>({
         queryKey: ['posts', page, perPage],
         queryFn: async () => {
             const res = await fetch(`${POSTS_URL}?page=${page}&per_page=${perPage}`);
@@ -40,9 +34,8 @@ export function usePosts(page = 1, perPage = 10) {
     });
 }
 
-// Хук для получения конкретного поста по slug
-export function usePost(slug: string, options = {}) {
-    return useQuery({
+export const usePost = (slug: string, options = {}) => {
+    return useQuery<WP_REST_API_Post>({
         queryKey: ['posts', slug],
         queryFn: async () => {
             const res = await fetch(`${POSTS_URL}?slug=${slug}`);
@@ -56,21 +49,8 @@ export function usePost(slug: string, options = {}) {
     });
 }
 
-// Хук для получения поста по ID
-export function usePostById(id: number, options = {}) {
-    return useQuery({
-        queryKey: ['posts', id],
-        queryFn: async () => {
-            const res = await fetch(`${POSTS_URL}/${id}`);
-            if (!res.ok) throw new Error('Ошибка при получении поста');
-            return res.json();
-        },
-        enabled: !!id,
-        ...options,
-    });
-}
 
-export function usePostsByTag(tagSlug: string, page: number = 1, perPage: number = PER_PAGE) {
+export const usePostsByTag = (tagSlug: string, page = 1, perPage = PER_PAGE) => {
     return useQuery({
         queryKey: ['posts', 'tag', tagSlug, page, perPage],
         queryFn: () => fetchPostsByTag(tagSlug, page, perPage),
