@@ -90,20 +90,15 @@ const TagPage: React.FC = () => {
                             {tagData?.description}
                         </Typography>
                     )}
-
-                    <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+                    {tagData?.count ?
                         <Typography variant="body2" color="text.secondary">
-                            ID: {tagData?.id || '—'}
+                            Постов: {tagData.count}
                         </Typography>
+                        :
                         <Typography variant="body2" color="text.secondary">
                             Постов: {total}
                         </Typography>
-                        {tagData?.count && (
-                            <Typography variant="body2" color="text.secondary">
-                                Всего в базе: {tagData.count}
-                            </Typography>
-                        )}
-                    </Box>
+                    }
                 </Box>
 
                 {/* Виджет с информацией */}
