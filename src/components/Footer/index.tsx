@@ -14,8 +14,8 @@ const Footer: React.FC<Props> = ({ copyright }) => {
     return(
         <Paper
             component="footer"
+            variant={'contrast'}
             square
-            variant="outlined"
             sx={{
                 py: 2,
             }}

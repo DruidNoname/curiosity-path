@@ -1,4 +1,4 @@
-export const lightThemeColors = {
+export const colors = {
     primary: {
         main: '#2d7a9c',
         light: '#4da0c0',
@@ -14,6 +14,7 @@ export const lightThemeColors = {
     background: {
         default: '#f0f7fa',
         paper: '#ffffff',
+        contrast: '#4da0c0',
     },
     text: {
         primary: '#1a2830',

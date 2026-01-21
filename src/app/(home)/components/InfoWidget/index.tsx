@@ -13,7 +13,10 @@ const InfoWidget: React.FC<Props> = ( { count, isLoading, isError }) => {
 
     return (
         <ErrorBoundary componentName={'InfoWidget'}>
-            <Card className={styles.InfoWidget}>
+            <Card
+                className={styles.InfoWidget}
+                variant={'contrast'}
+            >
                 <Box sx={{typography: 'body1'}}>
                     <Typography
                         variant="h4"
