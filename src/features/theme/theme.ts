@@ -789,8 +789,7 @@ export const deadSpaceLightTheme = createTheme({
                     props: { variant: 'contrast' },
                     style: {
                         // Переопределяем только цвета для светлой темы
-                        backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.8)', // Более плотный фон
-
+                        backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.5)', // Более плотный фон
                         // Более яркие тени для светлой темы
                         boxShadow: `
               0 4px 16px rgba(var(--color-primary-main-rgb), 0.15),
@@ -809,6 +808,22 @@ export const deadSpaceLightTheme = createTheme({
                 transparent
               )`,
                         },
+
+                        '&::after': {
+                            // ВСЕ фильтры в одной строке через пробел
+                            filter: `
+                        brightness(0.3) 
+                        invert(1)
+                        drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3))
+                        drop-shadow(0 6px 12px rgba(var(--color-primary-dark-rgb, 122, 208, 240), 0.3))
+                        drop-shadow(0 0 15px rgba(var(--color-primary-dark-rgb, 160, 224, 255), 0.2))
+                    `
+                        },
+
+                        '& .MuiTypography-root': {
+                            color: 'var(--color-primary-contrast)',
+                        },
+
                     },
                 },
             ]
@@ -829,7 +844,7 @@ export const deadSpaceLightTheme = createTheme({
                     color: lightThemeColors.text.secondary,
                     '&:hover': {
                         backgroundColor: alpha(lightThemeColors.text.secondary, 0.1),
-                        color: lightThemeColors.primary.dark,
+                        color: lightThemeColors.primary.contrastText
                     },
                 },
             },
