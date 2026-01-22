@@ -1,17 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from 'next/navigation';
-import { WP_REST_API_Post, WP_REST_API_Tag } from 'wp-types';
+import { WP_REST_API_Post } from 'wp-types';
 import PostPreview from "@/components/PostPreview";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Box, Divider, Typography, Chip, Breadcrumbs } from "@mui/material";
 import { usePostsByTag } from "@/features/posts/hooks";
-import InfoWidget from "@/app/(home)/components/InfoWidget";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
-import Link from 'next/link';
-import HomeIcon from '@mui/icons-material/Home';
 import TagIcon from '@mui/icons-material/Tag';
 import { PER_PAGE } from "@/features/posts/const";
 import {useTag} from "@/features/tags/hooks";

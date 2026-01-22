@@ -1,4 +1,4 @@
-export const darkThemeColors = {
+export const colors = {
     primary: {
         main: '#7ad0f0',
         light: '#a0e0ff',

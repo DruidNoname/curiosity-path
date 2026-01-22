@@ -1,19 +1,8 @@
 import { createTheme, alpha } from '@mui/material/styles';
 import { deadSpaceBaseTheme } from "./dsBaseTheme";
-import { darkThemeColors } from "./darkThemeColors";
-import { lightThemeColors } from "./lightThemeColors";
-declare module '@mui/material/styles' {
-    interface Palette {
-        custom?: {
-            customColor?: string;
-        };
-    }
-    interface PaletteOptions {
-        custom?: {
-            customColor?: string;
-        };
-    }
-}
+import { colors as darkThemeColors } from "./DarkTheme/Colors";
+import { colors as lightThemeColors } from "./LightTheme/Colors";
+
 
 const deadSpaceBlueShadows = [
     'none',
@@ -65,41 +54,6 @@ export const deadSpaceTheme = createTheme({
                     // Дополнительные переменные для теней
                     '--shadow-widget': '0 4px 16px rgba(var(--color-primary-main-rgb), 0.2)',
                     '--shadow-widget-hover': '0 6px 20px rgba(var(--color-primary-main-rgb), 0.3)',
-                },
-                ':root.theme-light': {
-                    // Обновляем переменные для светлой темы
-                    '--color-primary-main': lightThemeColors.primary.main,
-                    '--color-primary-light': lightThemeColors.primary.light,
-                    '--color-primary-dark': lightThemeColors.primary.dark,
-                    '--color-primary-contrast': lightThemeColors.primary.contrastText,
-                    '--color-secondary-main': lightThemeColors.secondary.main,
-                    '--color-secondary-light': lightThemeColors.secondary.light,
-                    '--color-secondary-dark': lightThemeColors.secondary.dark,
-                    '--color-secondary-contrast': lightThemeColors.secondary.contrastText,
-                    '--color-background-default': lightThemeColors.background.default,
-                    '--color-background-paper': lightThemeColors.background.paper,
-                    '--color-text-primary': lightThemeColors.text.primary,
-                    '--color-text-secondary': lightThemeColors.text.secondary,
-                    '--color-text-disabled': lightThemeColors.text.disabled,
-                    '--color-action-active': lightThemeColors.action.active,
-                    '--color-action-disabled': lightThemeColors.action.disabled,
-
-                    // RGB переменные для светлой темы
-                    '--color-primary-main-rgb': '45, 122, 156',
-                    '--color-primary-light-rgb': '77, 160, 192',
-                    '--color-primary-dark-rgb': '30, 92, 122',
-                    '--color-secondary-main-rgb': '204, 112, 52',
-                    '--color-secondary-light-rgb': '255, 140, 66',
-                    '--color-secondary-dark-rgb': '168, 88, 42',
-                    '--color-background-default-rgb': '240, 247, 250',
-                    '--color-background-paper-rgb': '255, 255, 255',
-                    '--color-text-primary-rgb': '26, 40, 48',
-                    '--color-text-secondary-rgb': '45, 122, 156',
-                    '--color-text-disabled-rgb': '136, 153, 170',
-
-                    // Тени для светлой темы
-                    '--shadow-widget': '0 4px 16px rgba(var(--color-primary-main-rgb), 0.15)',
-                    '--shadow-widget-hover': '0 6px 20px rgba(var(--color-primary-main-rgb), 0.25)',
                 },
                 body: {
                     backgroundColor: darkThemeColors.background.default,
@@ -248,6 +202,40 @@ export const deadSpaceTheme = createTheme({
                     boxShadow: `0 8px 24px ${alpha(darkThemeColors.primary.main, 0.25)}`,
                 },
             },
+        },
+        MuiCard: {
+            variants: [
+                {
+                    props: { variant: 'contrast' },
+                    style: ({ theme }) => ({
+                        backgroundColor: '#1a2830',
+                        backgroundImage: 'linear-gradient(rgba(255 255 255 / 0.07), rgba(255 255 255 / 0.07))',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(var(--color-primary-main-rgb), 0.4)',
+                        boxShadow: `var(--shadow-widget), inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.1)`,
+
+                        position: 'relative',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: '2px',
+                            background: `linear-gradient(90deg, transparent, var(--color-primary-main), transparent)`,
+                        },
+                        '& .MuiTypography-root': {
+                            color: 'var(--color-text-primary)',
+                        },
+                        '& .MuiTypography-h5': {
+                            color: 'var(--color-primary-light)',
+                        },
+                        '& .MuiTypography-body2': {
+                            color: 'var(--color-text-secondary)',
+                        },
+                    }),
+                }
+            ],
         },
         MuiInputBase: {
             styleOverrides: {
@@ -602,6 +590,7 @@ export const deadSpaceTheme = createTheme({
 
 // Светлая версия темы
 export const deadSpaceLightTheme = createTheme({
+    ...deadSpaceBaseTheme,
     ...deadSpaceTheme,
     palette: {
         ...deadSpaceTheme.palette,
@@ -677,8 +666,8 @@ export const deadSpaceLightTheme = createTheme({
         ...deadSpaceTheme.components,
         MuiCssBaseline: {
             styleOverrides: {
-                ':root.theme-light': {
-                    // CSS переменные для светлой темы
+                ':root': {
+                    // Обновляем переменные для светлой темы
                     '--color-primary-main': lightThemeColors.primary.main,
                     '--color-primary-light': lightThemeColors.primary.light,
                     '--color-primary-dark': lightThemeColors.primary.dark,
@@ -694,6 +683,23 @@ export const deadSpaceLightTheme = createTheme({
                     '--color-text-disabled': lightThemeColors.text.disabled,
                     '--color-action-active': lightThemeColors.action.active,
                     '--color-action-disabled': lightThemeColors.action.disabled,
+
+                    // RGB переменные для светлой темы
+                    '--color-primary-main-rgb': '45, 122, 156',
+                    '--color-primary-light-rgb': '77, 160, 192',
+                    '--color-primary-dark-rgb': '30, 92, 122',
+                    '--color-secondary-main-rgb': '204, 112, 52',
+                    '--color-secondary-light-rgb': '255, 140, 66',
+                    '--color-secondary-dark-rgb': '168, 88, 42',
+                    '--color-background-default-rgb': '240, 247, 250',
+                    '--color-background-paper-rgb': '255, 255, 255',
+                    '--color-text-primary-rgb': '26, 40, 48',
+                    '--color-text-secondary-rgb': '45, 122, 156',
+                    '--color-text-disabled-rgb': '136, 153, 170',
+
+                    // Тени для светлой темы
+                    '--shadow-widget': '0 4px 16px rgba(var(--color-primary-main-rgb), 0.15)',
+                    '--shadow-widget-hover': '0 6px 20px rgba(var(--color-primary-main-rgb), 0.25)'
                 },
                 body: {
                     backgroundColor: lightThemeColors.background.default,
@@ -717,15 +723,47 @@ export const deadSpaceLightTheme = createTheme({
         },
         MuiAppBar: {
             styleOverrides: {
-                root: {
-                    backgroundColor: lightThemeColors.background.paper,
-                    color: lightThemeColors.text.primary,
-                    borderBottom: `1px solid ${alpha(lightThemeColors.primary.light, 0.2)}`,
+                root: ({ theme }) => ({
+                    backgroundColor: theme.palette.primary.light,
+                    color: theme.palette.primary.contrastText,
+                    borderBottom: `1px solid ${alpha(theme.palette.primary.light, 0.3)}`,
                     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-                },
+
+                    '& .MuiIconButton-root': {
+                        color: theme.palette.primary.contrastText,
+                        '&:hover': {
+                            backgroundColor: alpha(theme.palette.primary.contrastText, 0.1),
+                        },
+                    },
+
+                    '& .MuiTypography-root': {
+                        color: theme.palette.primary.contrastText,
+                    },
+                }),
             },
         },
         MuiPaper: {
+            variants: [
+                {
+                    props: { variant: 'contrast' },
+                    style: ({ theme }) => ({
+                        backgroundColor: theme.palette.primary.light,
+                        color: theme.palette.primary.contrastText || '#ffffff',
+                        border: `1px solid ${theme.palette.primary.main}`,
+
+                        '& .MuiTypography-root': {
+                            color: 'inherit',
+                        },
+                        '& .MuiButton-contained': {
+                            backgroundColor: alpha('#ffffff', 0.2),
+                            color: '#ffffff',
+                            '&:hover': {
+                                backgroundColor: alpha('#ffffff', 0.3),
+                            },
+                        },
+                    }),
+                }
+            ],
             styleOverrides: {
                 root: {
                     backgroundColor: lightThemeColors.background.paper,
@@ -741,6 +779,54 @@ export const deadSpaceLightTheme = createTheme({
                     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
                 },
             },
+        },
+        MuiCard: {
+            ...deadSpaceTheme.components?.MuiCard,
+            variants: [
+                ...(deadSpaceTheme.components?.MuiCard?.variants || []),
+                // Переопределение для светлой темы
+                {
+                    props: { variant: 'contrast' },
+                    style: {
+                        // Переопределяем только цвета для светлой темы
+                        backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.5)', // Более плотный фон
+                        // Более яркие тени для светлой темы
+                        boxShadow: `
+              0 4px 16px rgba(var(--color-primary-main-rgb), 0.15),
+              inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.08)
+            `,
+
+                        // Граница потоньше
+                        border: '1px solid rgba(var(--color-primary-main-rgb), 0.2)',
+
+                        // Верхняя линия ярче
+                        '&::before': {
+                            background: `linear-gradient(
+                90deg,
+                transparent,
+                var(--color-primary-dark), // Более темный цвет для контраста
+                transparent
+              )`,
+                        },
+
+                        '&::after': {
+                            // ВСЕ фильтры в одной строке через пробел
+                            filter: `
+                        brightness(0.3) 
+                        invert(1)
+                        drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3))
+                        drop-shadow(0 6px 12px rgba(var(--color-primary-dark-rgb, 122, 208, 240), 0.3))
+                        drop-shadow(0 0 15px rgba(var(--color-primary-dark-rgb, 160, 224, 255), 0.2))
+                    `
+                        },
+
+                        '& .MuiTypography-root': {
+                            color: 'var(--color-primary-contrast)',
+                        },
+
+                    },
+                },
+            ]
         },
         MuiLink: {
             styleOverrides: {
@@ -758,7 +844,7 @@ export const deadSpaceLightTheme = createTheme({
                     color: lightThemeColors.text.secondary,
                     '&:hover': {
                         backgroundColor: alpha(lightThemeColors.text.secondary, 0.1),
-                        color: lightThemeColors.primary.dark,
+                        color: lightThemeColors.primary.contrastText
                     },
                 },
             },

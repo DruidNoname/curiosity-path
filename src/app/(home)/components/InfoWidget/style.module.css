@@ -1,13 +1,6 @@
 .InfoWidget {
     padding: 30px 50px;
     margin-bottom: 40px;
-    border: 1px solid rgba(var(--color-primary-main-rgb), 0.4);
-        box-shadow:
-            var(--shadow-widget),
-            inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.1);
-
-    background-color: rgba(var(--color-background-paper-rgb), 0.7);
-    backdrop-filter: blur(20px);
     text-align: right;
     display: flex;
     flex-direction: column;
@@ -15,7 +8,6 @@
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
     min-height: 315px;
 }
 
@@ -26,12 +18,6 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(
-            90deg,
-            transparent,
-            var(--color-primary-main),
-            transparent
-    );
 }
 
 .InfoWidget::after {

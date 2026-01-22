@@ -4,8 +4,8 @@ export const urls = {
     // В разработке
     dev: {
         site: 'http://localhost:3000',
-        wp: 'http://localhost:8000',
-        wpApi: 'http://localhost:8000/wp-json/wp/v2',
+        wp: 'https://suffer.curiosity-path.ru',
+        wpApi: 'https://suffer.curiosity-path.ru/wp-json/wp/v2',
         wpGraphql: 'http://localhost:8000/graphql',
     },
 
