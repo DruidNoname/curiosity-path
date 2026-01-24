@@ -1,4 +1,4 @@
-export { ThemeProvider } from './provider';
-export { useThemeContext } from './context';
+export { ThemeProvider } from './context/provider';
+export { useThemeContext } from './context/context';
 export { darkTheme, lightTheme } from './theme';
-export type { ThemeContextType } from './types';
+export type { ThemeContextType } from './model/types';
