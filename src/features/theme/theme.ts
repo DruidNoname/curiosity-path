@@ -1,7 +1,8 @@
 import { createTheme, alpha } from '@mui/material/styles';
-import { deadSpaceBaseTheme } from "./dsBaseTheme";
+import { deadSpaceBaseTheme } from "./BaseTheme/dsBaseTheme";
 import { colors as darkThemeColors } from "./DarkTheme/Colors";
 import { colors as lightThemeColors } from "./LightTheme/Colors";
+import {generateRGBfromHEX} from "@/features/theme/model/utils";
 
 
 const deadSpaceBlueShadows = [
@@ -39,17 +40,20 @@ export const deadSpaceTheme = createTheme({
                     '--color-action-disabled': darkThemeColors.action.disabled,
 
                     // Добавляем RGB переменные для использования с rgba()
-                    '--color-primary-main-rgb': '122, 208, 240',
-                    '--color-primary-light-rgb': '160, 224, 255',
-                    '--color-primary-dark-rgb': '77, 160, 192',
-                    '--color-secondary-main-rgb': '255, 140, 66',
-                    '--color-secondary-light-rgb': '255, 176, 116',
-                    '--color-secondary-dark-rgb': '204, 112, 52',
-                    '--color-background-default-rgb': '10, 20, 25',
-                    '--color-background-paper-rgb': '26, 40, 48',
-                    '--color-text-primary-rgb': '230, 247, 255',
-                    '--color-text-secondary-rgb': '160, 224, 255',
-                    '--color-text-disabled-rgb': '96, 112, 128',
+                    '--color-primary-main-rgb': generateRGBfromHEX(darkThemeColors.primary.main),
+                    '--color-primary-light-rgb': generateRGBfromHEX(darkThemeColors.primary.light),
+                    '--color-primary-dark-rgb': generateRGBfromHEX(darkThemeColors.primary.dark),
+                    '--color-secondary-main-rgb': generateRGBfromHEX(darkThemeColors.secondary.main),
+                    '--color-secondary-light-rgb': generateRGBfromHEX(darkThemeColors.secondary.light),
+                    '--color-secondary-dark-rgb': generateRGBfromHEX(darkThemeColors.secondary.dark),
+                    '--color-background-default-rgb': generateRGBfromHEX(darkThemeColors.background.default),
+                    '--color-background-paper-rgb': generateRGBfromHEX(darkThemeColors.background.paper),
+                    '--color-text-primary-rgb': generateRGBfromHEX(darkThemeColors.text.primary),
+                    '--color-text-secondary-rgb': generateRGBfromHEX(darkThemeColors.text.secondary),
+                    '--color-text-disabled-rgb': generateRGBfromHEX(darkThemeColors.text.disabled),
+                    '--color-action-active-rgb': generateRGBfromHEX(darkThemeColors.action.active),
+                    '--color-action-disabled-rgb': generateRGBfromHEX(darkThemeColors.action.disabled),
+
 
                     // Дополнительные переменные для теней
                     '--shadow-widget': '0 4px 16px rgba(var(--color-primary-main-rgb), 0.2)',
@@ -685,17 +689,19 @@ export const deadSpaceLightTheme = createTheme({
                     '--color-action-disabled': lightThemeColors.action.disabled,
 
                     // RGB переменные для светлой темы
-                    '--color-primary-main-rgb': '45, 122, 156',
-                    '--color-primary-light-rgb': '77, 160, 192',
-                    '--color-primary-dark-rgb': '30, 92, 122',
-                    '--color-secondary-main-rgb': '204, 112, 52',
-                    '--color-secondary-light-rgb': '255, 140, 66',
-                    '--color-secondary-dark-rgb': '168, 88, 42',
-                    '--color-background-default-rgb': '240, 247, 250',
-                    '--color-background-paper-rgb': '255, 255, 255',
-                    '--color-text-primary-rgb': '26, 40, 48',
-                    '--color-text-secondary-rgb': '45, 122, 156',
-                    '--color-text-disabled-rgb': '136, 153, 170',
+                    '--color-primary-main-rgb': generateRGBfromHEX(lightThemeColors.primary.main),
+                    '--color-primary-light-rgb': generateRGBfromHEX(lightThemeColors.primary.light),
+                    '--color-primary-dark-rgb': generateRGBfromHEX(lightThemeColors.primary.dark),
+                    '--color-secondary-main-rgb': generateRGBfromHEX(lightThemeColors.secondary.main),
+                    '--color-secondary-light-rgb': generateRGBfromHEX(lightThemeColors.secondary.light),
+                    '--color-secondary-dark-rgb': generateRGBfromHEX(lightThemeColors.secondary.dark),
+                    '--color-background-default-rgb': generateRGBfromHEX(lightThemeColors.background.default),
+                    '--color-background-paper-rgb': generateRGBfromHEX(lightThemeColors.background.paper),
+                    '--color-text-primary-rgb': generateRGBfromHEX(lightThemeColors.text.primary),
+                    '--color-text-secondary-rgb': generateRGBfromHEX(lightThemeColors.text.secondary),
+                    '--color-text-disabled-rgb': generateRGBfromHEX(lightThemeColors.text.disabled),
+                    '--color-action-active-rgb': generateRGBfromHEX(lightThemeColors.action.active),
+                    '--color-action-disabled-rgb': generateRGBfromHEX(lightThemeColors.action.disabled),
 
                     // Тени для светлой темы
                     '--shadow-widget': '0 4px 16px rgba(var(--color-primary-main-rgb), 0.15)',
@@ -784,22 +790,18 @@ export const deadSpaceLightTheme = createTheme({
             ...deadSpaceTheme.components?.MuiCard,
             variants: [
                 ...(deadSpaceTheme.components?.MuiCard?.variants || []),
-                // Переопределение для светлой темы
                 {
                     props: { variant: 'contrast' },
                     style: {
-                        // Переопределяем только цвета для светлой темы
-                        backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.5)', // Более плотный фон
-                        // Более яркие тени для светлой темы
+
+                        backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.5)',
                         boxShadow: `
               0 4px 16px rgba(var(--color-primary-main-rgb), 0.15),
               inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.08)
             `,
 
-                        // Граница потоньше
                         border: '1px solid rgba(var(--color-primary-main-rgb), 0.2)',
 
-                        // Верхняя линия ярче
                         '&::before': {
                             background: `linear-gradient(
                 90deg,
@@ -810,7 +812,6 @@ export const deadSpaceLightTheme = createTheme({
                         },
 
                         '&::after': {
-                            // ВСЕ фильтры в одной строке через пробел
                             filter: `
                         brightness(0.3) 
                         invert(1)

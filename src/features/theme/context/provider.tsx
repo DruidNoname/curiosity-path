@@ -3,8 +3,8 @@
 import React, { useState, useCallback, useMemo, ReactNode } from 'react';
 import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
 import { ThemeContext } from './context';
-import { darkTheme, lightTheme } from './index';
-import { ThemeContextType } from "@/features/theme/types";
+import { darkTheme, lightTheme } from '../index';
+import { ThemeContextType } from "@/features/theme/model/types";
 
 interface ThemeProviderProps {
     children: ReactNode;
