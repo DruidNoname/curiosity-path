@@ -16,7 +16,97 @@ const deadSpaceBlueShadows = [
 ] as const;
 
 export const deadSpaceTheme = createTheme({
-    ...deadSpaceBaseTheme,
+    palette: {
+        mode: 'dark',
+        primary: {
+            main: darkThemeColors.primary.main,
+            light: darkThemeColors.primary.light,
+            dark: darkThemeColors.primary.dark,
+            contrastText: darkThemeColors.primary.contrastText,
+        },
+        secondary: {
+            main: darkThemeColors.secondary.main,
+            light: darkThemeColors.secondary.light,
+            dark: darkThemeColors.secondary.dark,
+            contrastText: darkThemeColors.secondary.contrastText,
+        },
+        info: {
+            main: darkThemeColors.info.main,
+            light: darkThemeColors.info.light,
+            dark: darkThemeColors.info.dark,
+        },
+        warning: {
+            main: darkThemeColors.warning.main,
+            light: darkThemeColors.warning.light,
+            dark: darkThemeColors.warning.dark,
+        },
+        error: {
+            main: darkThemeColors.error.main,
+            light: darkThemeColors.error.light,
+            dark: darkThemeColors.error.dark,
+        },
+        success: {
+            main: darkThemeColors.success.main,
+            light: darkThemeColors.success.light,
+            dark: darkThemeColors.success.dark,
+        },
+        background: {
+            default: darkThemeColors.background.default,
+            paper: darkThemeColors.background.paper,
+        },
+        text: {
+            primary: darkThemeColors.text.primary,
+            secondary: darkThemeColors.text.secondary,
+            disabled: darkThemeColors.text.disabled,
+        },
+        divider: alpha(darkThemeColors.primary.main, 0.2),
+        action: {
+            active: darkThemeColors.action.active,
+            hover: alpha(darkThemeColors.primary.main, 0.08),
+            hoverOpacity: 0.08,
+            selected: alpha(darkThemeColors.primary.main, 0.16),
+            selectedOpacity: 0.16,
+            disabled: darkThemeColors.action.disabled,
+            disabledBackground: alpha(darkThemeColors.action.disabled, 0.12),
+            disabledOpacity: 0.38,
+            focus: alpha(darkThemeColors.primary.main, 0.12),
+            focusOpacity: 0.12,
+            activatedOpacity: 0.24,
+        },
+    },
+    typography: {
+        ...deadSpaceBaseTheme.typography,
+        h1: {
+            color: darkThemeColors.primary.light,
+        },
+        h2: {
+            color: darkThemeColors.primary.light,
+        },
+        h3: {
+            color: darkThemeColors.primary.main,
+        },
+        h4: {
+            color: darkThemeColors.primary.main,
+        },
+        h5: {
+            color: darkThemeColors.text.primary,
+        },
+        h6: {
+            color: darkThemeColors.primary.light,
+        },
+        body1: {
+            color: darkThemeColors.text.primary,
+        },
+        body2: {
+            color: darkThemeColors.primary.light,
+        },
+        caption: {
+            color: '#88aacc',
+        },
+        overline: {
+            color: darkThemeColors.primary.main,
+        },
+    },
     shadows: deadSpaceBlueShadows as any,
     components: {
         MuiCssBaseline: {
@@ -212,9 +302,8 @@ export const deadSpaceTheme = createTheme({
                 {
                     props: { variant: 'contrast' },
                     style: ({ theme }) => ({
-                        backgroundColor: '#1a2830',
+                        backgroundColor: 'var(--color-background-paper)',
                         backgroundImage: 'linear-gradient(rgba(255 255 255 / 0.07), rgba(255 255 255 / 0.07))',
-                        backdropFilter: 'blur(20px)',
                         border: '1px solid rgba(var(--color-primary-main-rgb), 0.4)',
                         boxShadow: `var(--shadow-widget), inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.1)`,
 
@@ -594,10 +683,7 @@ export const deadSpaceTheme = createTheme({
 
 // Светлая версия темы
 export const deadSpaceLightTheme = createTheme({
-    ...deadSpaceBaseTheme,
-    ...deadSpaceTheme,
     palette: {
-        ...deadSpaceTheme.palette,
         mode: 'light',
         primary: {
             main: lightThemeColors.primary.main,
@@ -671,6 +757,7 @@ export const deadSpaceLightTheme = createTheme({
         MuiCssBaseline: {
             styleOverrides: {
                 ':root': {
+                    colorScheme: 'light',
                     // Обновляем переменные для светлой темы
                     '--color-primary-main': lightThemeColors.primary.main,
                     '--color-primary-light': lightThemeColors.primary.light,
@@ -796,33 +883,42 @@ export const deadSpaceLightTheme = createTheme({
 
                         backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.5)',
                         boxShadow: `
-              0 4px 16px rgba(var(--color-primary-main-rgb), 0.15),
-              inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.08)
+              0 4px 16px rgba(var(--color-primary-dark-rgb), 0.3),
+              inset 0 0 0 2px rgba(var(--color-primary-light-rgb), 0.1)
             `,
+
 
                         border: '1px solid rgba(var(--color-primary-main-rgb), 0.2)',
 
                         '&::before': {
                             background: `linear-gradient(
                 90deg,
-                transparent,
+                rgba(var(--color-text-primary-rgb), 0.3),
                 var(--color-primary-dark), // Более темный цвет для контраста
-                transparent
+                rgba(var(--color-primary-dark-rgb), 0.3)
               )`,
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: '4px',
                         },
 
                         '&::after': {
                             filter: `
-                        brightness(0.3) 
-                        invert(1)
                         drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3))
-                        drop-shadow(0 6px 12px rgba(var(--color-primary-dark-rgb, 122, 208, 240), 0.3))
-                        drop-shadow(0 0 15px rgba(var(--color-primary-dark-rgb, 160, 224, 255), 0.2))
+                        drop-shadow(0 6px 12px rgba(var(--color-primary-dark-rgb, 122, 208, 240), 0.5))
+                        drop-shadow(0 0 15px rgba(var(--color-primary-dark-rgb, 160, 224, 255), 0.4))
                     `
                         },
 
                         '& .MuiTypography-root': {
-                            color: 'var(--color-primary-contrast)',
+                            color: 'var(--color-primary-text)',
+                        },
+
+                        '& .MuiTypography-h5': {
+                            color: 'var(--color-primary-dark)',
                         },
 
                     },
