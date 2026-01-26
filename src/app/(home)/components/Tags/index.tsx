@@ -9,12 +9,11 @@ import { WP_REST_API_Tag } from 'wp-types';
 const Tags: React.FC = () => {
     const { data, isLoading, isError, error } = useTags();
 
-    const tagElements = data?.tags?.map((tag: WP_REST_API_Tag, index: number, array: WP_REST_API_Tag[]) => (
+    const tagElements = data?.tags?.map((tag: WP_REST_API_Tag) => (
         <span key={tag.id}>
             <Link href={`tag/${tag.slug}` || tag.link}>
                 {tag.name}
             </Link>
-            {index < array.length - 1 && ', '}
         </span>
     ));
 
@@ -26,7 +25,7 @@ const Tags: React.FC = () => {
                 `Ошибка загрузки тегов: ${error?.message}`
                 ) : (
                 <>
-                    {`Доступные теги (${data?.count || 0}): `} { tagElements }
+                    {`Доступные теги (${data?.count || 0}): `} { tagElements?.join(', ') }
                 </>
             )}
         </Box>

@@ -34,3 +34,16 @@ export const useTag = (slug: string) => {
         staleTime: 1000 * 60 * 5
     });
 };
+
+export const useTagById = (id: number) => {
+    return useQuery<WP_REST_API_Tag | null>({
+        queryKey: ['tag', 'id', id],
+        queryFn: async () => {
+            const res = await fetch(`${TAGS_URL}/${id}`);
+            if (!res.ok) throw new Error('Ошибка при получении данных о теге');
+            return await res.json();
+        },
+        enabled: !!id,
+        staleTime: 1000 * 60 * 5
+    });
+};

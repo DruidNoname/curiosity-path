@@ -7,7 +7,7 @@ import { usePost } from "@/features/posts/hooks";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter } from 'next/navigation';
 import Skeleton from "@/ui/Skeleton";
-import { getCleanEntry} from "@/features/posts/utils";
+import { getCleanEntry} from "@/helpers/utils";
 
 interface PostProps {
     params: Promise<{ slug: string }>;
