@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^22.20.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9",
@@ -43,6 +43,6 @@
     "wp-types": "^4.69.0"
   },
   "engines": {
-    "node": ">=18.17.0"
+    "node": "^22.20.0"
   }
 }
