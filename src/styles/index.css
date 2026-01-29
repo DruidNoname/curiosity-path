@@ -22,9 +22,6 @@ li {
 }
 
 body {
-  font-family: "Manrope", sans-serif;
-  color: var(--text-primary-color);
-  margin: 0;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -74,6 +71,10 @@ img {
 .lonely-image__wrapper {
   border: 3px solid rgba(77, 160, 192, 0.2);
   border-radius: 6px;
+  display: block;
+  @media (min-width: 600px) {
+    display: inline;
+  }
 }
 
 .wp-caption {
@@ -98,14 +99,14 @@ img {
 
 
 .alignleft {
-  @media (min-width: 500px) {
+  @media (min-width: 650px) {
     float: left;
     margin-right: 24px;
   }
 }
 
 .alignright {
-  @media (min-width: 500px) {
+  @media (min-width: 650px) {
     float: right;
     margin-left: 24px;
   }
@@ -114,6 +115,15 @@ img {
 .aentry-post__figure,
 .aentry-post__img--text-width {
   margin-bottom: 16px;
+}
+
+.aentry-post__img--text-width {
+  margin-bottom: 16px;
+
+  img {
+    border: 3px solid rgba(77, 160, 192, 0.2);
+    border-radius: 6px;
+  }
 }
 
 

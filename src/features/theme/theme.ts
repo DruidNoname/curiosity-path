@@ -166,9 +166,6 @@ export const deadSpaceLightTheme = createTheme(
             },
             divider: alpha(lightThemeColors.primary.main, 0.2),
         },
-        typography: {
-            ...deadSpaceBaseTheme.typography,
-        },
         components: {
             MuiCssBaseline: {
                 styleOverrides: {
@@ -195,6 +192,7 @@ export const deadSpaceLightTheme = createTheme(
                         '--color-primary-main-rgb': generateRGBfromHEX(lightThemeColors.primary.main),
                         '--color-primary-light-rgb': generateRGBfromHEX(lightThemeColors.primary.light),
                         '--color-primary-dark-rgb': generateRGBfromHEX(lightThemeColors.primary.dark),
+                        '--color-primary-contrast-rgb': generateRGBfromHEX(lightThemeColors.primary.contrastText),
                         '--color-secondary-main-rgb': generateRGBfromHEX(lightThemeColors.secondary.main),
                         '--color-secondary-light-rgb': generateRGBfromHEX(lightThemeColors.secondary.light),
                         '--color-secondary-dark-rgb': generateRGBfromHEX(lightThemeColors.secondary.dark),
@@ -211,29 +209,55 @@ export const deadSpaceLightTheme = createTheme(
                         '--shadow-widget-hover': '0 6px 20px rgba(var(--color-primary-main-rgb), 0.25)'
                     },
                     body: {
-                        backgroundColor: lightThemeColors.background.default,
                         backgroundImage: 'none',
-                        scrollbarColor: `${alpha(lightThemeColors.primary.main, 0.3)} ${lightThemeColors.background.default}`,
                         '&::-webkit-scrollbar-track': {
-                            backgroundColor: alpha(lightThemeColors.primary.light, 0.1),
+                            backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.1)',
                         },
-                        '&::-webkit-scrollbar-thumb': {
-                            backgroundColor: alpha(lightThemeColors.primary.main, 0.3),
+                    },
+                },
+            },
+            MuiButton: {
+                variants: [
+                    {
+                        props: { variant: 'contained', color: 'primary' },
+                        style: {
+                            background: 'linear-gradient(135deg, var(--color-primary-main) 0%, var(--color-primary-dark) 100%)',
+                            color: 'var(--color-primary-contrast)',
                             '&:hover': {
-                                backgroundColor: alpha(lightThemeColors.primary.main, 0.5),
+                                background: 'linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary-main) 100%)',
                             },
                         },
                     },
-                    '::selection': {
-                        backgroundColor: alpha(lightThemeColors.primary.main, 0.2),
-                        color: lightThemeColors.text.primary,
+                    {
+                        props: { variant: 'outlined', color: 'primary' },
+                        style: {
+                            border: '1px solid rgba(var(--color-primary-main-rgb), 0.3)',
+                            color: 'var(--color-primary-main)',
+                            '&:hover': {
+                                backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.05)',
+                                border: '1px solid rgba(var(--color-primary-main-rgb), 0.5)',
+                            },
+                        },
+                    },
+                ],
+            },
+            MuiIconButton: {
+                styleOverrides: {
+                    root: {
+                        color: 'var(--color-text-secondary)',
+                        '&:hover': {
+                            backgroundColor: 'rgba(var(--color-text-secondary-rgb), 0.1)',
+                            color: 'var(--color-primary-contrast)',
+                        },
                     },
                 },
             },
             MuiAppBar: {
                 styleOverrides: {
                     root: {
-                        backgroundColor: 'var(--color-primary-light)',
+                        backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.7)',
+                        color: 'var(--color-primary-contrast)',
+                        borderBottom: '1px solid rgba(var(--color-primary-light-rgb), 0.3)',
 
                         '& .MuiIconButton-root': {
                             color: 'var(--color-primary-contrast)',
@@ -268,18 +292,18 @@ export const deadSpaceLightTheme = createTheme(
                     {
                         props: { variant: 'contrast' },
                         style: {
-                            backgroundColor: 'var(--color-primary-light)',
-                            color: 'var(--color-primary-contrast, #ffffff)',
+                            backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.7)',
+                            color: 'var(--color-primary-contrast, var(--color-text-primary, #ffffff))',
                             border: '1px solid var(--color-primary-main)',
 
                             '& .MuiTypography-root': {
                                 color: 'inherit',
                             },
                             '& .MuiButton-contained': {
-                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                color: '#ffffff',
+                                backgroundColor: 'rgba(var(--color-primary-contrast-rgb, 255 255 255), 0.2)',
+                                color: 'var(--color-primary-contrast, #ffffff)',
                                 '&:hover': {
-                                    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                                    backgroundColor: 'rgba(var(--color-primary-contrast-rgb, 255 255 255), 0.3)',
                                 },
                             },
                         },
@@ -293,47 +317,19 @@ export const deadSpaceLightTheme = createTheme(
                     {
                         props: { variant: 'contrast' },
                         style: {
-
                             backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.5)',
-                            boxShadow: `
-              0 4px 16px rgba(var(--color-primary-dark-rgb), 0.3),
-              inset 0 0 0 2px rgba(var(--color-primary-light-rgb), 0.1)
-            `,
-
-
+                            boxShadow: `0 4px 16px rgba(var(--color-primary-dark-rgb), 0.3),
+                    inset 0 0 0 2px rgba(var(--color-primary-light-rgb), 0.1)
+                `,
                             border: '1px solid rgba(var(--color-primary-main-rgb), 0.2)',
 
-                            '&::before': {
-                                background: `linear-gradient(
-                90deg,
-                rgba(var(--color-text-primary-rgb), 0.3),
-                var(--color-primary-dark), // Более темный цвет для контраста
-                rgba(var(--color-primary-dark-rgb), 0.3)
-              )`,
-                                content: '""',
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                height: '4px',
-                            },
-
-                            '&::after': {
-                                filter: `
-                        drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3))
-                        drop-shadow(0 6px 12px rgba(var(--color-primary-dark-rgb, 122, 208, 240), 0.5))
-                        drop-shadow(0 0 15px rgba(var(--color-primary-dark-rgb, 160, 224, 255), 0.4))
-                    `
-                            },
-
                             '& .MuiTypography-root': {
-                                color: 'var(--color-primary-text)',
+                                color: 'var(--color-text-primary)',
                             },
 
                             '& .MuiTypography-h5': {
                                 color: 'var(--color-primary-dark)',
                             },
-
                         },
                     },
                 ]
@@ -341,20 +337,9 @@ export const deadSpaceLightTheme = createTheme(
             MuiLink: {
                 styleOverrides: {
                     root: {
-                        color: lightThemeColors.text.secondary,
+                        color: 'var(--color-text-secondary)',
                         '&:hover': {
-                            color: lightThemeColors.primary.dark,
-                        },
-                    },
-                },
-            },
-            MuiIconButton: {
-                styleOverrides: {
-                    root: {
-                        color: lightThemeColors.text.secondary,
-                        '&:hover': {
-                            backgroundColor: alpha(lightThemeColors.text.secondary, 0.1),
-                            color: lightThemeColors.primary.contrastText
+                            color: 'var(--color-primary-dark)',
                         },
                     },
                 },
@@ -362,8 +347,8 @@ export const deadSpaceLightTheme = createTheme(
             MuiTableCell: {
                 styleOverrides: {
                     head: {
-                        color: lightThemeColors.text.secondary,
-                        backgroundColor: '#f8fcfd',
+                        color: 'var(--color-text-secondary)',
+                        backgroundColor: 'var(--color-background-paper)',
                     },
                 },
             },
@@ -371,7 +356,7 @@ export const deadSpaceLightTheme = createTheme(
                 styleOverrides: {
                     root: {
                         '&.Mui-selected': {
-                            color: lightThemeColors.primary.dark,
+                            color: 'var(--color-primary-dark)',
                         },
                     },
                 },
@@ -379,57 +364,32 @@ export const deadSpaceLightTheme = createTheme(
             MuiChip: {
                 styleOverrides: {
                     colorPrimary: {
-                        backgroundColor: alpha(lightThemeColors.primary.main, 0.1),
-                        color: lightThemeColors.primary.dark,
-                        border: `1px solid ${alpha(lightThemeColors.primary.main, 0.3)}`,
+                        backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.1)',
+                        color: 'var(--color-primary-dark)',
+                        border: '1px solid rgba(var(--color-primary-main-rgb), 0.3)',
                     },
                     colorSecondary: {
-                        backgroundColor: alpha(lightThemeColors.secondary.main, 0.1),
-                        color: lightThemeColors.secondary.dark,
-                        border: `1px solid ${alpha(lightThemeColors.secondary.main, 0.3)}`,
+                        backgroundColor: 'rgba(var(--color-secondary-main-rgb), 0.1)',
+                        color: 'var(--color-secondary-dark)',
+                        border: '1px solid rgba(var(--color-secondary-main-rgb), 0.3)',
                     },
                 },
-            },
-            MuiButton: {
-                variants: [
-                    {
-                        props: { variant: 'contained', color: 'primary' },
-                        style: {
-                            background: `linear-gradient(135deg, ${lightThemeColors.primary.main} 0%, ${lightThemeColors.primary.dark} 100%)`,
-                            color: lightThemeColors.primary.contrastText,
-                            '&:hover': {
-                                background: `linear-gradient(135deg, ${lightThemeColors.primary.light} 0%, ${lightThemeColors.primary.main} 100%)`,
-                            },
-                        },
-                    },
-                    {
-                        props: { variant: 'outlined', color: 'primary' },
-                        style: {
-                            border: `1px solid ${alpha(lightThemeColors.primary.main, 0.3)}`,
-                            color: lightThemeColors.primary.main,
-                            '&:hover': {
-                                backgroundColor: alpha(lightThemeColors.primary.main, 0.05),
-                                border: `1px solid ${alpha(lightThemeColors.primary.main, 0.5)}`,
-                            },
-                        },
-                    },
-                ],
             },
             MuiTabs: {
                 styleOverrides: {
                     indicator: {
-                        backgroundColor: lightThemeColors.primary.main,
+                        backgroundColor: 'var(--color-primary-main)',
                     },
                 },
             },
             MuiInputBase: {
                 styleOverrides: {
                     root: {
-                        backgroundColor: alpha(lightThemeColors.background.paper, 0.8),
-                        border: `1px solid ${alpha(lightThemeColors.primary.main, 0.2)}`,
+                        backgroundColor: 'rgba(var(--color-background-paper-rgb), 0.8)',
+                        border: '1px solid rgba(var(--color-primary-main-rgb), 0.2)',
                     },
                     input: {
-                        color: lightThemeColors.text.primary,
+                        color: 'var(--color-text-primary)',
                     },
                 },
             },

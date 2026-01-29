@@ -66,14 +66,14 @@ const lonelyImageWrap = (rawText: string, options = {}) => {
             /^align/,
             /^float-/
         ],
-        wrapperTag: 'figure'
+        wrapperTag: 'span'
     };
     const config = { ...defaults, ...options };
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(rawText, 'text/html');
 
-    const images = Array.from(doc.querySelectorAll('img')).filter(img => !img.closest('caption'));
+    const images = Array.from(doc.querySelectorAll('img')).filter(img => !img.closest('figure'));
 
     images.forEach(img => {
         // Получаем родителя и следующего sibling для безопасной вставки
@@ -110,6 +110,7 @@ const lonelyImageWrap = (rawText: string, options = {}) => {
         }
 
         parent.replaceChild(wrapper, img);
+        parent.insertBefore(wrapper, parent.firstChild);
         wrapper.appendChild(img);
     });
 

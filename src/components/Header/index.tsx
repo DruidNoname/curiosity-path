@@ -18,7 +18,7 @@ type Props = {
 }
 
 const Header: React.FC<Props> = ({ title }) => {
-    const { isDarkMode, toggleTheme } = useThemeContext();
+    const { mode, toggleTheme } = useThemeContext();
 
     return (
         <ErrorBoundary componentName={'Header'}>
@@ -31,7 +31,7 @@ const Header: React.FC<Props> = ({ title }) => {
                             </Link>
                         </Typography>
                         <IconButton onClick={toggleTheme} color="inherit">
-                            {isDarkMode ? <Brightness7 /> : <Brightness4 />}
+                            {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
                         </IconButton>
                     </Toolbar>
                 </Container>

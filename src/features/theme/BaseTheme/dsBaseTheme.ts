@@ -1,32 +1,32 @@
-import {alpha, createTheme} from "@mui/material/styles";
+import {createTheme} from "@mui/material/styles";
 import {colors as darkThemeColors} from "@/features/theme/DarkTheme/Colors";
 export const deadSpaceBaseTheme = createTheme({
     typography: {
         fontFamily: 'var(--font-roboto-mono), "Courier New", monospace',
         h1: {
-            fontSize: '2.5rem',
+            fontSize: 'clamp(1.7rem, 5vw, 2.5rem)',
             fontWeight: 700,
             color: 'var(--color-primary-light)',
             letterSpacing: '0.5px',
         },
         h2: {
-            fontSize: '2rem',
+            fontSize: 'clamp(1.4rem, 4vw, 2rem)',
             fontWeight: 600,
             color: 'var(--color-primary-light)',
             letterSpacing: '0.25px',
         },
         h3: {
-            fontSize: '1.75rem',
+            fontSize: 'clamp(1.25rem, 3.5vw, 1.75rem)',
             fontWeight: 600,
             color: 'var(--color-primary-main)',
         },
         h4: {
-            fontSize: '1.5rem',
+            fontSize: 'clamp(1.15rem, 3vw, 1.5rem)',
             fontWeight: 500,
             color: 'var(--color-primary-main)',
         },
         h5: {
-            fontSize: '1.25rem',
+            fontSize: 'clamp(1.1rem, 2.5vw, 1.25rem)',
             fontWeight: 500,
             color: 'var(--color-text-primary)',
         },
@@ -36,7 +36,7 @@ export const deadSpaceBaseTheme = createTheme({
             color: 'var(--color-primary-light)',
         },
         body1: {
-            fontSize: '1rem',
+            fontSize: 'clamp(0.9375rem, 2vw, 1rem)',
             lineHeight: 1.6,
             color: 'var(--color-text-primary)',
         },
@@ -452,7 +452,7 @@ export const deadSpaceBaseTheme = createTheme({
                     backgroundColor: 'var(--color-primary-main)',
                     height: '2px',
                 },
-                flexContainer: {
+                list: {
                     gap: '24px',
                 },
             },
