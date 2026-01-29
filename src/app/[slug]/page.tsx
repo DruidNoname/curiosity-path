@@ -32,7 +32,7 @@ const Post: React.FC<PostProps> = ({ params }) => {
         <ErrorBoundary componentName={'Post'}>
             <Container maxWidth="lg">
                 <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 3 }}>
+                    <Box className={styles.TitleBlock}>
                         <Box sx={{ typography: 'body1' }}>
                             <Typography
                                 variant="h1"
@@ -49,13 +49,12 @@ const Post: React.FC<PostProps> = ({ params }) => {
                                 component="p"
                                 dangerouslySetInnerHTML={{ __html: date }}
                             />
-
                         </Box>
                         <Button
+                            className={styles.BackButton}
                             startIcon={<ArrowBackIcon />}
                             onClick={handleGoBack}
                             variant="outlined"
-                            sx={{ mb: 2 }}
                         >
                             Назад
                         </Button>
