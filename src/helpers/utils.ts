@@ -1,65 +1,27 @@
 import sanitizeHtml from 'sanitize-html';
 
 //CLEAN TYPOGRAPHY
-const deleteEmptyParagraphs = (result: string): string => {
-    try {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(result, 'text/html');
-        const body = doc.body;
+const isEmptyParagraph = (element: Element): boolean => {
+    if (!element || element.nodeType !== 1) return false;
+    if (element.tagName !== 'P') return false;
 
-        // Функция для проверки, является ли параграф пустым
-        const isEmptyParagraph = (element: Element): boolean => {
-            if (!element || element.nodeType !== 1) return false;
+    const innerHTML = element.innerHTML || '';
+    const textContent = element.textContent || '';
 
-            // Проверяем только элементы <p>
-            if (element.tagName !== 'P') return false;
+    const tempDiv = element.ownerDocument.createElement('div');
+    tempDiv.innerHTML = innerHTML;
+    const plainText = tempDiv.textContent || tempDiv.innerText || '';
 
-            // Получаем содержимое
-            const innerHTML = element.innerHTML || '';
-            const textContent = element.textContent || '';
+    const cleanedText = plainText
+        .replace(/&nbsp;/gi, '')
+        .replace(/\u00A0/g, '')
+        .trim();
 
-            // Очищаем содержимое от всех HTML тегов
-            const tempDiv = doc.createElement('div');
-            tempDiv.innerHTML = innerHTML;
-            const plainText = tempDiv.textContent || tempDiv.innerText || '';
-
-            // Удаляем все неразрывные пробелы и обычные пробелы
-            const cleanedText = plainText
-                .replace(/&nbsp;/gi, '')
-                .replace(/\u00A0/g, '')
-                .trim();
-
-            // Параграф считается пустым если:
-            // 1. plainText после очистки пустой
-            // 2. textContent после трима пустой
-            // 3. Внутри только пробелы/неразрывные пробелы
-            return cleanedText === '' && textContent.trim() === '';
-        };
-
-        // Находим ВСЕ параграфы в документе
-        const allParagraphs = Array.from(body.getElementsByTagName('p'));
-
-        // Удаляем все пустые параграфы
-        allParagraphs.forEach(paragraph => {
-            if (isEmptyParagraph(paragraph) && paragraph.parentNode) {
-                paragraph.parentNode.removeChild(paragraph);
-            }
-        });
-
-        return body.innerHTML;
-
-    } catch (error) {
-        console.warn('DOMParser error:', error);
-        // Если DOMParser не сработал, используем регулярные выражения
-        // Удаляем все пустые параграфы (включая с атрибутами)
-        return result.replace(/<p[^>]*>\s*(&nbsp;|\u00A0|<\/?br\s*\/?>|\s)*<\/p>/gi, '');
-    }
+    return cleanedText === '' && textContent.trim() === '';
 };
 
-
-//MODIFY IMAGES
-
-const lonelyImageWrap = (rawText: string, options = {}) => {
+//BEAUTIFY IMAGES WITHOUT CAPTIONS
+const processLonelyImages = (doc: Document, options = {}): void => {
     const defaults = {
         transferToWrapper: [
             'alignright', 'alignleft', 'aligncenter',
@@ -70,20 +32,14 @@ const lonelyImageWrap = (rawText: string, options = {}) => {
     };
     const config = { ...defaults, ...options };
 
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(rawText, 'text/html');
-
     const images = Array.from(doc.querySelectorAll('img')).filter(img => !img.closest('figure'));
 
     images.forEach(img => {
-        // Получаем родителя и следующего sibling для безопасной вставки
         const parent = img.parentNode;
         if (!parent) return;
 
-        // Получаем классы изображения
         const imgClasses = img.className ? img.className.split(' ').filter(Boolean) : [];
 
-        // Фильтруем классы для переноса
         const classesForWrapper = imgClasses.filter(className =>
             config.transferToWrapper.some(pattern =>
                 typeof pattern === 'string' ? className === pattern : pattern.test(className)
@@ -96,13 +52,11 @@ const lonelyImageWrap = (rawText: string, options = {}) => {
             !classesForWrapper.includes(className)
         );
 
-        // Создаем обертку
         const wrapper = doc.createElement(config.wrapperTag);
         if (classesForWrapper.length > 0) {
             wrapper.className = classesForWrapper.join(' ');
         }
 
-        // Обновляем классы изображения
         if (classesForImg.length > 0) {
             img.className = classesForImg.join(' ');
         } else {
@@ -113,9 +67,66 @@ const lonelyImageWrap = (rawText: string, options = {}) => {
         parent.insertBefore(wrapper, parent.firstChild);
         wrapper.appendChild(img);
     });
-
-    return doc.body.innerHTML;
 };
+
+//BEAUTIFY IMAGES WITH CAPTIONS
+const processFigures = (doc: Document): void => {
+    const figures = doc.querySelectorAll('figure');
+
+    figures.forEach(figure => {
+        const caption = figure.querySelector('figcaption');
+        if (!caption) return;
+
+        const img = figure.querySelector('img[class*="wp-image-"]');
+        if (!img) return;
+
+        const match = img.className.match(/wp-image-(\d+)/);
+        if (!match || !match[1]) return;
+
+        const width = parseInt(match[1], 10);
+        if (isNaN(width) || width <= 0) return;
+
+        figure.style.maxWidth = `${width}px`;
+        figure.classList.add('wp-image-limited');
+
+        caption.style.maxWidth = '100%';
+        caption.style.boxSizing = 'border-box';
+        figure.dataset.imageWidth = String(width);
+    });
+};
+
+// Основная функция, использующая один парсер
+const processHTML = (html: string, options = {}): string => {
+    try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const body = doc.body;
+
+        // 1. Удаляем пустые параграфы
+        const allParagraphs = Array.from(body.getElementsByTagName('p'));
+        allParagraphs.forEach(paragraph => {
+            if (isEmptyParagraph(paragraph) && paragraph.parentNode) {
+                paragraph.parentNode.removeChild(paragraph);
+            }
+        });
+
+        // 2. Обрабатываем одинокие изображения
+        processLonelyImages(doc, options);
+
+        // 3. Обрабатываем фигуры
+        processFigures(doc);
+
+        return body.innerHTML;
+
+    } catch (error) {
+        console.warn('DOMParser error:', error);
+        // Фолбэк на случай ошибки парсера
+        return html.replace(/<p[^>]*>\s*(&nbsp;|\u00A0|<\/?br\s*\/?>|\s)*<\/p>/gi, '');
+    }
+};
+
+// Экспорт для использования
+export const processAllHTML = processHTML;
 
 export const getCleanEntry = (html: string): string => {
     if (!html || typeof html !== 'string') return '';
@@ -138,13 +149,11 @@ export const getCleanEntry = (html: string): string => {
         allowProtocolRelative: false,
     });
 
-    result = deleteEmptyParagraphs(result);
+    result = processHTML(result);
     // После удаления пустых параграфов, удаляем возможные множественные <br>
     result = result.replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>');
     // Удаляем лишние пробелы
     result = result.trim();
-
-    result = lonelyImageWrap(result);
 
     return result;
 };
