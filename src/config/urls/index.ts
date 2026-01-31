@@ -6,7 +6,7 @@ export const urls = {
         site: 'http://localhost:3000',
         wp: 'https://suffer.curiosity-path.ru',
         wpApi: 'https://suffer.curiosity-path.ru/wp-json/wp/v2',
-        wpGraphql: 'http://localhost:8000/graphql',
+        wpGraphql: 'https://suffer.curiosity-path.ru/graphql',
     },
 
     // В продакшене
