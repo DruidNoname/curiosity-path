@@ -3,7 +3,7 @@ import {PER_PAGE, POSTS_URL} from "./const";
 import {fetchPostsByTag} from "./api";
 import {WP_REST_API_Post} from "wp-types";
 
-interface PostsResponse {
+export interface PostsResponse {
     posts: WP_REST_API_Post[],
     total: number,
     totalPages: number,
@@ -33,6 +33,50 @@ export const usePosts = (page  = 1, perPage  = PER_PAGE) => {
         staleTime: 1000 * 60 * 5
     });
 }
+
+export const usePostsByMonth = (
+    page = 1,
+    perPage = 90,
+    selectedMonth?: { start: Date; end: Date }
+) => {
+    return useQuery<PostsResponse>({
+        queryKey: ['posts', page, perPage, selectedMonth?.start, selectedMonth?.end],
+        queryFn: async () => {
+            const params = new URLSearchParams({
+                page: page.toString(),
+                per_page: perPage.toString(),
+                orderby: 'date',
+                order: 'desc',
+            });
+
+            // WordPress API использует параметры after и before
+            if (selectedMonth) {
+                // Форматируем даты в ISO строки
+                const after = selectedMonth.start.toISOString();
+                const before = selectedMonth.end.toISOString();
+
+                params.append('after', after);
+                params.append('before', before);
+            }
+
+            const res = await fetch(`${POSTS_URL}?${params.toString()}`);
+            if (!res.ok) throw new Error('Ошибка при получении постов');
+
+            const total = res.headers.get('X-WP-Total') || '0';
+            const totalPages = res.headers.get('X-WP-TotalPages') || '1';
+            const posts = await res.json();
+
+            return {
+                posts,
+                total: parseInt(total, 10),
+                totalPages: parseInt(totalPages, 10),
+                currentPage: page,
+                perPage: perPage
+            };
+        },
+        staleTime: 1000 * 60 * 5
+    });
+};
 
 export const usePost = (slug: string, options = {}) => {
     return useQuery<WP_REST_API_Post>({
