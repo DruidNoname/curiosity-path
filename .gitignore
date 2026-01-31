@@ -49,3 +49,6 @@ Thumbs.db
 .pnpm-debug.log*
 next-env.d.ts
 test-connection.js
+package-lock.json
+schema.graphql
+.graphqlrc

@@ -1,4 +1,8 @@
 export default function PerformanceTest() {
+
+
+
+
     console.log('Страница рендерится');
     return (
         <div>
