@@ -35,23 +35,45 @@ const MainPage: React.FC = () => {
                 { isLoading ?
                     <Loader/>
                     :
-                    <>
-                        { posts?.map((post: WP_REST_API_Post) => (
-                            <PostPreview post={post} key={post.id}/>
-                        ))
-                        }
-                        <Pagination
-                            sx={{ mt: 3, mb: 4 }}
-                            count={Math.ceil(total / PER_PAGE) || 1}
-                            page={page}
-                            onChange={(_e, page) => {
-                                setPage(page);
+                    <Box
+                        component={'div'}
+                        sx={{
+                            display: {xs: 'block', sm: 'flex'},
+                            gap:  { sm: '16px', lg: '32px'},
+                        }}
+                    >
+                        <Box
+                            component={'div'}
+                        >
+                            { posts?.map((post: WP_REST_API_Post) => (
+                                <PostPreview post={post} key={post.id}/>
+                            ))
+                            }
+                            <Pagination
+                                sx={{ mt: 3, mb: 4 }}
+                                count={Math.ceil(total / PER_PAGE) || 1}
+                                page={page}
+                                onChange={(_e, page) => {
+                                    setPage(page);
+                                }}
+                                disabled={isLoading}
+                            />
+                        </Box>
+                        <Box
+                            component="aside"
+                            sx={{
+                                width: '20%',
+                                minWidth: '300px',
+                                p: 3,
+                                bgcolor: 'background.paper',
+                                borderLeft: 1,
+                                borderColor: 'divider'
                             }}
-                            disabled={isLoading}
-                        />
-
-                        <Tags/>
-                    </>
+                        >
+                            {/* Содержимое aside */}
+                            <Tags/>
+                        </Box>
+                    </Box>
                 }
                 { isError &&
                     <>
