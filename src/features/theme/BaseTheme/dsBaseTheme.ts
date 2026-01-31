@@ -452,9 +452,9 @@ export const deadSpaceBaseTheme = createTheme({
                     backgroundColor: 'var(--color-primary-main)',
                     height: '2px',
                 },
-                list: {
-                    gap: '24px',
-                },
+                // list: {
+                //     gap: '24px',
+                // },
             },
         },
         MuiTab: {
@@ -593,6 +593,86 @@ export const deadSpaceBaseTheme = createTheme({
                 root: {
                     backgroundColor: 'rgba(var(--color-background-default-rgb), 0.8)',
                     backdropFilter: 'blur(4px)',
+                },
+            },
+        },
+        MuiDayCalendar: {
+            styleOverrides: {
+                weekDayLabel: {
+                    width: '28px',    // ⬇ Уменьшаем ширину
+                    height: '28px',   // ⬇ Уменьшаем высоту
+                    margin: '0 1px',  // ⬇ Уменьшаем отступы
+                },
+                weekContainer: {
+                    margin: '2px 0', // Уменьшаем вертикальные отступы
+                }
+            }
+        },
+        MuiPickersDay: {
+            styleOverrides: {
+                root: {
+                    width: '28px',
+                    height: '28px',
+                }
+            }
+        },
+        MuiDateCalendar: {
+            styleOverrides: {
+                root: {
+                    width: 'unset',
+                    padding: '0',
+                }
+            }
+        },
+        MuiPickersCalendarHeader: {
+            styleOverrides: {
+                root: {
+                    minHeight: '40px',
+                    padding: '4px 8px',
+                    marginBottom: '4px',
+                },
+
+                label: {
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    padding: '2px 4px',
+                    lineHeight: 1.3,
+                },
+
+                switchViewButton: {
+                    width: '28px',
+                    height: '28px',
+                    padding: '4px',
+                    margin: '0 2px',
+                }
+            }
+        },
+        MuiPickersFadeTransitionGroup: {
+            styleOverrides: {
+                root: {
+                    position: 'relative',
+                    '&.MuiDateCalendar-viewTransitionContainer:has(.MuiYearCalendar-root), &.MuiDateCalendar-viewTransitionContainer:has(.MuiMonthCalendar-root)': {
+                        overflowY: 'scroll',
+                        transition: 'all 0.3s ease',
+                        willChange: 'transform, opacity',
+                        maxWidth: '100%',
+                        borderRadius: '8px',
+                        boxShadow: 'inset 0 1px 4px rgba(var(--color-primary-main-rgb), 0.3), inset 0 2px 8px rgba(var(--color-primary-main-rgb), 0.15), inset 0 4px 10px rgba(var(--color-primary-main-rgb), 0.05)',
+                    },
+                },
+            },
+        },
+        MuiYearCalendar: {
+            styleOverrides: {
+                root: {
+                    maxWidth: '100%',
+                },
+            },
+        },
+        MuiMonthCalendar: {
+            styleOverrides: {
+                root: {
+                    maxWidth: '100%',
                 },
             },
         },
