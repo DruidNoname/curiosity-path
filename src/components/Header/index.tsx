@@ -12,8 +12,6 @@ import {useThemeContext} from "@/features/theme/context/context";
 import { Brightness4, Brightness7 } from '@mui/icons-material';
 import Menu from '../Nav';
 
-
-
 type Props = {
     title: string
 }

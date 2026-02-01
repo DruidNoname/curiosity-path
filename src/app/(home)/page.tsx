@@ -10,7 +10,7 @@ import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
 import Tags from "@/app/(home)/components/Tags";
 import {PER_PAGE} from "@/features/posts/const";
-import {Calendar} from "@/components/Calendar";
+import {PostCalendar} from "@/components/PostCalendar";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -90,7 +90,7 @@ const MainPage: React.FC = () => {
                                 borderColor: 'divider'
                             }}
                         >
-                            <Calendar/>
+                            <PostCalendar/>
                             { isError && 'И сюда.' }
                             <Tags/>
                         </Box>
