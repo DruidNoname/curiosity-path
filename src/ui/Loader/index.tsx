@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './style.module.css';
 import Backdrop from '@mui/material/Backdrop';
 import Image from 'next/image';
-import loaderImage from '@/assets/images/loader.svg'
+import loaderImage from '@/assets/images/loader.svg';
 import LinearProgress from '@mui/material/LinearProgress';
 import { OverridableStringUnion } from '@mui/types';
 
@@ -13,12 +13,13 @@ type Props = {
   display?: 'inline';
   margin?: string;
   isLinear?: boolean;
+  isDots?: boolean;
   smallSize?: number;
   backdropMode?: boolean;
   color?: OverridableStringUnion<'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'inherit'>;
 };
 
-const Loader: React.FC<Props> = ({className, size = 40, display, isLinear, backdropMode, color, margin, style, smallSize}) => {
+const Loader: React.FC<Props> = ({className, size = 40, display, isLinear, backdropMode, color, margin, style, smallSize, isDots}) => {
 
   const classes = [
     styles.Loader,
@@ -42,7 +43,12 @@ const Loader: React.FC<Props> = ({className, size = 40, display, isLinear, backd
         <div className={classes.join(' ')} style={{display, margin: smallSize ? margin || '0' : margin, ...style}}>
           {isLinear ? (
             <LinearProgress color={color}/>
-          ) : (
+          ) :
+              isDots ? (
+                      <div className={styles.Dotsloader}></div>
+                    )
+                  :
+                    (
               <Image
                   src={loaderImage}
                   alt="Loading"

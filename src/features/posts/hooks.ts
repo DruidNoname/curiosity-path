@@ -1,4 +1,4 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {PER_PAGE, POSTS_URL} from "./const";
 import {fetchPostsByTag} from "./api";
 import {WP_REST_API_Post} from "wp-types";
@@ -32,7 +32,7 @@ export const usePosts = (page  = 1, perPage  = PER_PAGE) => {
         },
         staleTime: 1000 * 60 * 5
     });
-}
+};
 
 export const usePostsByMonth = (
     page = 1,
@@ -78,6 +78,7 @@ export const usePostsByMonth = (
     });
 };
 
+
 export const usePost = (slug: string, options = {}) => {
     return useQuery<WP_REST_API_Post>({
         queryKey: ['posts', slug],
@@ -91,7 +92,7 @@ export const usePost = (slug: string, options = {}) => {
         staleTime: 1000 * 60 * 10, // 10 минут
         ...options,
     });
-}
+};
 
 
 export const usePostsByTag = (tagSlug: string, page = 1, perPage = PER_PAGE) => {
