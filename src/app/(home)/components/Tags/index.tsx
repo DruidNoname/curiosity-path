@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Link } from "@mui/material";
+import {Box, Link, Typography} from "@mui/material";
 import { useQuery } from '@apollo/client';
 import Skeleton from "@/ui/Skeleton";
 import {GET_ALL_TAGS} from "@/features/tags/queries";
@@ -20,7 +20,6 @@ const Tags: React.FC = () => {
 
     const tagElements = tags.map((tag: any, index: number, array: any[]) => (
         <React.Fragment key={tag.id}>
-            {/* ID теперь base64, но slug остался строкой */}
             <Link href={`/tag/${tag.slug}`}>
                 {tag.name}
             </Link>
@@ -36,7 +35,12 @@ const Tags: React.FC = () => {
                 `Ошибка загрузки тегов: ${errorMessage}`
             ) : (
                 <>
-                    {`Доступные теги (${totalTags || 0}): `} { tagElements }
+                    <Typography variant={'h5'} sx={{ mb: '16px' }}>
+                        {`Доступные теги (${totalTags || 0}): `}
+                    </Typography>
+                    <Typography variant={'body1'}>
+                        { tagElements }
+                    </Typography>
                 </>
             )}
         </Box>

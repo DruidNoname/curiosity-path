@@ -599,8 +599,8 @@ export const deadSpaceBaseTheme = createTheme({
         MuiDayCalendar: {
             styleOverrides: {
                 weekDayLabel: {
-                    width: '28px',    // ⬇ Уменьшаем ширину
-                    height: '28px',   // ⬇ Уменьшаем высоту
+                    width: '34px',    // ⬇ Уменьшаем ширину
+                    height: '32px',   // ⬇ Уменьшаем высоту
                     margin: '0 1px',  // ⬇ Уменьшаем отступы
                 },
                 weekContainer: {
@@ -611,8 +611,8 @@ export const deadSpaceBaseTheme = createTheme({
         MuiPickersDay: {
             styleOverrides: {
                 root: {
-                    width: '28px',
-                    height: '28px',
+                    width: '32px',
+                    height: '32px',
                 }
             }
         },
@@ -640,8 +640,8 @@ export const deadSpaceBaseTheme = createTheme({
                 },
 
                 switchViewButton: {
-                    width: '28px',
-                    height: '28px',
+                    width: '32px',
+                    height: '32px',
                     padding: '4px',
                     margin: '0 2px',
                 }

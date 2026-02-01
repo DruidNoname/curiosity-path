@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React from "react";
 import { WP_REST_API_Post } from 'wp-types';
 import PostPreview from "@/components/PostPreview";
@@ -25,7 +25,6 @@ const MainPage: React.FC = () => {
     const {
         posts = [],
         total = 0,
-        totalPages = 1
     } = data || {};
 
     return (
@@ -43,23 +42,43 @@ const MainPage: React.FC = () => {
                             gap:  { sm: '16px', lg: '32px'},
                         }}
                     >
-                        <Box
-                            component={'div'}
-                        >
-                            { posts?.map((post: WP_REST_API_Post) => (
-                                <PostPreview post={post} key={post.id}/>
-                            ))
-                            }
-                            <Pagination
-                                sx={{ mt: 3, mb: 4 }}
-                                count={Math.ceil(total / PER_PAGE) || 1}
-                                page={page}
-                                onChange={(_e, page) => {
-                                    setPage(page);
-                                }}
-                                disabled={isLoading}
-                            />
-                        </Box>
+                        { isError ?
+                            <Box
+                                component={'div'}
+                                sx={{ flexGrow: 1 }}
+                            >
+                                <Typography variant="body1" component="p">
+                                    А бек не завезли.
+                                </Typography>
+                                <Divider sx={{ mt: '20px', mb: '36px'}} />
+                                <Typography variant="body1" component="p">
+                                    Ошибка: {error?.message}
+                                </Typography>
+                            </Box>
+
+                            :
+
+                            <Box
+                                component={'div'}
+                                sx={{ flexGrow: 1 }}
+                            >
+                                { posts?.map((post: WP_REST_API_Post) => (
+                                    <PostPreview post={post} key={post.id}/>
+                                ))
+                                }
+                                <Pagination
+                                    sx={{ mt: 3, mb: 4 }}
+                                    count={Math.ceil(total / PER_PAGE) || 1}
+                                    page={page}
+                                    onChange={(_e, page) => {
+                                        setPage(page);
+                                    }}
+                                    disabled={isLoading}
+                                />
+                            </Box>
+                        }
+
+
                         <Box
                             component="aside"
                             sx={{
@@ -72,24 +91,14 @@ const MainPage: React.FC = () => {
                             }}
                         >
                             <Calendar/>
+                            { isError && 'И сюда.' }
                             <Tags/>
                         </Box>
                     </Box>
                 }
-                { isError &&
-                    <>
-                        <Typography variant="body1" component="p">
-                            А бек не завезли.
-                        </Typography>
-                        <Divider sx={{ mx: 4 }} />
-                        <Typography variant="body2" component="p">
-                            Ошибка: {error?.message}
-                        </Typography>
-                    </>
-                }
             </Box>
         </ErrorBoundary>
     );
-}
+};
 
 export default MainPage;

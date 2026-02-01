@@ -9,7 +9,8 @@ import {
     Typography,
 } from '@mui/material';
 import {useThemeContext} from "@/features/theme/context/context";
-import { Brightness4, Brightness7 } from '@mui/icons-material'
+import { Brightness4, Brightness7 } from '@mui/icons-material';
+import Menu from '../Nav';
 
 
 
@@ -30,6 +31,7 @@ const Header: React.FC<Props> = ({ title }) => {
                                 {title}
                             </Link>
                         </Typography>
+                        <Menu/>
                         <IconButton onClick={toggleTheme} color="inherit">
                             {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
                         </IconButton>

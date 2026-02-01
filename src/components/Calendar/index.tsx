@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React from "react";
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -6,12 +6,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ErrorBoundary from '../ErrorBoundary';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import {Locale, ru} from 'date-fns/locale';
-import {Box, Chip, Typography} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import {startOfMonth, endOfMonth, addMonths, format, parseISO} from 'date-fns';
-import {usePosts, usePostsByMonth} from "@/features/posts/hooks";
-import {PER_PAGE} from "@/features/posts/const";
+import { usePostsByMonth} from "@/features/posts/hooks";
 import {PickersDay} from "@mui/x-date-pickers";
-import {Stack} from "@mui/system";
+import Loader from "@/ui/Loader";
 
 const russianLocale: Locale  = {
     ...ru,
@@ -34,13 +33,13 @@ export const Calendar: React.FC = () => {
         end: monthEnd
     };
 
-    const [selectedMonth, setSelectedMonth] = React.useState(thisMonthInterval)
+    const [selectedMonth, setSelectedMonth] = React.useState(thisMonthInterval);
 
     const {
         data: currentMonthData,
         isLoading,
-        // isError,
-        // error
+        isError,
+        error
     } = usePostsByMonth(1, 90, selectedMonth);
 
     const [queryHistory, setQueryHistory] = React.useState<Record<string, any>>({});
@@ -79,11 +78,6 @@ export const Calendar: React.FC = () => {
 
     const postsByDate = React.useMemo(() => {
         const map = new Map();
-        //тут надо описать интерфейс для поста!!!
-        //подумать, почему кнопка назад не работает при переходе с календаря
-        // (по ходу, потому, что пост в новом окне, как убрать или изменить логику?)
-        // и разобраться с кешированием нормально, а то ощущения, что я кеширую кеш
-
         displayData?.posts?.forEach((post: any) => {
             try {
                 const date = parseISO(post.date);
@@ -133,106 +127,123 @@ export const Calendar: React.FC = () => {
         });
     };
 
+    //тут надо описать интерфейс для поста!!!
+    //подумать, почему кнопка назад не работает при переходе с календаря
+    // (по ходу, потому, что пост в новом окне, как убрать или изменить логику?)
+    // и разобраться с кешированием нормально, а то ощущения, что я кеширую кеш
     return (
         <ErrorBoundary componentName={'Calendar'}>
-            <Typography variant={'h6'} sx={{ lineHeight: '1.25em', fontSize: '12px'}}>Это календарь, он находится в стадии разработки. Зато он красивый.</Typography>
+            { !isError ?
+                <Typography variant={'h5'}>
+                    Календарь
+                </Typography>
+                :
+                <Typography variant={'h6'} sx={{ lineHeight: '1.25em', fontSize: '12px'}}>
+                    `Это календарь, он просто красивый. А ещё ${error.message}.`
+                </Typography>
+            }
             <LocalizationProvider
                 dateAdapter={AdapterDateFns}
                 adapterLocale={russianLocale}
-            >
-                <DateCalendar
-                    views={['year', 'month', 'day']}
-                    onMonthChange={handleMonthChange}
-                    onYearChange={handleYearChange}
-                    minDate={minDate}
-                    maxDate={maxDate}
-                    slots={{
-                        day: (props) => {
-                            const { day, ...other } = props;
-                            const dateKey = format(day, 'yyyy-MM-dd');
-                            const postsForDay = postsByDate.get(dateKey) || [];
-                            const hasPosts = postsForDay.length > 0;
+            > { isLoading ?
+                <Loader/>
+                :
+                !isError ?
+                    <DateCalendar
+                        views={['year', 'month', 'day']}
+                        onMonthChange={handleMonthChange}
+                        onYearChange={handleYearChange}
+                        minDate={minDate}
+                        maxDate={maxDate}
+                        slots={{
+                            day: (props) => {
+                                const { day, ...other } = props;
+                                const dateKey = format(day, 'yyyy-MM-dd');
+                                const postsForDay = postsByDate.get(dateKey) || [];
+                                const hasPosts = postsForDay.length > 0;
 
-                            return (
-                                <Box sx={{ position: 'relative' }}>
-                                    <PickersDay
-                                        {...other}
-                                        day={day}
-                                        onClick={() => hasPosts && handleDateClick(day)}
-                                        sx={{
-                                            color: hasPosts ? 'var(--color-primary-main)' : 'rgba(var(--color-primary-main-rgb), 0.6)',
-                                            cursor: hasPosts ? 'pointer' : 'default',
-                                            pointerEvents: hasPosts ? 'auto' : 'none',
-                                            '&:hover': hasPosts ? {
-                                                backgroundColor: 'rgba(25, 118, 210, 0.12)',
-                                            } : {},
-                                            position: 'relative',
-                                        }}
-                                    />
+                                return (
+                                    <Box sx={{ position: 'relative' }}>
+                                        <PickersDay
+                                            {...other}
+                                            day={day}
+                                            onClick={() => hasPosts && handleDateClick(day)}
+                                            sx={{
+                                                color: hasPosts ? 'var(--color-primary-main)' : 'rgba(var(--color-primary-main-rgb), 0.45)',
+                                                cursor: hasPosts ? 'pointer' : 'default',
+                                                pointerEvents: hasPosts ? 'auto' : 'none',
+                                                '&:hover': hasPosts ? {
+                                                    backgroundColor: 'rgba(25, 118, 210, 0.12)',
+                                                } : {},
+                                                position: 'relative',
+                                            }}
+                                        />
 
-                                    {/*{hasPosts && (*/}
-                                    {/*    <>*/}
-                                    {/*        /!* Точечка-индикатор *!/*/}
-                                    {/*        <Box*/}
-                                    {/*            sx={{*/}
-                                    {/*                position: 'absolute',*/}
-                                    {/*                bottom: 4,*/}
-                                    {/*                left: '50%',*/}
-                                    {/*                transform: 'translateX(-50%)',*/}
-                                    {/*                width: 6,*/}
-                                    {/*                height: 6,*/}
-                                    {/*                backgroundColor: 'primary.main',*/}
-                                    {/*                borderRadius: '50%',*/}
-                                    {/*            }}*/}
-                                    {/*        />*/}
+                                        {/*{hasPosts && (*/}
+                                        {/*    <>*/}
+                                        {/*        /!* Точечка-индикатор *!/*/}
+                                        {/*        <Box*/}
+                                        {/*            sx={{*/}
+                                        {/*                position: 'absolute',*/}
+                                        {/*                bottom: 4,*/}
+                                        {/*                left: '50%',*/}
+                                        {/*                transform: 'translateX(-50%)',*/}
+                                        {/*                width: 6,*/}
+                                        {/*                height: 6,*/}
+                                        {/*                backgroundColor: 'primary.main',*/}
+                                        {/*                borderRadius: '50%',*/}
+                                        {/*            }}*/}
+                                        {/*        />*/}
 
-                                    {/*        /!* Всплывающая подсказка при наведении *!/*/}
-                                    {/*        <Box*/}
-                                    {/*            sx={{*/}
-                                    {/*                position: 'absolute',*/}
-                                    {/*                top: '100%',*/}
-                                    {/*                left: '50%',*/}
-                                    {/*                transform: 'translateX(-50%)',*/}
-                                    {/*                mt: 1,*/}
-                                    {/*                p: 1,*/}
-                                    {/*                bgcolor: 'background.paper',*/}
-                                    {/*                boxShadow: 2,*/}
-                                    {/*                borderRadius: 1,*/}
-                                    {/*                zIndex: 10,*/}
-                                    {/*                display: 'none',*/}
-                                    {/*                minWidth: 200,*/}
-                                    {/*                '&:hover': {*/}
-                                    {/*                    display: 'block',*/}
-                                    {/*                },*/}
-                                    {/*            }}*/}
-                                    {/*        >*/}
-                                    {/*            <Typography variant="caption" fontWeight="bold">*/}
-                                    {/*                {postsForDay.length} {postsForDay.length === 1 ? 'пост' : 'поста'}*/}
-                                    {/*            </Typography>*/}
-                                    {/*            <Stack spacing={0.5} mt={0.5}>*/}
-                                    {/*                {postsForDay.map((post: any) => (*/}
-                                    {/*                    <Chip*/}
-                                    {/*                        key={post.id}*/}
-                                    {/*                        label={post.title}*/}
-                                    {/*                        size="small"*/}
-                                    {/*                        onClick={() => window.open(post.link, '_blank')}*/}
-                                    {/*                        sx={{*/}
-                                    {/*                            cursor: 'pointer',*/}
-                                    {/*                            '&:hover': {*/}
-                                    {/*                                backgroundColor: 'action.hover',*/}
-                                    {/*                            },*/}
-                                    {/*                        }}*/}
-                                    {/*                    />*/}
-                                    {/*                ))}*/}
-                                    {/*            </Stack>*/}
-                                    {/*        </Box>*/}
-                                    {/*    </>*/}
-                                    {/*)}*/}
-                                </Box>
-                            );
-                        }
-                    }}
-                />
+                                        {/*        /!* Всплывающая подсказка при наведении *!/*/}
+                                        {/*        <Box*/}
+                                        {/*            sx={{*/}
+                                        {/*                position: 'absolute',*/}
+                                        {/*                top: '100%',*/}
+                                        {/*                left: '50%',*/}
+                                        {/*                transform: 'translateX(-50%)',*/}
+                                        {/*                mt: 1,*/}
+                                        {/*                p: 1,*/}
+                                        {/*                bgcolor: 'background.paper',*/}
+                                        {/*                boxShadow: 2,*/}
+                                        {/*                borderRadius: 1,*/}
+                                        {/*                zIndex: 10,*/}
+                                        {/*                display: 'none',*/}
+                                        {/*                minWidth: 200,*/}
+                                        {/*                '&:hover': {*/}
+                                        {/*                    display: 'block',*/}
+                                        {/*                },*/}
+                                        {/*            }}*/}
+                                        {/*        >*/}
+                                        {/*            <Typography variant="caption" fontWeight="bold">*/}
+                                        {/*                {postsForDay.length} {postsForDay.length === 1 ? 'пост' : 'поста'}*/}
+                                        {/*            </Typography>*/}
+                                        {/*            <Stack spacing={0.5} mt={0.5}>*/}
+                                        {/*                {postsForDay.map((post: any) => (*/}
+                                        {/*                    <Chip*/}
+                                        {/*                        key={post.id}*/}
+                                        {/*                        label={post.title}*/}
+                                        {/*                        size="small"*/}
+                                        {/*                        onClick={() => window.open(post.link, '_blank')}*/}
+                                        {/*                        sx={{*/}
+                                        {/*                            cursor: 'pointer',*/}
+                                        {/*                            '&:hover': {*/}
+                                        {/*                                backgroundColor: 'action.hover',*/}
+                                        {/*                            },*/}
+                                        {/*                        }}*/}
+                                        {/*                    />*/}
+                                        {/*                ))}*/}
+                                        {/*            </Stack>*/}
+                                        {/*        </Box>*/}
+                                        {/*    </>*/}
+                                        {/*)}*/}
+                                    </Box>
+                                );
+                            }
+                        }}
+                    /> :
+                    <DateCalendar/>
+            }
             </LocalizationProvider>
         </ErrorBoundary>
     );
