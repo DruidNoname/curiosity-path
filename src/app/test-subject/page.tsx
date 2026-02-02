@@ -2,13 +2,16 @@
 
 import React from "react";
 import {Typography} from "@mui/material";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const TestSubject: React.FC = () => {
 
     return(
-        <Typography variant={'h5'}>
-           Территория самых бесчеловечных экспериментов.
-        </Typography>
+        <ErrorBoundary componentName={'TestSubject'}>
+            <Typography variant={'h5'}>
+                Территория самых бесчеловечных экспериментов.
+            </Typography>
+        </ErrorBoundary>
     );
 };
 
