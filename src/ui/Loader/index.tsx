@@ -27,37 +27,51 @@ const Loader: React.FC<Props> = ({className, size = 40, display, isLinear, backd
     className,
   ];
 
+  const getLoader = () => {
+    switch (true) {
+      case backdropMode:
+        return (
+            <Backdrop open={backdropMode} className={styles.Backdrop}>
+              <div className={classes.join(' ')} style={{display, ...style}}>
+                <Image
+                    src={loaderImage}
+                    alt="Loading"
+                    className={'RadialLoader'}
+                />
+              </div>
+            </Backdrop>
+        );
+
+      case isDots:
+        return <span className={styles.Dotsloader}>
+          <span className={styles.Dot}>.</span>
+          <span className={styles.Dot}>.</span>
+          <span className={styles.Dot}>.</span>
+        </span>;
+
+      case isLinear:
+        return <LinearProgress color={color}/>;
+
+      default:
+        return (
+            <div className={classes.join(' ')} style={{
+              display,
+              margin: smallSize ? margin || '0' : margin,
+              ...style
+            }}>
+                  <Image
+                      src={loaderImage}
+                      alt="Loading"
+                      className={'RadialLoader'}
+                  />
+            </div>
+        );
+    }
+  };
+
+
   return (
-    <>
-      {backdropMode ? (
-        <Backdrop open={backdropMode} className={styles.Backdrop}>
-          <div className={classes.join(' ')} style={{display, ...style}}>
-            <Image
-                src={loaderImage}
-                alt="Loading"
-                className={'RadialLoader'}
-            />
-          </div>
-        </Backdrop>
-      ) : (
-        <div className={classes.join(' ')} style={{display, margin: smallSize ? margin || '0' : margin, ...style}}>
-          {isLinear ? (
-            <LinearProgress color={color}/>
-          ) :
-              isDots ? (
-                      <div className={styles.Dotsloader}></div>
-                    )
-                  :
-                    (
-              <Image
-                  src={loaderImage}
-                  alt="Loading"
-                  className={'RadialLoader'}
-              />
-          )}
-        </div>
-      )}
-    </>
+      getLoader()
   );
 };
 
