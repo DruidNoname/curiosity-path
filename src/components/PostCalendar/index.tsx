@@ -49,7 +49,7 @@ export const PostCalendar: React.FC = () => {
         <ErrorBoundary componentName={'PostCalendar'}>
             { !isError ?
                 <Typography variant={'h5'}>
-                    Календарь {isLoading && ' ...'}
+                    Календарь {!isLoading && <Loader isDots={true}/> }
                 </Typography>
                 :
                 <Typography variant={'h6'} sx={{ lineHeight: '1.25em', fontSize: '12px'}}>
