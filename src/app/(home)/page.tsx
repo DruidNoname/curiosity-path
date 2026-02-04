@@ -11,6 +11,7 @@ import Pagination from "@/ui/Pagination";
 import Tags from "@/app/(home)/components/Tags";
 import {PER_PAGE} from "@/features/posts/const";
 import {PostCalendar} from "@/components/PostCalendar";
+import HistoryWidget from "@/app/(home)/components/HistoryWidget";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -30,6 +31,7 @@ const MainPage: React.FC = () => {
     return (
         <ErrorBoundary componentName={'MainPage'}>
             <Box sx={{ mb: 4 }}>
+
                 <InfoWidget count={ total } isLoading={ isLoading } isError={isError} />
 
                 { isLoading ?
@@ -77,8 +79,6 @@ const MainPage: React.FC = () => {
                                 />
                             </Box>
                         }
-
-
                         <Box
                             component="aside"
                             sx={{
@@ -90,6 +90,7 @@ const MainPage: React.FC = () => {
                                 borderColor: 'divider'
                             }}
                         >
+                            <HistoryWidget/>
                             <PostCalendar/>
                             { isError && 'И сюда.' }
                             <Tags/>

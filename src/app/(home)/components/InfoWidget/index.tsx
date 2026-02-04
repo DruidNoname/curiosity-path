@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style.module.css";
-import {Box, Card, Typography} from "@mui/material";
+import {Box, Paper, Typography} from "@mui/material";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Skeleton from "@/ui/Skeleton";
 
@@ -13,7 +13,7 @@ const InfoWidget: React.FC<Props> = ( { count, isLoading, isError }) => {
 
     return (
         <ErrorBoundary componentName={'InfoWidget'}>
-            <Card
+            <Paper
                 className={styles.InfoWidget}
                 variant={'contrast'}
             >
@@ -42,7 +42,7 @@ const InfoWidget: React.FC<Props> = ( { count, isLoading, isError }) => {
                         )}
                     </Typography>
                 </Box>
-            </Card>
+            </Paper>
         </ErrorBoundary>
     )
 };

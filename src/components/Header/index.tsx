@@ -4,13 +4,13 @@ import {
     AppBar,
     Container,
     IconButton,
-    Link,
     Toolbar,
     Typography,
 } from '@mui/material';
 import {useThemeContext} from "@/features/theme/context/context";
 import { Brightness4, Brightness7 } from '@mui/icons-material';
 import Menu from '../Nav';
+import {TextSimilarLink} from '@/ui/Link';
 
 type Props = {
     title: string
@@ -25,9 +25,9 @@ const Header: React.FC<Props> = ({ title }) => {
                 <Container maxWidth="lg">
                     <Toolbar>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            <Link href="/" underline="none" >  {/* или без underline */}
+                            <TextSimilarLink href="/">
                                 {title}
-                            </Link>
+                            </TextSimilarLink>
                         </Typography>
                         <Menu/>
                         <IconButton onClick={toggleTheme} color="inherit">

@@ -3,13 +3,13 @@
 import React from "react";
 import ErrorBoundary from '../ErrorBoundary';
 import {Typography} from "@mui/material";
-import {startOfMonth, endOfMonth, addMonths, format, parseISO} from 'date-fns';
+import {startOfMonth, endOfMonth, addMonths, format} from 'date-fns';
 import { usePostsByMonth} from "@/features/posts/hooks";
 import PostCalendarDay from "@/components/PostCalendar/DayWithLink";
 import Calendar from "@/ui/Calendar";
 import {getPostsByDate} from "@/components/PostCalendar/utils";
 import Loader from "@/ui/Loader";
-import {Box, display} from "@mui/system";
+
 export const PostCalendar: React.FC = () => {
     const today = new Date();
     const monthStart = startOfMonth(today);

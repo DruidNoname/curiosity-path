@@ -2,6 +2,7 @@ import React from "react";
 import '@mui/material/styles';
 import '@mui/material/Paper';
 import '@mui/material/Card';
+import '@mui/material/Link';
 
 
 declare module '@mui/material/styles' {
@@ -78,7 +79,7 @@ declare module '@mui/material/styles' {
 declare module '@mui/material/Paper' {
     interface PaperPropsVariantOverrides {
         contrast: true;
-        accent?: true;     // если нужно
+        iced: true;     // если нужно
         glass?: true;      // если нужно
     }
 }
@@ -86,6 +87,15 @@ declare module '@mui/material/Paper' {
 declare module '@mui/material/Card' {
     interface CardPropsVariantOverrides {
         contrast: true;
+        iced: true;     // если нужно
+        glass?: true;      // если нужно
+    }
+}
+
+
+declare module '@mui/material/Link' {
+    interface LinkPropsVariantOverrides {
+        textSimilar: true;
         accent?: true;     // если нужно
         glass?: true;      // если нужно
     }

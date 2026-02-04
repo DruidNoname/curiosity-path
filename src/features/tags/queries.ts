@@ -10,5 +10,4 @@ query GetTagsWithCount($first: Int = 100) {
       link
     }
   }
-}
-`
+}`;

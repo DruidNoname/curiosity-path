@@ -92,7 +92,7 @@ export const deadSpaceBaseTheme = createTheme({
                 },
                 '::selection': {
                     backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.3)',
-                    color: darkThemeColors.text.primary,
+                    color: 'var(--color-text-primary)',
                 },
                 '@font-face': {
                     fontFamily: 'Roboto Mono',
@@ -226,6 +226,107 @@ export const deadSpaceBaseTheme = createTheme({
                     boxShadow: '0 8px 24px rgba(var(--color-primary-main-rgb), 0.25)',
                 },
             },
+            variants: [
+                {
+                    props: { variant: 'contrast' },
+                    style: {
+                        backgroundColor: 'var(--color-background-paper)',
+                        backgroundImage: 'linear-gradient(rgba(255 255 255 / 0.07), rgba(255 255 255 / 0.07))',
+                        border: '1px solid rgba(var(--color-primary-main-rgb), 0.4)',
+                        boxShadow: `var(--shadow-widget), inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.1)`,
+                        position: 'relative',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: '2px',
+                            background: `linear-gradient(90deg, transparent, var(--color-primary-main), transparent)`,
+                        },
+                        '& .MuiTypography-root': {
+                            color: 'var(--color-text-primary)',
+                        },
+                        '& .MuiTypography-h5': {
+                            color: 'var(--color-primary-light)',
+                        },
+                        '& .MuiTypography-body2': {
+                            color: 'var(--color-text-secondary)',
+                        },
+                    },
+
+                },
+                {
+                    props: { variant: 'iced' },
+                    style: {
+                        backgroundColor: 'var(--color-background-paper)',
+                        backgroundImage: `
+                    linear-gradient(135deg, 
+                        rgba(255, 255, 255, 0.15) 0%,
+                        rgba(255, 255, 255, 0.05) 25%,
+                        rgba(255, 255, 255, 0) 50%,
+                        rgba(0, 0, 0, 0.05) 75%,
+                        rgba(0, 0, 0, 0.1) 100%
+                    ),
+                    linear-gradient(rgba(255 255 255 / 0.07), rgba(255 255 255 / 0.07))
+                `,
+                        border: '1px solid rgba(var(--color-primary-main-rgb), 0.5)',
+                        boxShadow: `
+                        var(--shadow-widget),
+                        inset 0 0 30px rgba(200, 230, 255, 0.15),
+                        inset 0 0 40px rgba(180, 220, 255, 0.08),
+                        inset 0 0 50px rgba(160, 210, 255, 0.04),
+                        inset 0 -2px 10px rgba(0, 0, 0, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3)
+                `,
+                        position: 'relative',
+                        backdropFilter: 'blur(10px)',
+                        overflow: 'hidden',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: '1px',
+                            background: `linear-gradient(90deg, 
+                        transparent, 
+                        rgba(255, 255, 255, 0.8), 
+                        rgba(173, 216, 230, 0.9), 
+                        rgba(255, 255, 255, 0.8), 
+                        transparent
+                    )`,
+                            zIndex: 1,
+                        },
+                        '&::after': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundImage: `
+                        linear-gradient(90deg, 
+                            transparent 50%, 
+                            rgba(255, 255, 255, 0.02) 50%
+                        ),
+                        linear-gradient(
+                            transparent 50%, 
+                            rgba(255, 255, 255, 0.02) 50%
+                        )
+                    `,
+                            backgroundSize: '4px 4px',
+                            opacity: 0.3,
+                            pointerEvents: 'none',
+                            zIndex: 0,
+                        },
+                        '& .MuiPaperContent-root, & .MuiPaperHeader-root': {
+                            position: 'relative',
+                            zIndex: 2,
+                        }
+                    }
+                }
+            ]
         },
         MuiCard: {
             variants: [
@@ -256,6 +357,7 @@ export const deadSpaceBaseTheme = createTheme({
                             color: 'var(--color-text-secondary)',
                         },
                     },
+
                 }
             ],
         },
@@ -473,14 +575,13 @@ export const deadSpaceBaseTheme = createTheme({
         MuiLink: {
             styleOverrides: {
                 root: {
-                    color: 'var(--color-primary-main)',
                     textDecoration: 'none',
                     fontWeight: 500,
-                    borderBottom: '1px solid transparent',
+                    borderBottom: '1px solid rgba(var(--color-primary-main-rgb), 0.5)',
                     transition: 'all 0.2s ease',
                     '&:hover': {
                         color: 'var(--color-primary-light)',
-                        borderBottom: '1px solid rgba(var(--color-primary-main-rgb), 0.5)',
+                        borderBottom: '1px solid rgba(var(--color-primary-main-rgb), 0.8)',
                     },
                 },
             },
