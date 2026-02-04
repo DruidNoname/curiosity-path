@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import {PER_PAGE, POSTS_URL} from "./const";
+import {ADDON_POSTS_URL, PER_PAGE, POSTS_URL} from "./const";
 import {fetchPostsByTag} from "./api";
 import {WP_REST_API_Post} from "wp-types";
 
@@ -10,6 +10,14 @@ export interface PostsResponse {
     currentPage: number,
     perPage: number
 };
+
+interface PostsByTodayResponse {
+    posts: WP_REST_API_Post[];
+    count: number;
+    date: string;
+    month: number;
+    day: number;
+}
 
 export const usePosts = (page  = 1, perPage  = PER_PAGE) => {
     return useQuery<PostsResponse>({
@@ -75,6 +83,37 @@ export const usePostsByMonth = (
             };
         },
         staleTime: 1000 * 60 * 5
+    });
+};
+
+export const usePostsByToday = () => {
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1; // 1-12
+    const currentDay = today.getDate(); // 1-31
+
+    const apiUrl = `${ADDON_POSTS_URL}/${currentMonth}/${currentDay}`;
+
+    return useQuery<PostsByTodayResponse, Error>({
+        queryKey: ['posts-by-today', currentMonth, currentDay],
+        queryFn: async () => {
+            const res = await fetch(apiUrl);
+
+            if (!res.ok) {
+                throw new Error(`Ошибка API: ${res.status}`);
+            }
+
+            const posts: WP_REST_API_Post[] = await res.json();
+
+            return {
+                posts,
+                count: posts.length,
+                date: today.toISOString().split('T')[0],
+                month: currentMonth,
+                day: currentDay
+            };
+        },
+        staleTime: 1000 * 60 * 60 * 12, // 12 часов
+        gcTime: 1000 * 60 * 60 * 24,    // 24 часа (вместо cacheTime)
     });
 };
 

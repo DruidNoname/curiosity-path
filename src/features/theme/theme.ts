@@ -289,22 +289,90 @@ export const deadSpaceLightTheme = createTheme(
                     },
                 },
                 variants: [
+                    ...(deadSpaceTheme.components?.MuiPaper?.variants || []),
                     {
                         props: { variant: 'contrast' },
                         style: {
-                            backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.7)',
-                            color: 'var(--color-primary-contrast, var(--color-text-primary, #ffffff))',
-                            border: '1px solid var(--color-primary-main)',
+                            backgroundColor: 'rgba(var(--color-primary-light-rgb), 0.5)',
+                            boxShadow: `0 4px 16px rgba(var(--color-primary-dark-rgb), 0.3),
+                    inset 0 0 0 2px rgba(var(--color-primary-light-rgb), 0.1)
+                `,
+                            border: '1px solid rgba(var(--color-primary-main-rgb), 0.2)',
 
                             '& .MuiTypography-root': {
-                                color: 'inherit',
+                                color: 'var(--color-text-primary)',
                             },
-                            '& .MuiButton-contained': {
-                                backgroundColor: 'rgba(var(--color-primary-contrast-rgb, 255 255 255), 0.2)',
-                                color: 'var(--color-primary-contrast, #ffffff)',
-                                '&:hover': {
-                                    backgroundColor: 'rgba(var(--color-primary-contrast-rgb, 255 255 255), 0.3)',
-                                },
+
+                            '& .MuiTypography-h5': {
+                                color: 'var(--color-primary-dark)',
+                            },
+                        },
+                    },
+                    {
+                        props: { variant: 'iced' },
+                        style: {
+                            backgroundColor: 'var(--color-background-paper)', // #ffffff
+                            backgroundImage: `
+              linear-gradient(135deg, 
+                rgba(var(--color-primary-light-rgb), 0.08) 0%,
+                rgba(var(--color-primary-light-rgb), 0.03) 25%,
+                transparent 50%,
+                rgba(var(--color-primary-dark-rgb), 0.03) 75%,
+                rgba(var(--color-primary-dark-rgb), 0.08) 100%
+              ),
+              linear-gradient(rgba(var(--color-primary-light-rgb), 0.04), rgba(var(--color-primary-light-rgb), 0.04))
+            `,
+                            border: '1px solid rgba(var(--color-primary-light-rgb), 0.3)',
+                            boxShadow: `
+              0 4px 12px rgba(var(--color-primary-main-rgb), 0.08),
+              0 1px 3px rgba(var(--color-primary-main-rgb), 0.05),
+              inset 0 0 20px rgba(var(--color-primary-light-rgb), 0.06),
+              inset 0 0 30px rgba(var(--color-primary-light-rgb), 0.03),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9),
+              inset 0 -1px 0 rgba(var(--color-primary-dark-rgb), 0.08)
+            `,
+                            position: 'relative',
+                            backdropFilter: 'blur(6px)',
+                            overflow: 'hidden',
+
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                height: '1px',
+                                background: `linear-gradient(90deg, 
+                transparent, 
+                rgba(var(--color-primary-light-rgb), 0.5), 
+                rgba(var(--color-primary-main-rgb), 0.7), 
+                rgba(var(--color-primary-light-rgb), 0.5), 
+                transparent
+              )`,
+                                zIndex: 1,
+                            },
+
+                            '&::after': {
+                                content: '""',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundImage: `
+                linear-gradient(90deg, 
+                  transparent 50%, 
+                  rgba(var(--color-primary-light-rgb), 0.02) 50%
+                ),
+                linear-gradient(
+                  transparent 50%, 
+                  rgba(var(--color-primary-light-rgb), 0.02) 50%
+                )
+              `,
+                                backgroundSize: '6px 6px',
+                                opacity: 0.15,
+                                pointerEvents: 'none',
+                                zIndex: 0,
                             },
                         },
                     }

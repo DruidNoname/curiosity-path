@@ -6,6 +6,7 @@ export const urls = {
         site: 'http://localhost:3000',
         wp: 'https://suffer.curiosity-path.ru',
         wpApi: 'https://suffer.curiosity-path.ru/wp-json/wp/v2',
+        wpAddonApi: 'https://suffer.curiosity-path.ru/wp-json/custom/v1',
         wpGraphql: 'https://suffer.curiosity-path.ru/graphql',
     },
 
@@ -14,6 +15,7 @@ export const urls = {
         site: 'https://curiosity-path.ru',
         wp: 'https://suffer.curiosity-path.ru',
         wpApi: 'https://suffer.curiosity-path.ru/wp-json/wp/v2',
+        wpAddonApi: 'https://suffer.curiosity-path.ru/wp-json/custom/v1',
         wpGraphql: 'https://suffer.curiosity-path.ru/graphql',
     },
 
@@ -26,6 +28,7 @@ export const urls = {
     get base() { return this.current.site; },
     get wp() { return this.current.wp; },
     get api() { return this.current.wpApi; },
+    get addonApi() { return this.current.wpAddonApi; },
     get graphql() { return this.current.wpGraphql; },
 
     // // Готовые API endpoints

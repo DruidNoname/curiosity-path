@@ -1,11 +1,9 @@
-'use client'
 import React from "react";
 import styles from './style.module.css';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { WP_REST_API_Post } from 'wp-types';
 import {Card, Typography, Link, Box} from "@mui/material";
 import {createExcerpt} from "@/helpers/utils";
-import {useTagById} from "@/features/tags/hooks";
 import {TAGS_URL} from "@/features/tags/const";
 import {useQueries} from "@tanstack/react-query";
 
@@ -46,7 +44,6 @@ const PostPreview: React.FC<Props> = ({ post }) => {
                             { title }
                         </Link>
                     </Typography>
-
                     { date &&
                         <time className={styles.date}>{date}</time>
                     }
@@ -83,6 +80,6 @@ const PostPreview: React.FC<Props> = ({ post }) => {
             </Card>
         </ErrorBoundary>
     );
-}
+};
 
 export default PostPreview;
