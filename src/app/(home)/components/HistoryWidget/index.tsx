@@ -42,7 +42,9 @@ const HistoryWidget: React.FC = ( ) => {
                 variant={'iced'}
                 sx={{padding: '16px', marginBottom: '20px;', minHeight: '180px', marginRight: '-3px', marginLeft: '-3px',}}
             >
-                {posts?.map((post: WP_REST_API_Post) => {
+                {   posts?.length > 0
+                    ?
+                    posts?.map((post: WP_REST_API_Post) => {
                     const postDate = new Date(post.date);
                     const postYear = postDate.getFullYear();
 
@@ -58,7 +60,12 @@ const HistoryWidget: React.FC = ( ) => {
                             </Link>
                         </Tooltip>
                     );
-                })}
+                })
+                :
+                    <Typography variant={'body2'}>
+                        ...ничего не произошло.
+                    </Typography>
+                }
             </Paper>
         </ErrorBoundary>
     );
