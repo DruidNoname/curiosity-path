@@ -1,6 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
-import {PER_PAGE, POSTS_URL} from "./const";
+import {POSTS_URL} from "./const";
 import {urls} from "@/config/urls";
+import {PER_PAGE} from "@/helpers/const";
 
 // Функции для префетчинга на сервере
 export async function prefetchPosts(queryClient: QueryClient) {

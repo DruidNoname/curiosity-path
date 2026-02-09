@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import {ADDON_POSTS_URL, PER_PAGE, POSTS_URL} from "./const";
+import {ADDON_POSTS_URL, POSTS_URL} from "./const";
 import {fetchPostsByTag} from "./api";
 import {WP_REST_API_Post} from "wp-types";
+import {PER_PAGE} from "@/helpers/const";
 
 export interface PostsResponse {
     posts: WP_REST_API_Post[],
