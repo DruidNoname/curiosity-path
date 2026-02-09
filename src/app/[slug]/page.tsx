@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React from 'react';
 import styles from './style.module.css';
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -59,7 +59,7 @@ const Post: React.FC<PostProps> = ({ params }) => {
                             Назад
                         </Button>
                     </Box>
-                    <Divider sx={{ mb: 4 }} />
+                    <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
 
                     <Box sx={{ typography: 'body1' }}>
                         { isLoading ?

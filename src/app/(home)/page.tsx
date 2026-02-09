@@ -9,7 +9,7 @@ import InfoWidget from "@/app/(home)/components/InfoWidget";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
 import Tags from "@/app/(home)/components/Tags";
-import {PER_PAGE} from "@/features/posts/const";
+import {PER_PAGE} from "@/helpers/const";
 import {PostCalendar} from "@/components/PostCalendar";
 import HistoryWidget from "@/app/(home)/components/HistoryWidget";
 

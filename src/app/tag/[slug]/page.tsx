@@ -10,7 +10,7 @@ import { usePostsByTag } from "@/features/posts/hooks";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
 import TagIcon from '@mui/icons-material/Tag';
-import { PER_PAGE } from "@/features/posts/const";
+import { PER_PAGE } from "@/helpers/const";
 import {useTag} from "@/features/tags/hooks";
 
 const TagPage: React.FC = () => {
@@ -66,48 +66,46 @@ const TagPage: React.FC = () => {
         <ErrorBoundary componentName={'TagPage'}>
             <Box sx={{ mb: 4 }}>
                 <Box sx={{ mb: 4, pb: 2, borderBottom: 1, borderColor: 'divider' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                        <Chip
-                            icon={<TagIcon />}
-                            label="Тег"
-                            color="primary"
-                            size="small"
-                        />
-                        <Typography variant="h4" component="h1">
-                            {tagData?.name || decodeURIComponent(slug)}
-                        </Typography>
-                    </Box>
-
-                    {tagData?.description && (
-                        <Typography
-                            variant="body1"
-                            color="text.secondary"
-                            sx={{ mt: 1, mb: 2 }}
-                        >
-                            {tagData?.description}
-                        </Typography>
-                    )}
-                    {tagData?.count ?
-                        <Typography variant="body2" color="text.secondary">
-                            Постов: {tagData.count}
-                        </Typography>
+                    { isError ? <div> Ошибка загрузки тега. </div>
                         :
-                        <Typography variant="body2" color="text.secondary">
-                            Постов: {total}
-                        </Typography>
+                        <>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+
+
+                                <Chip
+                                    icon={<TagIcon />}
+                                    label="Тег"
+                                    color="primary"
+                                    size="small"
+                                />
+                                <Typography variant="h4" component="h1">
+                                    {tagData?.name || decodeURIComponent(slug)}
+                                </Typography>
+
+                            </Box>
+
+                            {tagData?.description && (
+                                <Typography
+                                    variant="body1"
+                                    color="text.secondary"
+                                    sx={{ mt: 1, mb: 2 }}
+                                >
+                                    {tagData?.description}
+                                </Typography>
+                            )}
+                            {tagData?.count ?
+                                <Typography variant="body2" color="text.secondary">
+                                    Постов: {tagData.count}
+                                </Typography>
+                                :
+                                <Typography variant="body2" color="text.secondary">
+                                    Постов: {total}
+                                </Typography>
+                            }
+                        </>
                     }
                 </Box>
-
-                {/* Виджет с информацией */}
-                {/*<InfoWidget*/}
-                {/*    count={total}*/}
-                {/*    isLoading={isLoading}*/}
-                {/*    isError={isError}*/}
-                {/*    customText={`постов с тегом "${name || decodeURIComponent(slug)}"`}*/}
-                {/*/>*/}
-
-                {/* Загрузка при пагинации */}
-                {isLoading && page > 1 ? (
+                {(isLoading || isPostsLoading) && page > 1 ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
                         <Loader size={40} />
                     </Box>
@@ -128,27 +126,23 @@ const TagPage: React.FC = () => {
                                     setPage(newPage);
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                 }}
-                                disabled={isLoading}
+                                disabled={isPostsLoading}
                             />
                         )}
 
                         {/* Сообщение если нет постов */}
-                        {!isLoading && posts.length === 0 && (
+                        {!isLoading && !isPostsLoading && posts.length === 0 && (
                             <Box sx={{ textAlign: 'center', py: 8 }}>
                                 <TagIcon sx={{ fontSize: 60, color: 'action.disabled', mb: 2 }} />
                                 <Typography variant="h6" color="text.secondary" gutterBottom>
                                     Пока нет постов с этим тегом
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Но вы можете быть первым!
                                 </Typography>
                             </Box>
                         )}
                     </>
                 )}
 
-                {/* Ошибка */}
-                {isError && posts.length === 0 && (
+                {isPostsError && posts.length === 0 && (
                     <>
                         <Typography variant="body1" component="p">
                             Не удалось загрузить посты тега.
