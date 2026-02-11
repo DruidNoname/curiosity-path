@@ -1,7 +1,7 @@
 import {RECIPES_URL} from "@/features/recipes/const";
 import {PER_PAGE} from "@/helpers/const";
 import { useQuery } from '@tanstack/react-query';
-import {RecipesResponse} from "@/features/recipes/types";
+import {RecipeListItem, RecipesResponse} from "@/features/recipes/types";
 export const useRecipes = (page  = 1, perPage  = PER_PAGE) => {
     return useQuery<RecipesResponse>({
         queryKey: ['recipes', page, perPage],
@@ -31,19 +31,16 @@ export const useRecipeBySlug = (slug: string) => {
         queryFn: async () => {
             if (!slug) throw new Error('Slug is required');
 
-            // Шаг 1: Ищем рецепт, у которого поле 'slug' равно переданному значению
             const searchRes = await fetch(`${RECIPES_URL}?slug=${slug}`);
             if (!searchRes.ok) throw new Error('Recipe not found');
 
             const recipes = await searchRes.json();
-            // API возвращает массив. Находим нужный рецепт.
-            const targetRecipe = recipes.find(recipe => recipe.slug === slug);
+            const targetRecipe = recipes.find((recipe: RecipeListItem) => recipe.slug === slug);
 
             if (!targetRecipe) {
                 throw new Error('Recipe not found');
             }
 
-            // Шаг 2: Делаем запрос уже по найденному ID
             const recipeRes = await fetch(`${RECIPES_URL}/${targetRecipe.id}`);
             if (!recipeRes.ok) throw new Error('Failed to fetch recipe details');
 

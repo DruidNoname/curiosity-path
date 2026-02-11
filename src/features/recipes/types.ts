@@ -1,3 +1,50 @@
+export interface Ingredient {
+    uid: number;
+    amount: string;
+    unit: string;
+    name: string;
+    notes: string;
+    unit_id: number;
+    id: number;
+    type: string;
+}
+
+export interface IngredientsFull {
+    ingredients: Ingredient[];
+    name: string; // Название группы ингредиентов (может быть пустым)
+}
+
+export interface Instruction {
+    uid: number;
+    name: string;
+    text: string;
+    image: number;
+    ingredients: number[];
+    type: 'instruction';
+    image_url: string;
+}
+
+export interface InstructionsFull {
+    instructions: Instruction[];
+    name: string;
+}
+
+export interface Recipe {
+    id: number;
+    name: string; // Название рецепта (дублирует title.rendered)
+    summary: string; // Краткое описание в HTML
+    servings: string; // Количество порций
+    prep_time: string; // Время подготовки (в минутах)
+    cook_time: string; // Время приготовления (в минутах)
+    total_time: string; // Общее время (в минутах)
+    image_url?: string;
+    ingredients: IngredientsFull;
+    instructions: InstructionsFull[];
+    ingredients_flat: Ingredient[];
+    instructions_flat: Instruction[];
+}
+
+
 export interface RecipeListItem {
     id: number;
     date: string;
@@ -19,48 +66,7 @@ export interface RecipeListItem {
     wprm_cuisine: number[];
     wprm_keyword: number[];
     // Основные данные рецепта - САМАЯ ВАЖНАЯ ЧАСТЬ
-    recipe: {
-        id: number;
-        name: string; // Название рецепта (дублирует title.rendered)
-        summary: string; // Краткое описание в HTML
-        servings: string; // Количество порций
-        prep_time: string; // Время подготовки (в минутах)
-        cook_time: string; // Время приготовления (в минутах)
-        total_time: string; // Общее время (в минутах)
-        image_url?: string;
-        // ИНГРЕДИЕНТЫ - структурированные данные
-        ingredients: Array<{
-            ingredients: Array<{
-                amount: string; // Количество (например, "2")
-                unit: string;  // Единица измерения (например, "ст.л.")
-                name: string;  // Название ингредиента
-                notes: string; // Примечание (например, "мелко нарезанный")
-            }>;
-            name: string; // Название группы ингредиентов (может быть пустым)
-        }>;
-
-        // ИНСТРУКЦИИ - пошаговое приготовление
-        instructions: Array<{
-            instructions: Array<{
-                text: string; // Текст шага в HTML
-                image: number; // ID изображения для шага (0 если нет)
-            }>;
-            name: string; // Название группы инструкций (может быть пустым)
-        }>;
-
-        // Плоские версии (удобны для отображения)
-        ingredients_flat: Array<{
-            amount: string;
-            unit: string;
-            name: string;
-            notes: string;
-        }>;
-
-        instructions_flat: Array<{
-            text: string;
-            image: number;
-        }>;
-    };
+    recipe: Recipe;
 }
 
 // Интерфейс для полного ответа хука useRecipes
