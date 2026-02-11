@@ -2,19 +2,17 @@
 import React from 'react';
 import styles from './style.module.css';
 import ErrorBoundary from "@/components/ErrorBoundary";
-import {Box, Button, Container, Divider, Typography} from "@mui/material";
+import {Box, Container, Divider, Typography} from "@mui/material";
 import { usePost } from "@/features/posts/hooks";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter } from 'next/navigation';
 import Skeleton from "@/ui/Skeleton";
 import { getCleanEntry} from "@/helpers/utils";
+import EntryTitle from "../../components/SingleEntry/EntryTitle";
 
 interface PostProps {
     params: Promise<{ slug: string }>;
 }
-
 const Post: React.FC<PostProps> = ({ params }) => {
-    const router = useRouter();
     const { slug } = React.use(params);
     const { data: post, isLoading, isError, error } = usePost(slug);
 
@@ -22,9 +20,7 @@ const Post: React.FC<PostProps> = ({ params }) => {
     const date = post?.date ? new Date(post.date).toLocaleDateString('ru-RU') : '';
     const excerpt = getCleanEntry(post?.excerpt?.rendered || '');
     const content = getCleanEntry(post?.content.rendered || '');
-    const handleGoBack = () => {
-        router.back();
-    };
+
 
     if (isError) return <div>Ошибка: {error.message}</div>;
 
@@ -32,33 +28,7 @@ const Post: React.FC<PostProps> = ({ params }) => {
         <ErrorBoundary componentName={'Post'}>
             <Container maxWidth="lg">
                 <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
-                    <Box className={styles.TitleBlock}>
-                        <Box sx={{ typography: 'body1' }}>
-                            <Typography
-                                variant="h1"
-                                component="h1"
-                                sx={{
-                                    fontWeight: 'bold',
-                                    mb: 1
-                                }}
-                            >
-                                { isLoading ? <Skeleton width={320}/> : title }
-                            </Typography>
-                            <Typography
-                                variant="body1"
-                                component="p"
-                                dangerouslySetInnerHTML={{ __html: date }}
-                            />
-                        </Box>
-                        <Button
-                            className={styles.BackButton}
-                            startIcon={<ArrowBackIcon />}
-                            onClick={handleGoBack}
-                            variant="outlined"
-                        >
-                            Назад
-                        </Button>
-                    </Box>
+                    <EntryTitle title={title} isLoading={isLoading} date={date}/>
                     <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
 
                     <Box sx={{ typography: 'body1' }}>
@@ -87,7 +57,7 @@ const Post: React.FC<PostProps> = ({ params }) => {
                 </Box>
             </Container>
         </ErrorBoundary>
-    )
-}
+    );
+};
 
 export default Post;

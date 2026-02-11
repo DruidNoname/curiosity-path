@@ -10,7 +10,6 @@ import {useQueries} from "@tanstack/react-query";
 type Props = {
     post: WP_REST_API_Post
 }
-
 const PostPreview: React.FC<Props> = ({ post }) => {
     const title = post.title?.rendered || 'Без названия';
     const date = post.date ? new Date(post.date).toLocaleDateString('ru-RU') : '';

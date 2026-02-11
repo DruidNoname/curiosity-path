@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useParams } from 'next/navigation';
 import { WP_REST_API_Post } from 'wp-types';
-import PostPreview from "@/components/PostPreview";
+import PostPreview from "../../../components/EntriesLists/PostPreview";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Box, Divider, Typography, Chip, Breadcrumbs } from "@mui/material";
 import { usePostsByTag } from "@/features/posts/hooks";

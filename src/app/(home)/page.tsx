@@ -1,7 +1,7 @@
 'use client';
 import React from "react";
 import { WP_REST_API_Post } from 'wp-types';
-import PostPreview from "@/components/PostPreview";
+import PostPreview from "../../components/EntriesLists/PostPreview";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Box, Divider, Typography} from "@mui/material";
 import {usePosts} from "@/features/posts/hooks";

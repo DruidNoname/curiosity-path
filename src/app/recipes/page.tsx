@@ -4,7 +4,7 @@ import React from "react";
 import {Box, Link, Pagination, Paper, Typography} from "@mui/material";
 import { useRecipes } from "@/features/recipes/hooks";
 import {PER_PAGE} from "@/helpers/const";
-import PostPreview from "@/components/PostPreview";
+import PostPreview from "../../components/EntriesLists/PostPreview";
 import {RecipeListItem} from "@/features/recipes/types";
 import Loader from "@/ui/Loader";
 
