@@ -3,15 +3,15 @@
 import React, { useState } from "react";
 import { useParams } from 'next/navigation';
 import { WP_REST_API_Post } from 'wp-types';
-import PostPreview from "../../../components/EntriesLists/PostPreview";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { Box, Divider, Typography, Chip, Breadcrumbs } from "@mui/material";
+import { Box, Divider, Typography, Chip } from "@mui/material";
 import { usePostsByTag } from "@/features/posts/hooks";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
 import TagIcon from '@mui/icons-material/Tag';
 import { PER_PAGE } from "@/helpers/const";
 import {useTag} from "@/features/tags/hooks";
+import { EntryPreview } from "@/modules/components/EntryPreview";
 
 const TagPage: React.FC = () => {
     const params = useParams();
@@ -30,7 +30,6 @@ const TagPage: React.FC = () => {
         data: postsData,
         isLoading: isPostsLoading,
         isError: isPostsError,
-        error: postsError
     } = usePostsByTag(slug, page, PER_PAGE);
 
     const {
@@ -70,8 +69,6 @@ const TagPage: React.FC = () => {
                         :
                         <>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-
-
                                 <Chip
                                     icon={<TagIcon />}
                                     label="Тег"
@@ -81,7 +78,6 @@ const TagPage: React.FC = () => {
                                 <Typography variant="h4" component="h1">
                                     {tagData?.name || decodeURIComponent(slug)}
                                 </Typography>
-
                             </Box>
 
                             {tagData?.description && (
@@ -111,12 +107,17 @@ const TagPage: React.FC = () => {
                     </Box>
                 ) : (
                     <>
-                        {/* Список постов */}
                         {posts?.map((post: WP_REST_API_Post) => (
-                            <PostPreview post={post} key={post.id} />
+                            <EntryPreview
+                            entryId={post.id}
+                            entrySlug={post.slug}
+                            entryTitle={post.title?.rendered || 'Без названия'}
+                            entryPreview={post.excerpt?.rendered || ''}
+                            entryDate={post.date || ''}
+                            entryTags={post.tags || []}
+                            key={`post_${post.id}`}
+                            />
                         ))}
-
-                        {/* Пагинация */}
                         {totalPages > 1 && (
                             <Pagination
                                 sx={{ mt: 3, mb: 4 }}
@@ -130,7 +131,6 @@ const TagPage: React.FC = () => {
                             />
                         )}
 
-                        {/* Сообщение если нет постов */}
                         {!isLoading && !isPostsLoading && posts.length === 0 && (
                             <Box sx={{ textAlign: 'center', py: 8 }}>
                                 <TagIcon sx={{ fontSize: 60, color: 'action.disabled', mb: 2 }} />
@@ -156,6 +156,6 @@ const TagPage: React.FC = () => {
             </Box>
         </ErrorBoundary>
     );
-}
+};
 
 export default TagPage;

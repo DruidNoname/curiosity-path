@@ -11,3 +11,15 @@ query GetTagsWithCount($first: Int = 100) {
     }
   }
 }`;
+
+export const GET_TAG_BY_ID = gql`
+  query GetTag($id: ID!) {
+    tag(id: $id) {
+      id
+      name
+      slug
+      link
+      count
+    }
+  }
+`;

@@ -1,0 +1,1 @@
+export { ImageBordered } from "./ImageBordered";

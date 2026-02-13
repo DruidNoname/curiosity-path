@@ -3,7 +3,7 @@
 import React from 'react';
 import {useRecipeBySlug} from "@/features/recipes/hooks";
 import {Box, Container, Divider, Typography} from "@mui/material";
-import styles from "@/app/[slug]/style.module.css";
+import styles from "./style.module.css";
 import Skeleton from "@/ui/Skeleton";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Recipe as RecipeType} from "@/features/recipes/types";

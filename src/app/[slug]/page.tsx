@@ -1,10 +1,8 @@
 'use client';
 import React from 'react';
-import styles from './style.module.css';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Box, Container, Divider, Typography} from "@mui/material";
 import { usePost } from "@/features/posts/hooks";
-import { useRouter } from 'next/navigation';
 import Skeleton from "@/ui/Skeleton";
 import { getCleanEntry} from "@/helpers/utils";
 import EntryTitle from "../../components/SingleEntry/EntryTitle";
@@ -27,7 +25,7 @@ const Post: React.FC<PostProps> = ({ params }) => {
     return (
         <ErrorBoundary componentName={'Post'}>
             <Container maxWidth="lg">
-                <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
+                <Box sx={{ mt: 4, mb: 2 }}>
                     <EntryTitle title={title} isLoading={isLoading} date={date}/>
                     <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
 

@@ -1,7 +1,6 @@
 'use client';
 import React from "react";
 import { WP_REST_API_Post } from 'wp-types';
-import PostPreview from "../../components/EntriesLists/PostPreview";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Box, Divider, Typography} from "@mui/material";
 import {usePosts} from "@/features/posts/hooks";
@@ -12,6 +11,7 @@ import Tags from "@/app/(home)/components/Tags";
 import {PER_PAGE} from "@/helpers/const";
 import {PostCalendar} from "@/components/PostCalendar";
 import HistoryWidget from "@/app/(home)/components/HistoryWidget";
+import { EntryPreview } from "@/modules/components/EntryPreview";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -65,7 +65,15 @@ const MainPage: React.FC = () => {
                                 sx={{ flexGrow: 1 }}
                             >
                                 { posts?.map((post: WP_REST_API_Post) => (
-                                    <PostPreview post={post} key={post.id}/>
+                                    <EntryPreview
+                                        entryId={post.id}
+                                        entrySlug={post.slug}
+                                        entryTitle={post.title?.rendered || 'Без названия'}
+                                        entryPreview={post.excerpt?.rendered || ''}
+                                        entryDate={post.date || ''}
+                                        entryTags={post.tags || []}
+                                        key={`post_${post.id}`}
+                                    />
                                 ))
                                 }
                                 <Pagination
