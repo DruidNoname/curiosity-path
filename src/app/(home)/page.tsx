@@ -1,6 +1,5 @@
 'use client';
 import React from "react";
-import { WP_REST_API_Post } from 'wp-types';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Box, Divider, Typography} from "@mui/material";
 import {usePosts} from "@/features/posts/hooks";
@@ -12,6 +11,7 @@ import {PER_PAGE} from "@/helpers/const";
 import {PostCalendar} from "@/components/PostCalendar";
 import HistoryWidget from "@/app/(home)/components/HistoryWidget";
 import { EntryPreview } from "@/modules/components/EntryPreview";
+import {TransformedPost} from "@/features/posts/types";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -64,7 +64,7 @@ const MainPage: React.FC = () => {
                                 component={'div'}
                                 sx={{ flexGrow: 1 }}
                             >
-                                { posts?.map((post: WP_REST_API_Post) => (
+                                { posts?.map((post: TransformedPost) => (
                                     <EntryPreview
                                         entryId={post.id}
                                         entrySlug={post.slug}
@@ -72,6 +72,7 @@ const MainPage: React.FC = () => {
                                         entryPreview={post.excerpt?.rendered || ''}
                                         entryDate={post.date || ''}
                                         entryTags={post.tags || []}
+                                        entryImage={post.featuredImage ? post.featuredImage?.medium : undefined}
                                         key={`post_${post.id}`}
                                     />
                                 ))

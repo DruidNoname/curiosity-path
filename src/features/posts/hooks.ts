@@ -3,36 +3,49 @@ import {ADDON_POSTS_URL, POSTS_URL} from "./const";
 import {fetchPostsByTag} from "./api";
 import {WP_REST_API_Post} from "wp-types";
 import {PER_PAGE} from "@/helpers/const";
+import {PostsResponse, PostsByTodayResponse} from "@/features/posts/types";
 
-export interface PostsResponse {
-    posts: WP_REST_API_Post[],
-    total: number,
-    totalPages: number,
-    currentPage: number,
-    perPage: number
-};
 
-interface PostsByTodayResponse {
-    posts: WP_REST_API_Post[];
-    count: number;
-    date: string;
-    month: number;
-    day: number;
-}
 
-export const usePosts = (page  = 1, perPage  = PER_PAGE) => {
+
+export const usePosts = (page = 1, perPage = PER_PAGE) => {
     return useQuery<PostsResponse>({
         queryKey: ['posts', page, perPage],
         queryFn: async () => {
-            const res = await fetch(`${POSTS_URL}?page=${page}&per_page=${perPage}`);
+            // Убрал slug=example-post, добавил _embed и правильные параметры пагинации
+            const res = await fetch(
+                `${POSTS_URL}?page=${page}&per_page=${perPage}&_embed&status=publish`
+            );
+
             if (!res.ok) throw new Error('Ошибка при получении постов');
 
             const total = res.headers.get('X-WP-Total') || '0';
-            const totalPages = res.headers.get('X-WP-TotalPages')  || '1';
+            const totalPages = res.headers.get('X-WP-TotalPages') || '1';
             const posts = await res.json();
 
+            // Трансформируем посты, добавляя удобный доступ к featured image
+            const transformedPosts = posts.map((post: any) => {
+                // Получаем featured image из _embedded если оно есть
+                const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
+
+                return {
+                    ...post,
+                    // Добавляем удобные поля для изображений
+                    featuredImage: featuredMedia ? {
+                        full: featuredMedia.source_url,
+                        thumbnail: featuredMedia.media_details?.sizes?.thumbnail?.source_url,
+                        medium: featuredMedia.media_details?.sizes?.medium?.source_url,
+                        large: featuredMedia.media_details?.sizes?.large?.source_url,
+                        alt: featuredMedia.alt_text || post.title.rendered,
+                        caption: featuredMedia.caption?.rendered || '',
+                    } : null,
+                    // Или просто URL если нужно только это
+                    featuredImageUrl: featuredMedia?.source_url || null,
+                };
+            });
+
             return {
-                posts,
+                posts: transformedPosts,
                 total: parseInt(total, 10),
                 totalPages: parseInt(totalPages, 10),
                 currentPage: page,
@@ -140,7 +153,6 @@ export const usePostsByTag = (tagSlug: string, page = 1, perPage = PER_PAGE) => 
         queryKey: ['posts', 'tag', tagSlug, page, perPage],
         queryFn: () => fetchPostsByTag(tagSlug, page, perPage),
         enabled: !!tagSlug,
-        staleTime: 5 * 60 * 1000, // 5 минут
-        // keepPreviousData: true,
+        staleTime: 5 * 60 * 1000,
     });
 };

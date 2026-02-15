@@ -14,7 +14,7 @@ type Props = {
     entryPreview?: string;
     entryDate?: string;
     entryTags?: number[];
-    entryImage?: string;
+    entryImage?: string | null;
 }
 export const EntryPreview: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage }) => {
     const title = entryTitle || 'Без названия';

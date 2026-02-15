@@ -30,7 +30,6 @@ export const EntryPreviewContent: React.FC<Props> = ({title, link, date, excerpt
                 <Typography
                     variant="body1"
                     component="div"
-                    sx={{ mb: 3 }}
                     dangerouslySetInnerHTML={{ __html: excerpt }}
                 />
             }
