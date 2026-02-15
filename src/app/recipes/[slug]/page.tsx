@@ -2,12 +2,12 @@
 
 import React from 'react';
 import {useRecipeBySlug} from "@/features/recipes/hooks";
-import {Box, Button, Container, Divider, Typography} from "@mui/material";
-import styles from "@/app/[slug]/style.module.css";
+import {Box, Container, Divider, Typography} from "@mui/material";
+import styles from "./style.module.css";
 import Skeleton from "@/ui/Skeleton";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Recipe as RecipeType} from "@/features/recipes/types";
+import EntryTitle from "../../../components/SingleEntry/EntryTitle";
 
 // import {useRouter} from "next/navigation";
 
@@ -16,6 +16,7 @@ interface Props {
 }
 const Recipe: React.FC<Props> = ({ params }) =>  {
     const { slug } = React.use(params);
+
     const { data, isLoading, isError, error } = useRecipeBySlug(slug);
     const recipe: RecipeType = data?.recipe || [];
 
@@ -60,31 +61,10 @@ const createInstructionsList = (recipeData: RecipeType) => {
 };
 
 return(
-    <ErrorBoundary componentName={'Post'}>
+    <ErrorBoundary componentName={'Recipe'}>
         <Container maxWidth="lg">
             <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
-                <Box className={styles.TitleBlock}>
-                    <Box sx={{ typography: 'body1' }}>
-                        <Typography
-                            variant="h1"
-                            component="h1"
-                            sx={{
-                                fontWeight: 'bold',
-                                mb: 1
-                            }}
-                        >
-                            { isLoading ? <Skeleton width={320}/> : recipe?.name }
-                        </Typography>
-                    </Box>
-                    {/*<Button*/}
-                    {/*    className={styles.BackButton}*/}
-                    {/*    startIcon={<ArrowBackIcon />}*/}
-                    {/*    onClick={handleGoBack}*/}
-                    {/*    variant="outlined"*/}
-                    {/*>*/}
-                    {/*    Назад*/}
-                    {/*</Button>*/}
-                </Box>
+                <EntryTitle title={recipe?.name || ''} isLoading={isLoading}/>
                 <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
 
                 <Box sx={{ typography: 'body1' }}>

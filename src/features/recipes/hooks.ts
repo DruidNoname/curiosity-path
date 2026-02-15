@@ -47,7 +47,7 @@ export const useRecipeBySlug = (slug: string) => {
             const recipeData = await recipeRes.json();
             return recipeData;
         },
-        enabled: !!slug, // Запрос выполнится только если slug передан[citation:7]
+        enabled: !!slug,
         staleTime: 1000 * 60 * 5
     });
 };
