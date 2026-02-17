@@ -28,6 +28,8 @@ const MainPage: React.FC = () => {
         total = 0,
     } = data || {};
 
+    console.log(posts);
+
     return (
         <ErrorBoundary componentName={'MainPage'}>
             <Box sx={{ mb: 4 }}>

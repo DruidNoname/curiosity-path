@@ -7,7 +7,7 @@ import styles from "./style.module.css";
 import Skeleton from "@/ui/Skeleton";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Recipe as RecipeType} from "@/features/recipes/types";
-import EntryTitle from "../../../components/SingleEntry/EntryTitle";
+import SingleEntryTitle from "../../../components/SingleEntry/SingleEntryTitle";
 
 // import {useRouter} from "next/navigation";
 
@@ -64,7 +64,7 @@ return(
     <ErrorBoundary componentName={'Recipe'}>
         <Container maxWidth="lg">
             <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
-                <EntryTitle title={recipe?.name || ''} isLoading={isLoading}/>
+                <SingleEntryTitle title={recipe?.name || ''} isLoading={isLoading}/>
                 <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
 
                 <Box sx={{ typography: 'body1' }}>

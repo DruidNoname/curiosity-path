@@ -1,4 +1,4 @@
-.EntryTitleBlock {
+.SingleEntryTitleBlock {
     @media (min-width: 650px) {
         display: flex;
         justify-content: space-between;
@@ -6,7 +6,7 @@
         margin-bottom: 24px;
     }
 
-    .EntryTitle:not(:only-child) {
+    .SingleEntryTitle:not(:only-child) {
         margin-bottom: 12px;
     }
 
