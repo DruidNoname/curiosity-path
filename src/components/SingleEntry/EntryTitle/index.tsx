@@ -4,6 +4,7 @@ import Skeleton from "@/ui/Skeleton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
 import {useRouter} from "next/navigation";
+import {getCleanEntry} from "@/helpers/utils";
 
 type Props = {
     title: string;
@@ -34,7 +35,7 @@ const EntryTitle: React.FC<Props> = ({title, isLoading, date, tags}) => {
                     component="h1"
                     className={styles.EntryTitle}
                 >
-                    { isLoading ? <Skeleton width={320}/> : title }
+                    { isLoading ? <Skeleton width={320}/> : getCleanEntry(title) }
                 </Typography>
                 {date ? <Typography
                     variant="body1"
