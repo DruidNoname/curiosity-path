@@ -110,7 +110,7 @@ const TagPage: React.FC = () => {
                         {posts?.map((post: WP_REST_API_Post) => (
                             <EntryPreview
                             entryId={post.id}
-                            entrySlug={post.slug}
+                            entrySlug={`/${post.slug}`}
                             entryTitle={post.title?.rendered || 'Без названия'}
                             entryPreview={post.excerpt?.rendered || ''}
                             entryDate={post.date || ''}
