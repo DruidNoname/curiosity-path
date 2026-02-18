@@ -5,7 +5,7 @@ import {Box, Container, Divider, Typography} from "@mui/material";
 import { usePost } from "@/features/posts/hooks";
 import Skeleton from "@/ui/Skeleton";
 import { getCleanEntry} from "@/helpers/utils";
-import SingleEntryTitle from "../../components/SingleEntry/SingleEntryTitle";
+import SingleEntryTitle from "@/components/SingleEntry/SingleEntryTitle";
 
 interface PostProps {
     params: Promise<{ slug: string }>;
@@ -31,9 +31,9 @@ const Post: React.FC<PostProps> = ({ params }) => {
                     <Box sx={{ typography: 'body1' }}>
                         { isLoading ?
                             <>
-                                <Skeleton width={200}/><br/>
-                                <Skeleton width={350}/><br/>
-                                <Skeleton width={200}/><br/>
+                                <Skeleton width={180}/><br/>
+                                <Skeleton width={320}/><br/>
+                                <Skeleton width={180}/><br/>
                             </>
                             :
                             <>
@@ -42,7 +42,7 @@ const Post: React.FC<PostProps> = ({ params }) => {
                                     component="div"
                                     dangerouslySetInnerHTML={{ __html: excerpt }}
                                 />
-                                <Divider sx={{ mb: 2, borderStyle: 'dashed' }} />
+                                <Divider sx={{ mb: 3, borderStyle: 'dashed' }} />
                                 <Typography
                                     variant="body1"
                                     component="div"

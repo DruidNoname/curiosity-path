@@ -1,3 +1,4 @@
+'use client';
 import sanitizeHtml from 'sanitize-html';
 
 //CLEAN TYPOGRAPHY

@@ -6,7 +6,7 @@ import { useRecipes } from "@/features/recipes/hooks";
 import {PER_PAGE} from "@/helpers/const";
 import {RecipeListItem} from "@/features/recipes/types";
 import Loader from "@/ui/Loader";
-import { EntryPreview } from "@/modules/components/EntryPreview";
+import { EntryPreview } from "@/modules";
 
 const Recipes: React.FC = () => {
     const [page, setPage] = React.useState(1);

@@ -4,7 +4,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import {Paper, Box} from "@mui/material";
 import {createExcerpt, getCleanEntry} from "@/helpers/utils";
 import {useTagsByIds} from "@/features/tags/hooks";
-import {EntryPreviewContent} from "@/modules/components/EntryPreviewContent";
+import {EntryPreviewContent} from "./EntryPreviewContent";
 import {ImageBordered} from "@/components/Images";
 
 type Props = {

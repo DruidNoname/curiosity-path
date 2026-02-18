@@ -13,7 +13,7 @@ const Tags: React.FC = () => {
         variables: { first: 100 },
     });
     const rawTags = data?.tags?.nodes || [];
-    const tags = [...rawTags].sort((a, b) => b.count | 1 - a.count | 1) || [];
+    const tags = [...rawTags].sort((a, b) => b.count - a.count) || [];
     const totalTags = tags.length || 0;
 
     const errorMessage =  error?.graphQLErrors?.[0]?.message || error?.message || 'Неизвестная ошибка';
