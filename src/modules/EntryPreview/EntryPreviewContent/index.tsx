@@ -1,5 +1,5 @@
 import {Box, Link, Typography} from "@mui/material";
-import styles from "@/modules/components/EntryPreview/style.module.css";
+import styles from "@/modules/EntryPreview/style.module.css";
 import React from "react";
 import {WP_REST_API_Tag} from "wp-types";
 import Skeleton from "@/ui/Skeleton";

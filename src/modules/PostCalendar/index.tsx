@@ -1,13 +1,13 @@
 'use client';
 
 import React from "react";
-import ErrorBoundary from '../ErrorBoundary';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import {Typography} from "@mui/material";
 import {startOfMonth, endOfMonth, addMonths, format} from 'date-fns';
 import { usePostsByMonth} from "@/features/posts/hooks";
-import PostCalendarDay from "@/components/PostCalendar/DayWithLink";
+import PostCalendarDay from "@/modules/PostCalendar/DayWithLink";
 import Calendar from "@/ui/Calendar";
-import {getPostsByDate} from "@/components/PostCalendar/utils";
+import {getPostsByDate} from "@/modules/PostCalendar/utils";
 import Loader from "@/ui/Loader";
 
 export const PostCalendar: React.FC = () => {

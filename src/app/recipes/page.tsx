@@ -6,7 +6,7 @@ import { useRecipes } from "@/features/recipes/hooks";
 import {PER_PAGE} from "@/helpers/const";
 import {RecipeListItem} from "@/features/recipes/types";
 import Loader from "@/ui/Loader";
-import { EntryPreview } from "@/modules/components/EntryPreview";
+import { EntryPreview } from "@/modules";
 
 const Recipes: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -47,33 +47,6 @@ const Recipes: React.FC = () => {
                                 entryImage={recipe.image_url}
                                 key={`recipe_${recipe.id}`}
                             />
-                            // <Paper key={`recipe_${recipe.id}`}  sx={{
-                            //     p: 2,
-                            //     display: 'flex',
-                            //     gap: '16px'
-                            // }}>
-                            //     <Box sx={{ width: 200, flexShrink: 0 }}>
-                            //         <img
-                            //             src={recipe.image_url}
-                            //             alt={recipe.name}
-                            //             style={{
-                            //                 width: '100%',
-                            //                 height: 'auto',
-                            //                 borderRadius: '4px'
-                            //             }}
-                            //         />
-                            //     </Box>
-                            //     <Box>
-                            //         <Link href={`/recipes/${item.slug}`} >{recipe.name}</Link>
-                            //         <Typography
-                            //             variant={'body1'}
-                            //             sx={{mt: '16px', mb: '24px'}}
-                            //             component="p"
-                            //             dangerouslySetInnerHTML={{ __html: recipe.summary }}
-                            //         />
-                            //     </Box>
-                            //
-                            // </Paper>
                         );
                     })}
                     { totalPages > 1 &&

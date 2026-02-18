@@ -1,3 +1,4 @@
+'use client';
 import sanitizeHtml from 'sanitize-html';
 
 //CLEAN TYPOGRAPHY
@@ -102,7 +103,6 @@ const processHTML = (html: string, options = {}): string => {
         const doc = parser.parseFromString(html, 'text/html');
         const body = doc.body;
 
-        // 1. Удаляем пустые параграфы
         const allParagraphs = Array.from(body.getElementsByTagName('p'));
         allParagraphs.forEach(paragraph => {
             if (isEmptyParagraph(paragraph) && paragraph.parentNode) {
@@ -110,10 +110,7 @@ const processHTML = (html: string, options = {}): string => {
             }
         });
 
-        // 2. Обрабатываем одинокие изображения
         processLonelyImages(doc, options);
-
-        // 3. Обрабатываем фигуры
         processFigures(doc);
 
         return body.innerHTML;

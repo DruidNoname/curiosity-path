@@ -1,0 +1,12 @@
+.ImageWrapper {
+    border: 3px solid rgba(77, 160, 192, 0.2);
+    border-radius: 8px;
+    display: block;
+    @media (min-width: 600px) {
+        display: inline;
+    }
+}
+
+.Image {
+    border-radius: 8px;
+}

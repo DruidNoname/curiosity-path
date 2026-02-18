@@ -8,9 +8,9 @@ import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
 import Tags from "@/app/(home)/components/Tags";
 import {PER_PAGE} from "@/helpers/const";
-import {PostCalendar} from "@/components/PostCalendar";
+import {PostCalendar} from "../../modules/PostCalendar";
 import HistoryWidget from "@/app/(home)/components/HistoryWidget";
-import { EntryPreview } from "@/modules/components/EntryPreview";
+import { EntryPreview } from "../../modules/EntryPreview";
 import {TransformedPost} from "@/features/posts/types";
 
 const MainPage: React.FC = () => {
