@@ -9,6 +9,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import {Recipe as RecipeType} from "@/features/recipes/types";
 import SingleEntryTitle from "../../../components/SingleEntry/SingleEntryTitle";
 import {IngredientsList} from "@/app/recipes/[slug]/components/IngredientsList";
+import Loader from "@/ui/Loader";
 
 // import {useRouter} from "next/navigation";
 
@@ -36,37 +37,20 @@ const Recipe: React.FC<Props> = ({ params }) =>  {
         });
     };
 
+    if (isLoading) return <Loader />;
+
     return(
         <ErrorBoundary componentName={'Recipe'}>
             <Container maxWidth="lg">
                 <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
                     <SingleEntryTitle title={recipe?.name || ''} isLoading={isLoading}/>
                     <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
-                    <IngredientsList ingredients={recipe?.ingredients_flat }/>
-                    <Box sx={{ typography: 'body1' }}>
-                        { isLoading ?
-                            <>
-                                <Skeleton width={200}/><br/>
-                                <Skeleton width={350}/><br/>
-                                <Skeleton width={200}/><br/>
-                            </>
-                            :
-                            <>
-                                <Typography
-                                    variant="body1"
-                                    component="div"
-                                    dangerouslySetInnerHTML={{ __html: recipe?.summary }}
-                                />
-                                <Divider sx={{ mb: 2, borderStyle: 'dashed' }} />
-
-
-                                <Typography variant={'h5'} sx={{mb: 2}}>
-                                    Приготовление:
-                                </Typography>
-                                { createInstructionsList(recipe) }
-                            </>
-                        }
-                    </Box>
+                    <IngredientsList ingredients={recipe?.ingredients_flat } isLoading={isLoading}/>
+                    <Divider sx={{ mb: 4, borderStyle: 'dashed' }} />
+                    <Typography variant={'h4'} sx={{mb: 2}}>
+                        Приготовление:
+                    </Typography>
+                    { createInstructionsList(recipe) }
                 </Box>
             </Container>
         </ErrorBoundary>

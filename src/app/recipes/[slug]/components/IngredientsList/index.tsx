@@ -2,15 +2,17 @@ import React from "react";
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {RecipeCalcButtons} from "../RecipeCalcButtons";
-import {Typography} from "@mui/material";
+import {Box, Button, Paper, Typography} from "@mui/material";
 import {Ingredient} from "@/features/recipes/types";
 import {ProportionByIngredientForm} from "@/app/recipes/[slug]/components/ProportionByIngredientForm";
 
 type Props = {
     ingredients: Ingredient[];
+    isLoading: boolean;
 };
 
-export const IngredientsList: React.FC<Props> = ({ ingredients }) => {
+export const IngredientsList: React.FC<Props> = ({ ingredients, isLoading }) => {
+    const [open, setOpen] = React.useState(false);
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const router = useRouter();
@@ -48,14 +50,28 @@ export const IngredientsList: React.FC<Props> = ({ ingredients }) => {
 
     return(
         <ErrorBoundary componentName={'IngredientsList'}>
-            <RecipeCalcButtons setMultiplier={handleMultiplierChange}/>
-            <Typography variant={'h5'} sx={{mb: 2}}>
-                Ингредиенты:
-            </Typography>
-            <ul>
-                { ingredientItems }
-            </ul>
-            <ProportionByIngredientForm ingredients={ingredients}/>
+            <Box sx={{display: {lg: 'flex'}, justifyContent: 'space-between', gap: '16px'}}>
+                <div>
+                    <Typography variant={'h4'} sx={{mb: 2}}>
+                        Ингредиенты:
+                    </Typography>
+                    <ul>
+                        { ingredientItems }
+                    </ul>
+                </div>
+                <Paper sx={{ mb: 3, padding: '16px', width: {lg: '400px'}}}>
+                    <Typography variant={'h5'} sx={{mb: 3}}>
+                        Изменить количество ингредиентов:
+                    </Typography>
+                    <RecipeCalcButtons setMultiplier={handleMultiplierChange} disabled={isLoading}/>
+
+                    <Button sx={{display: 'block', width: '100%', mb: 3 }} variant={'outlined'} disabled={isLoading} onClick={() => setOpen(!open)}>Пропорция по ингредиенту</Button>
+                    { open ?
+                        <ProportionByIngredientForm ingredients={ingredients || []} setMultiplier={handleMultiplierChange} setOpen={setOpen}/> :
+                        null
+                    }
+                </Paper>
+            </Box>
         </ErrorBoundary>
     );
 };
