@@ -14,13 +14,10 @@ const Recipes: React.FC = () => {
     const {
         data,
         isLoading,
-        isError,
-        error
     } = useRecipes(page, PER_PAGE);
 
     const {
         recipes = [],
-        total = 0,
         totalPages = 1,
     } = data || {};
 

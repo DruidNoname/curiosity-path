@@ -8,6 +8,9 @@ import Skeleton from "@/ui/Skeleton";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Recipe as RecipeType} from "@/features/recipes/types";
 import SingleEntryTitle from "../../../components/SingleEntry/SingleEntryTitle";
+import {IngredientsList} from "@/app/recipes/[slug]/components/IngredientsList";
+import Loader from "@/ui/Loader";
+import {UNIT_MAP} from "@/features/recipes/const";
 
 // import {useRouter} from "next/navigation";
 
@@ -17,89 +20,59 @@ interface Props {
 const Recipe: React.FC<Props> = ({ params }) =>  {
     const { slug } = React.use(params);
 
-    const { data, isLoading, isError, error } = useRecipeBySlug(slug);
+    const { data, isLoading } = useRecipeBySlug(slug);
     const recipe: RecipeType = data?.recipe || [];
 
-    const ingredientList = (recipeData: RecipeType) => {
-        if (!recipeData?.ingredients_flat) return [];
+    const createInstructionsList = (recipeData: RecipeType) => {
+        const instructionsFlat = recipeData?.instructions_flat || [];
+        if (instructionsFlat.length === 0) {
+            return []; // Или можно вернуть [<Box key="no-instructions">Нет инструкций</Box>]
+        }
 
-        return recipeData.ingredients_flat.map(ing => {
-            // Формируем строку с примечанием в скобках
-            const notesPart = ing.notes ? ` (${ing.notes})` : '';
-
-            // Формируем строку с количеством и единицей измерения
-            const amountUnitPart = [
-                ing.amount !== undefined && ing.amount !== null ? ing.amount : '',
-                ing.unit || ''
-            ].filter(part => part !== '').join(' ');
-
-            // Собираем части
-            const ingredientText = `${ing.name || ''}${notesPart}${amountUnitPart ? ': ' + amountUnitPart : ''}`;
-
+        return instructionsFlat.map((step) => {
             return (
-                <li key={ing.id || ing.uid}>
-                    {ingredientText}
-                </li>
+                <Box key={step.text.slice(0, 8)}>
+                    <div dangerouslySetInnerHTML={{ __html: step.text || '' }} />
+                </Box>
             );
         });
     };
 
+    const rawIngs = recipe?.ingredients_flat || [];
 
-const createInstructionsList = (recipeData: RecipeType) => {
-    const instructionsFlat = recipeData?.instructions_flat || [];
-    if (instructionsFlat.length === 0) {
-        return []; // Или можно вернуть [<Box key="no-instructions">Нет инструкций</Box>]
-    }
-
-    return instructionsFlat.map((step) => {
-        return (
-            <Box key={step.text.slice(0, 8)}>
-                <div dangerouslySetInnerHTML={{ __html: step.text || '' }} />
-            </Box>
-        );
+    const ingredients = rawIngs.map((ing) => {
+        if (ing?.unit && ing.unit in UNIT_MAP) {
+            return {
+                ...ing,
+                unit: UNIT_MAP[ing.unit]
+            };
+        } else if (!ing?.unit) {
+            return {
+                ...ing,
+                unit: 'шт.'
+            };
+        }
+        return ing;
     });
-};
 
-return(
-    <ErrorBoundary componentName={'Recipe'}>
-        <Container maxWidth="lg">
-            <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
-                <SingleEntryTitle title={recipe?.name || ''} isLoading={isLoading}/>
-                <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
+    if (isLoading) return <Loader />;
 
-                <Box sx={{ typography: 'body1' }}>
-                    { isLoading ?
-                        <>
-                            <Skeleton width={200}/><br/>
-                            <Skeleton width={350}/><br/>
-                            <Skeleton width={200}/><br/>
-                        </>
-                        :
-                        <>
-                            <Typography
-                                variant="body1"
-                                component="div"
-                                dangerouslySetInnerHTML={{ __html: recipe?.summary }}
-                            />
-                            <Divider sx={{ mb: 2, borderStyle: 'dashed' }} />
-                            <Typography variant={'h5'} sx={{mb: 2}}>
-                                Ингредиенты:
-                            </Typography>
-                            <ul>
-                                { ingredientList(recipe) }
-                            </ul>
-
-                            <Typography variant={'h5'} sx={{mb: 2}}>
-                                Приготовление:
-                            </Typography>
-                            { createInstructionsList(recipe) }
-                        </>
-                    }
+    return(
+        <ErrorBoundary componentName={'Recipe'}>
+            <Container maxWidth="lg">
+                <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
+                    <SingleEntryTitle title={recipe?.name || ''} isLoading={isLoading}/>
+                    <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
+                    <IngredientsList ingredients={ ingredients } isLoading={isLoading}/>
+                    <Divider sx={{ mb: 4, borderStyle: 'dashed' }} />
+                    <Typography variant={'h4'} sx={{mb: 2}}>
+                        Приготовление:
+                    </Typography>
+                    { createInstructionsList(recipe) }
                 </Box>
-            </Box>
-        </Container>
-    </ErrorBoundary>
-);
+            </Container>
+        </ErrorBoundary>
+    );
 };
 
 export default Recipe;

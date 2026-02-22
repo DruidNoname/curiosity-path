@@ -1,0 +1,16 @@
+.Changer {
+    border: 1px solid rgba(var(--color-primary-main-rgb), 0.5);
+    border-left-color: transparent;
+    border-right-color: transparent;
+    padding: 24px 0;
+    border-radius: 4px;
+}
+
+.Select {
+    flex-grow: 1;
+}
+
+.Input {
+    padding: 3px 10px;
+    max-width: 90px;
+}

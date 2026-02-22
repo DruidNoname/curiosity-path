@@ -1,6 +1,6 @@
 export interface Ingredient {
     uid: number;
-    amount: string;
+    amount: number;
     unit: string;
     name: string;
     notes: string;
@@ -77,3 +77,11 @@ export interface RecipesResponse {
     currentPage: number;
     perPage: number;
 }
+
+export type RoundingIngredientsConfig = {
+    min: number;           // минимальное значение для правила
+    max?: number;          // максимальное значение (опционально)
+    precision: number;     // точность округления
+    toNearest?: number;    // округление до ближайшего (например, 5 для сотен)
+    decimals?: number;     // количество знаков после запятой
+};
