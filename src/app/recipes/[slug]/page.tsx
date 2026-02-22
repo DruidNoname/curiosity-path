@@ -10,6 +10,7 @@ import {Recipe as RecipeType} from "@/features/recipes/types";
 import SingleEntryTitle from "../../../components/SingleEntry/SingleEntryTitle";
 import {IngredientsList} from "@/app/recipes/[slug]/components/IngredientsList";
 import Loader from "@/ui/Loader";
+import {UNIT_MAP} from "@/features/recipes/const";
 
 // import {useRouter} from "next/navigation";
 
@@ -37,6 +38,23 @@ const Recipe: React.FC<Props> = ({ params }) =>  {
         });
     };
 
+    const rawIngs = recipe?.ingredients_flat || [];
+
+    const ingredients = rawIngs.map((ing) => {
+        if (ing?.unit && ing.unit in UNIT_MAP) {
+            return {
+                ...ing,
+                unit: UNIT_MAP[ing.unit]
+            };
+        } else if (!ing?.unit) {
+            return {
+                ...ing,
+                unit: 'шт.'
+            };
+        }
+        return ing;
+    });
+
     if (isLoading) return <Loader />;
 
     return(
@@ -45,7 +63,7 @@ const Recipe: React.FC<Props> = ({ params }) =>  {
                 <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
                     <SingleEntryTitle title={recipe?.name || ''} isLoading={isLoading}/>
                     <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
-                    <IngredientsList ingredients={recipe?.ingredients_flat } isLoading={isLoading}/>
+                    <IngredientsList ingredients={ ingredients } isLoading={isLoading}/>
                     <Divider sx={{ mb: 4, borderStyle: 'dashed' }} />
                     <Typography variant={'h4'} sx={{mb: 2}}>
                         Приготовление:

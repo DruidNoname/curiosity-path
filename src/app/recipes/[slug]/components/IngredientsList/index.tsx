@@ -5,6 +5,7 @@ import {RecipeCalcButtons} from "../RecipeCalcButtons";
 import {Box, Button, Paper, Typography} from "@mui/material";
 import {Ingredient} from "@/features/recipes/types";
 import {ProportionByIngredientForm} from "@/app/recipes/[slug]/components/ProportionByIngredientForm";
+import {processNumber} from "@/features/recipes/utils";
 
 type Props = {
     ingredients: Ingredient[];
@@ -34,7 +35,7 @@ export const IngredientsList: React.FC<Props> = ({ ingredients, isLoading }) => 
         return ingredients.map(ing => {
             const notesPart = ing.notes ? ` (${ing.notes})` : '';
             const amountUnitPart = [
-                ing.amount !== undefined && ing.amount !== null ? (ing.amount * multiplier) : '',
+                ing.amount !== undefined && ing.amount !== null ? (processNumber(ing.amount * multiplier)) : '',
                 ing.unit || ''
             ].filter(part => part !== '').join(' ');
 
