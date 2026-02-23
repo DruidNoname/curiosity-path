@@ -42,7 +42,7 @@ const Recipe: React.FC<Props> = ({ params }) =>  {
             );
         });
 
-        const images = additionalImgs.map(imgLink => <ImageBordered src={imgLink} sx={{ maxWidth: '350px;'}}/>);
+        const images = additionalImgs.map(imgLink => <ImageBordered src={imgLink} key={imgLink.slice(-8, -1)} sx={{ maxWidth: '350px;'}}/>);
 
         return(
             <>
