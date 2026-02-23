@@ -2,6 +2,7 @@ import {urls} from "@/config/urls";
 import {RoundingIngredientsConfig} from "@/features/recipes/types";
 
 export const RECIPES_URL = `${urls.api}/wprm_recipe`;
+export const COURSES_URL = `${urls.api}/wprm_course`;
 
 export const UNIT_MAP: Record<string, string> = {
     g: 'гр.',

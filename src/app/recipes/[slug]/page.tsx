@@ -11,6 +11,7 @@ import SingleEntryTitle from "../../../components/SingleEntry/SingleEntryTitle";
 import {IngredientsList} from "@/app/recipes/[slug]/components/IngredientsList";
 import Loader from "@/ui/Loader";
 import {UNIT_MAP} from "@/features/recipes/const";
+import {ImageBordered} from "@/components/Images";
 
 // import {useRouter} from "next/navigation";
 
@@ -24,23 +25,46 @@ const Recipe: React.FC<Props> = ({ params }) =>  {
     const recipe: RecipeType = data?.recipe || [];
 
     const createInstructionsList = (recipeData: RecipeType) => {
+        const additionalImgs: string[] = [];
         const instructionsFlat = recipeData?.instructions_flat || [];
         if (instructionsFlat.length === 0) {
             return []; // Или можно вернуть [<Box key="no-instructions">Нет инструкций</Box>]
         }
 
-        return instructionsFlat.map((step) => {
+        const steps = instructionsFlat.map((step, index) => {
+            if (step?.image_url) {
+                additionalImgs.push(step?.image_url);
+            }
             return (
-                <Box key={step.text.slice(0, 8)}>
+                <Box key={`instruction_step_${index}`}>
                     <div dangerouslySetInnerHTML={{ __html: step.text || '' }} />
                 </Box>
             );
         });
+
+        const images = additionalImgs.map(imgLink => <ImageBordered src={imgLink} sx={{ maxWidth: '350px;'}}/>);
+
+        return(
+            <>
+                <Typography variant={'h4'} sx={{mb: 2}}>
+                    Приготовление:
+                </Typography>
+                { steps }
+                { images.length > 0 &&
+                    <>
+                        <Typography variant={'h4'} sx={{mb: 2}}>
+                            Изображения:
+                        </Typography>
+                        { images }
+                    </>
+                }
+            </>
+        );
     };
 
     const rawIngs = recipe?.ingredients_flat || [];
 
-    const ingredients = rawIngs.map((ing) => {
+    const ingredientsWithFixedUnits = rawIngs.map((ing) => {
         if (ing?.unit && ing.unit in UNIT_MAP) {
             return {
                 ...ing,
@@ -63,11 +87,9 @@ const Recipe: React.FC<Props> = ({ params }) =>  {
                 <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
                     <SingleEntryTitle title={recipe?.name || ''} isLoading={isLoading}/>
                     <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
-                    <IngredientsList ingredients={ ingredients } isLoading={isLoading}/>
+                    <IngredientsList ingredients={ ingredientsWithFixedUnits } isLoading={isLoading}/>
                     <Divider sx={{ mb: 4, borderStyle: 'dashed' }} />
-                    <Typography variant={'h4'} sx={{mb: 2}}>
-                        Приготовление:
-                    </Typography>
+
                     { createInstructionsList(recipe) }
                 </Box>
             </Container>

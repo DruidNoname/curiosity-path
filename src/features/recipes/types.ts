@@ -85,3 +85,22 @@ export type RoundingIngredientsConfig = {
     toNearest?: number;    // округление до ближайшего (например, 5 для сотен)
     decimals?: number;     // количество знаков после запятой
 };
+
+export interface UseCoursesParams {
+    orderby?: 'count' | 'name' | 'id' | 'slug';
+    order?: 'asc' | 'desc';
+    perPage?: number;
+    hideEmpty?: boolean;
+}
+
+export interface Course {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string;
+    count?: number; // количество рецептов в этом курсе
+    link?: string;
+    taxonomy?: string;
+    parent?: number;
+    meta?: Record<string, any>;
+}

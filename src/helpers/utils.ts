@@ -1,4 +1,5 @@
 'use client';
+
 import sanitizeHtml from 'sanitize-html';
 
 //CLEAN TYPOGRAPHY
@@ -99,6 +100,12 @@ const processFigures = (doc: Document): void => {
 // Основная функция, использующая один парсер
 const processHTML = (html: string, options = {}): string => {
     try {
+        if (typeof DOMParser === 'undefined') {
+            // На сервере возвращаем HTML как есть или минимальную обработку
+            console.log('Server-side rendering, skipping DOMParser');
+            return html.replace(/<p[^>]*>\s*(&nbsp;|\u00A0|<\/?br\s*\/?>|\s)*<\/p>/gi, '');
+        }
+
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         const body = doc.body;

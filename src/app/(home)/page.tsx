@@ -12,6 +12,7 @@ import {PostCalendar} from "../../modules/PostCalendar";
 import HistoryWidget from "@/app/(home)/components/HistoryWidget";
 import { EntryPreview } from "../../modules/EntryPreview";
 import {TransformedPost} from "@/features/posts/types";
+import EntriesListLayout from "@/components/Layouts/EntriesListLayout";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -31,39 +32,17 @@ const MainPage: React.FC = () => {
     return (
         <ErrorBoundary componentName={'MainPage'}>
             <Box sx={{ mb: 4 }}>
-
-                <InfoWidget count={ total } isLoading={ isLoading } isError={isError} />
+                <InfoWidget count={ total } isLoading={ isLoading } isError={isError} error={error}/>
 
                 { isLoading ?
-                    <Loader/>
+
+                    <Loader />
+
                     :
-                    <Box
-                        component={'div'}
-                        sx={{
-                            display: {xs: 'block', sm: 'flex'},
-                            gap:  { sm: '16px', lg: '32px'},
-                        }}
-                    >
-                        { isError ?
-                            <Box
-                                component={'div'}
-                                sx={{ flexGrow: 1 }}
-                            >
-                                <Typography variant="body1" component="p">
-                                    А бек не завезли.
-                                </Typography>
-                                <Divider sx={{ mt: '20px', mb: '36px'}} />
-                                <Typography variant="body1" component="p">
-                                    Ошибка: {error?.message}
-                                </Typography>
-                            </Box>
 
-                            :
-
-                            <Box
-                                component={'div'}
-                                sx={{ flexGrow: 1 }}
-                            >
+                    <EntriesListLayout
+                        mainContent={
+                            <>
                                 { posts?.map((post: TransformedPost) => (
                                     <EntryPreview
                                         entryId={post.id}
@@ -86,25 +65,16 @@ const MainPage: React.FC = () => {
                                     }}
                                     disabled={isLoading}
                                 />
-                            </Box>
+                            </>
                         }
-                        <Box
-                            component="aside"
-                            sx={{
-                                width: '20%',
-                                minWidth: '300px',
-                                p: 3,
-                                bgcolor: 'background.paper',
-                                borderLeft: 1,
-                                borderColor: 'divider'
-                            }}
-                        >
-                            <HistoryWidget/>
-                            <PostCalendar/>
-                            { isError && 'И сюда.' }
-                            <Tags/>
-                        </Box>
-                    </Box>
+                        asideContent={
+                            <>
+                                <HistoryWidget/>
+                                <PostCalendar/>
+                                <Tags/>
+                            </>
+                        }
+                    />
                 }
             </Box>
         </ErrorBoundary>

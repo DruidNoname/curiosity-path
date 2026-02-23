@@ -40,7 +40,7 @@ const HistoryWidget: React.FC = ( ) => {
             }
             <Paper
                 variant={'iced'}
-                sx={{padding: '16px', marginBottom: '20px;', minHeight: '180px', marginRight: '-3px', marginLeft: '-3px',}}
+                sx={{padding: '16px', marginBottom: '20px;', minHeight: '130px', marginRight: '-3px', marginLeft: '-3px',}}
             >
                 {   posts?.length > 0
                     ?
