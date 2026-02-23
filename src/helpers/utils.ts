@@ -72,21 +72,32 @@ const processLonelyImages = (doc: Document, options = {}): void => {
 };
 
 //BEAUTIFY IMAGES WITH CAPTIONS
+//toDo эта функция мне не нравится
 const processFigures = (doc: Document): void => {
     const figures = doc.querySelectorAll('figure');
 
     figures.forEach(figure => {
         const caption = figure.querySelector('figcaption');
         if (!caption) return;
+        const classedImg = figure.querySelector('img[class*="wp-image-"]');
+        const unclassedImg = figure.querySelector('img');
+        if (!classedImg && !unclassedImg) return;
+        let width = null;
 
-        const img = figure.querySelector('img[class*="wp-image-"]');
-        if (!img) return;
+        if (classedImg || unclassedImg) {
+            const img = classedImg || unclassedImg;
 
-        const match = img.className.match(/wp-image-(\d+)/);
-        if (!match || !match[1]) return;
+            const widthAttr = img?.getAttribute('width');
+            const match = img?.className?.match(/wp-image-(\d+)/);
 
-        const width = parseInt(match[1], 10);
-        if (isNaN(width) || width <= 0) return;
+            if (widthAttr) {
+                width = parseInt(widthAttr, 10);
+            } else if (match && match[1]) {
+                width = parseInt(match[1], 10);
+            }
+
+            if (!width || isNaN(width) || width <= 0) return;
+        }
 
         figure.style.maxWidth = `${width}px`;
         figure.classList.add('wp-image-limited');
