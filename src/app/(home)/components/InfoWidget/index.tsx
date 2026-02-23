@@ -8,8 +8,9 @@ type Props = {
     count: number;
     isLoading: boolean;
     isError: boolean;
+    error?: any;
 }
-const InfoWidget: React.FC<Props> = ( { count, isLoading, isError }) => {
+const InfoWidget: React.FC<Props> = ( { count, isLoading, isError, error }) => {
 
     return (
         <ErrorBoundary componentName={'InfoWidget'}>
@@ -36,7 +37,10 @@ const InfoWidget: React.FC<Props> = ( { count, isLoading, isError }) => {
                         {isLoading ? (
                             <Skeleton width={200} sx={{ ml: 'auto' }}/>
                         ) : isError ? (
-                            'У самурая нет цели... Только ожидание бека.'
+                            <>
+                                <p>'У самурая нет цели... Только ожидание бека.'</p>
+                                <p>Ошибка чего-то: {error?.message}</p>
+                            </>
                         ) : (
                             `Всего постов: ${count}`
                         )}
@@ -44,7 +48,7 @@ const InfoWidget: React.FC<Props> = ( { count, isLoading, isError }) => {
                 </Box>
             </Paper>
         </ErrorBoundary>
-    )
+    );
 };
 
-export default InfoWidget
+export default InfoWidget;
