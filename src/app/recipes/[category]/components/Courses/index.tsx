@@ -11,12 +11,12 @@ const Courses: React.FC = () => {
 
     const displayCourses = data || [];
 
-    const totalTags = 123;
+    const totalTags = displayCourses?.length || 0;
 
     const courseElements = displayCourses.map((course, index, array) => (
         <React.Fragment key={course.id}>
             <Link
-                href={`/course/${course.slug}`}
+                href={`/recipes/${course.slug}`}
                 style={{ textDecoration: 'none' }}
             >
                 {course.name}
