@@ -4,7 +4,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import {RecipeCalcButtons} from "../RecipeCalcButtons";
 import {Box, Button, Paper, Typography} from "@mui/material";
 import {Ingredient} from "@/features/recipes/types";
-import {ProportionByIngredientForm} from "@/app/recipes/[category]/[slug]/components/ProportionByIngredientForm";
+import {ProportionByIngredientForm} from "@/app/recipes/[slug]/components/ProportionByIngredientForm";
 import {processNumber} from "@/features/recipes/utils";
 
 type Props = {

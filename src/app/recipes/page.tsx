@@ -5,6 +5,7 @@ import {Box, Card, Link, Typography} from "@mui/material";
 import {useCourses} from "@/features/recipes/hooks";
 import Loader from "@/ui/Loader";
 import {Stack} from "@mui/system";
+import PageTitle from "@/components/SingleEntry/PageTitle";
 
 
 const Recipes: React.FC = () => {
@@ -16,9 +17,7 @@ const Recipes: React.FC = () => {
 
     return(
         <Box sx={{px: '24px'}}>
-            <Typography variant={'h3'} sx={{mt: '16px', mb: '24px'}}>
-                Книга рецептов: категории
-            </Typography>
+            <PageTitle title={'Книга рецептов: категории'} isLoading={isLoading}/>
             <Stack
                 direction="row"        // Элементы в ряд
                 useFlexGap             // Обязательно! Позволяет Stack'у правильно обрабатывать gap при переносе
@@ -40,7 +39,7 @@ const Recipes: React.FC = () => {
                         }}>
                             { isContent ?
                                 <Link
-                                    href={`/recipes/${cat.slug}`}
+                                    href={`/recipes/categories/${cat.slug}`}
                                     style={{ textDecoration: 'none' }}
                                 >
                                     {`${cat.name} (${cat.count})`}

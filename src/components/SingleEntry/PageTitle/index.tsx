@@ -9,10 +9,9 @@ import {getCleanEntry} from "@/helpers/utils";
 type Props = {
     title: string;
     isLoading: boolean;
-    date?: string;
-    tags?: any; //я ещё не решила, чем они будут приходить
+    actions?: any; //я ещё не решила, чем они будут приходить
 }
-const EntryTitle: React.FC<Props> = ({title, isLoading, date, tags}) => {
+const PageTitle: React.FC<Props> = ({title, isLoading, actions}) => {
     const router = useRouter();
     const [canGoBack, setCanGoBack] = React.useState(false);
 
@@ -28,22 +27,18 @@ const EntryTitle: React.FC<Props> = ({title, isLoading, date, tags}) => {
     };
 
     return (
-        <Box className={styles.EntryTitleBlock}>
+        <Box className={styles.PageTitleBlock}>
             <Box>
                 <Typography
-                    variant="h1"
+                    variant="h3"
                     component="h1"
-                    className={styles.EntryTitle}
+                    className={styles.PageTitle}
                 >
                     { isLoading ? <Skeleton width={320}/> : getCleanEntry(title) }
                 </Typography>
-                {date ? <Typography
+                {actions ? <Typography
                     variant="body1"
-                    component="div"> { `Запись от ${date}` } </Typography> : null }
-                {tags ? <Typography
-                    variant="body1"
-                    component="div"> { `Теги: ${tags}` } </Typography> : null }
-
+                    component="div"> { `Запись от ${actions}` } </Typography> : null }
             </Box>
             <Button
                 className={styles.BackButton}
@@ -57,4 +52,4 @@ const EntryTitle: React.FC<Props> = ({title, isLoading, date, tags}) => {
     );
 };
 
-export default EntryTitle;
+export default PageTitle;

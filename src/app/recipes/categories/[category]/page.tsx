@@ -8,8 +8,9 @@ import {RecipeListItem} from "@/features/recipes/types";
 import Loader from "@/ui/Loader";
 import { EntryPreview } from "@/modules";
 import EntriesListLayout from "@/components/Layouts/EntriesListLayout";
-import Courses from "@/app/recipes/[category]/components/Courses";
+import Courses from "@/app/recipes/components/Courses";
 import {useParams} from "next/navigation";
+import PageTitle from "@/components/SingleEntry/PageTitle";
 
 
 const RecipesCat: React.FC = () => {
@@ -39,9 +40,7 @@ const RecipesCat: React.FC = () => {
 
     return(
         <Box sx={{px: '24px'}}>
-            <Typography variant={'h3'} sx={{mt: '16px', mb: '24px'}}>
-                Книга рецептов
-            </Typography>
+            <PageTitle title={'Книга рецептов'} isLoading={isLoading}/>
             <EntriesListLayout
                 mainContent={
                     <>
@@ -51,7 +50,7 @@ const RecipesCat: React.FC = () => {
                             return(
                                 <EntryPreview
                                     entryId={recipe.id}
-                                    entrySlug={`/recipes/${slug}/${item.slug}`}
+                                    entrySlug={`/recipes/${item.slug}`}
                                     entryTitle={recipe.name || 'Без названия'}
                                     entryPreview={recipe.summary || ''}
                                     entryImage={recipe.image_url}
