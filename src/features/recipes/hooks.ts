@@ -2,11 +2,17 @@ import {COURSES_URL, RECIPES_URL} from "@/features/recipes/const";
 import {PER_PAGE} from "@/helpers/const";
 import { useQuery } from '@tanstack/react-query';
 import {Course, RecipeListItem, RecipesResponse, UseCoursesParams} from "@/features/recipes/types";
-export const useRecipes = (page  = 1, perPage  = PER_PAGE) => {
+export const useRecipes = (page = 1, perPage  = PER_PAGE, courseID?: number, enabled?: boolean) => {
     return useQuery<RecipesResponse>({
         queryKey: ['recipes', page, perPage],
         queryFn: async () => {
-            const res = await fetch(`${RECIPES_URL}?page=${page}&per_page=${perPage}`);
+            let url = `${RECIPES_URL}?page=${page}&per_page=${perPage}`;
+
+            if (courseID) {
+                url += `&wprm_course=${courseID}`;
+            }
+
+            const res = await fetch(url);
             if (!res.ok) throw new Error('Ошибка при получении рецептов');
 
             const total = res.headers.get('X-WP-Total') || '0';
@@ -21,7 +27,8 @@ export const useRecipes = (page  = 1, perPage  = PER_PAGE) => {
                 perPage: perPage
             };
         },
-        staleTime: 1000 * 60 * 5
+        staleTime: 1000 * 60 * 5,
+        enabled: enabled
     });
 };
 
@@ -82,85 +89,5 @@ export const useRecipeBySlug = (slug: string) => {
         },
         enabled: !!slug,
         staleTime: 1000 * 60 * 5
-    });
-};
-
-export const useWprmDiagnostic = () => {
-    return useQuery({
-        queryKey: ['wprm-diagnostic'],
-        queryFn: async () => {
-            const results: any = {
-                endpoints: {},
-                recipes: null,
-                taxonomies: null
-            };
-
-            // 1. Проверяем базовый эндпоинт WPRM
-            try {
-                const wprmRes = await fetch('/wp-json/wprm/v1');
-                results.endpoints['/wprm/v1'] = {
-                    status: wprmRes.status,
-                    ok: wprmRes.ok
-                };
-                if (wprmRes.ok) {
-                    results.wprmInfo = await wprmRes.json();
-                }
-            } catch (e) {
-                // @ts-ignore
-                results.endpoints['/wprm/v1'] = { error: e.message };
-            }
-
-            // 2. Проверяем рецепты
-            try {
-                const recipesRes = await fetch('/wp-json/wp/v2/wprm_recipe?per_page=5');
-                results.endpoints['/wp/v2/wprm_recipe'] = {
-                    status: recipesRes.status,
-                    ok: recipesRes.ok,
-                    total: recipesRes.headers.get('X-WP-Total'),
-                    totalPages: recipesRes.headers.get('X-WP-TotalPages')
-                };
-
-                if (recipesRes.ok) {
-                    const recipes = await recipesRes.json();
-                    results.recipes = recipes.map((r: any) => ({
-                        id: r.id,
-                        title: r.title?.rendered,
-                        slug: r.slug,
-                        // Ищем поля с таксономиями
-                        taxonomies: Object.keys(r).filter(k =>
-                            Array.isArray(r[k]) && r[k].length > 0 && typeof r[k][0] === 'object' && r[k][0]?.taxonomy
-                        )
-                    }));
-                }
-            } catch (e) {
-                // @ts-ignore
-                results.endpoints['/wp/v2/wprm_recipe'] = { error: e.message };
-            }
-
-            // 3. Проверяем возможные таксономии через рецепты
-            if (results.recipes && results.recipes.length > 0) {
-                // Берем первый рецепт и проверяем его _links
-                const firstRecipeId = results.recipes[0].id;
-                try {
-                    const linksRes = await fetch(`/wp-json/wp/v2/wprm_recipe/${firstRecipeId}?_fields=id,_links`);
-                    if (linksRes.ok) {
-                        const linksData = await linksRes.json();
-                        console.log('Links для рецепта:', linksData._links);
-
-                        // В _links могут быть ссылки на таксономии
-                        if (linksData._links) {
-                            results.taxonomyLinks = Object.keys(linksData._links)
-                                .filter(key => key.includes('wp:term') || key.includes('taxonomy'))
-                                .map(key => linksData._links[key]);
-                        }
-                    }
-                } catch (e) {
-                    console.log('Не удалось получить _links');
-                }
-            }
-
-            return results;
-        },
-        retry: false
     });
 };

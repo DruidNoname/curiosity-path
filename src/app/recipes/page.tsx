@@ -1,72 +1,59 @@
 'use client';
 
 import React from "react";
-import {Box, Pagination, Typography} from "@mui/material";
-import { useRecipes } from "@/features/recipes/hooks";
-import {PER_PAGE} from "@/helpers/const";
-import {RecipeListItem} from "@/features/recipes/types";
+import {Box, Card, Link, Typography} from "@mui/material";
+import {useCourses} from "@/features/recipes/hooks";
 import Loader from "@/ui/Loader";
-import { EntryPreview } from "@/modules";
-import EntriesListLayout from "@/components/Layouts/EntriesListLayout";
-import Courses from "@/app/recipes/components/Courses";
+import {Stack} from "@mui/system";
+import PageTitle from "@/components/SingleEntry/PageTitle";
 
 
 const Recipes: React.FC = () => {
-    const [page, setPage] = React.useState(1);
+    const { data, isLoading } = useCourses({hideEmpty: false});
 
-    const {
-        data,
-        isLoading,
-    } = useRecipes(page, PER_PAGE);
-
-    const {
-        recipes = [],
-        totalPages = 1,
-    } = data || {};
+    const categories = data || [];
 
     if (isLoading) return <Loader/>;
 
     return(
         <Box sx={{px: '24px'}}>
-            <Typography variant={'h3'} sx={{mt: '16px', mb: '24px'}}>
-                Книга рецептов
-            </Typography>
-            <EntriesListLayout
-                mainContent={
-                    <>
-                        { recipes?.map((item: RecipeListItem) => {
-                            const recipe = item?.recipe;
-
-                            return(
-                                <EntryPreview
-                                    entryId={recipe.id}
-                                    entrySlug={`/recipes/${item.slug}`}
-                                    entryTitle={recipe.name || 'Без названия'}
-                                    entryPreview={recipe.summary || ''}
-                                    entryImage={recipe.image_url}
-                                    key={`recipe_${recipe.id}`}
-                                />
-                            );
-                        })}
-                        { totalPages > 1 &&
-                            <Pagination
-                                sx={{ mt: 3, mb: 4 }}
-                                count={totalPages}
-                                page={page}
-                                onChange={(_e, newPage) => {
-                                    setPage(newPage);
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }}
-                                disabled={isLoading}
-                            />
-                        }
-                    </>
+            <PageTitle title={'Книга рецептов: категории'} isLoading={isLoading}/>
+            <Stack
+                direction="row"        // Элементы в ряд
+                useFlexGap             // Обязательно! Позволяет Stack'у правильно обрабатывать gap при переносе
+                spacing={2}            // Gap между элементами (2 = 16px)
+                sx={{
+                    flexWrap: 'wrap',    // Разрешаем перенос на новую строку
+                }}
+            >
+                { categories.map(cat => {
+                    const isContent = cat.count !== undefined && cat.count > 0;
+                    return(
+                        <Card key={cat.id} sx={{
+                            width: {
+                                xs: '100%',      // 1 колонка на мобилках
+                                sm: 'calc(50% - 8px)', // 2 колонки (16px/2 = вычитаем 8px)
+                                lg: 'calc(25% - 12px)' // 4 колонки (16px * 3/4 = вычитаем 12px)
+                            },
+                            padding: 2
+                        }}>
+                            { isContent ?
+                                <Link
+                                    href={`/recipes/categories/${cat.slug}`}
+                                    style={{ textDecoration: 'none' }}
+                                >
+                                    {`${cat.name} (${cat.count})`}
+                                </Link>
+                                :
+                                <Typography variant={'body1'} color={'textDisabled'}>
+                                    { cat.name } (0)
+                                </Typography>
+                            }
+                        </Card>
+                    );
+                })
                 }
-
-                asideContent={
-                 <Courses/>
-                }
-            />
+            </Stack>
         </Box>
     );
 };
