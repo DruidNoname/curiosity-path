@@ -1,0 +1,9 @@
+.MyPortret {
+    max-width: 320px;
+    margin-bottom: 16px;
+    @media(min-width: 768px) {
+        float: right;
+        margin-left: 20px;
+        margin-bottom: 20px;
+    }
+}
