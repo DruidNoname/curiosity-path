@@ -23,7 +23,7 @@ const About: React.FC = () => {
             </Box>
             <Divider sx={{ marginTop: '16px', marginBottom: '24px',  }} />
             <Box>
-                <ImageBordered src={'/images/ya.jpg'} title={'Фото автора'} classNameWrapper={styles.MyPortret}/>
+                <ImageBordered src={'https://suffer.curiosity-path.ru/wp-content/uploads/2026/02/photo_2026-02-26_23-04-36.jpg'} title={'Фото автора'} classNameWrapper={styles.MyPortret}/>
                 <p><i>Привет, меня зовут Оля, мне {age} годиков, я&nbsp;веб-разработчик c&nbsp;{experience}-летним стажем. Заархивированная тётенька в&nbsp;купальнике на&nbsp;фоне моря&nbsp;&mdash; это&nbsp;я. Поговаривают, что тётеньками в&nbsp;купальниках хорошо рекламируется что угодно, даже блог. Вот и&nbsp;попробуем.</i></p>
                 <p>Этот микропроект создан, продуман и&nbsp;написан лично мной с&nbsp;помощью <b>React</b> и&nbsp;<b>Next.js</b> на&nbsp;<b>Typescript</b>. Клиентская часть лежит на&nbsp;next-овской&nbsp;же облачной платформе vercel. Серверная - собрана из дипсика и палок на headless-wordpress.</p>
                 <p>Кроме <b>постов блога</b> здесь планируется размещение <b>нескольких инструментов разной степени нужности</b> и&nbsp;упоротости. На&nbsp;странице dev-экспериментов можно посмотреть, над чем я&nbsp;работаю в&nbsp;данный момент. Bли не&nbsp;работаю, если выдохлась. Пока собирается справочник рецептов с&nbsp;расчётом граммовки ингредиентов.</p>
