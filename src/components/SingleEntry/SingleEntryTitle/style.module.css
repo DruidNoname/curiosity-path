@@ -1,4 +1,5 @@
 .SingleEntryTitleBlock {
+    margin-bottom: 16px;
     @media (min-width: 650px) {
         display: flex;
         justify-content: space-between;
@@ -6,8 +7,16 @@
         margin-bottom: 24px;
     }
 
-    .SingleEntryTitle:not(:only-child) {
+    &:has(> :nth-child(2)) .SingleEntryTitle {
         margin-bottom: 12px;
+    }
+
+    &:has(.SingleEntrySubtitle) .SingleEntryTitle{
+        margin-bottom: 6px;
+    }
+
+    &:has(> :nth-child(2)) .SingleEntrySubtitle {
+        margin-bottom: 16px;
     }
 
     .BackButton {
