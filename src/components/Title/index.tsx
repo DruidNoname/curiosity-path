@@ -1,16 +1,17 @@
 import {Box, Button, Typography} from "@mui/material";
 import styles from "./style.module.css";
-import Skeleton from "@/ui/Skeleton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
 import {useRouter} from "next/navigation";
+import Skeleton from "@/ui/Skeleton";
 
 type Props = {
     title: string;
     variant?: 'h2' |  'h1' |  'h4';
     subtitle?: string;
+    isLoading?: boolean;
 }
-const Title: React.FC<Props> = ({title, variant, subtitle}) => {
+const Title: React.FC<Props> = ({title, variant, subtitle, isLoading}) => {
     const router = useRouter();
     const [canGoBack, setCanGoBack] = React.useState(false);
 
@@ -33,7 +34,7 @@ const Title: React.FC<Props> = ({title, variant, subtitle}) => {
                     component="h1"
                     className={styles.Title}
                 >
-                    { title }
+                    { isLoading ? <Skeleton width={320}/> : title }
                 </Typography>
                 { subtitle ? <Typography
                     variant="h4"
