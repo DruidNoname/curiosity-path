@@ -1,4 +1,6 @@
-.PageTitleBlock {
+.TitleBlock {
+    margin-bottom: 16px;
+
     @media (min-width: 650px) {
         display: flex;
         justify-content: space-between;
@@ -6,8 +8,16 @@
         margin-bottom: 24px;
     }
 
-    .PageTitle:not(:only-child) {
+    .Title:not(:only-child) {
         margin-bottom: 12px;
+    }
+
+    &:has(> :nth-child(2)) .Subtitle {
+        margin-bottom: 16px;
+
+        @media (min-width: 650px) {
+            margin-bottom: 0;
+        }
     }
 
     .BackButton {

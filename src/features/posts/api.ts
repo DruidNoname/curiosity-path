@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import {POSTS_URL} from "./const";
+import {CAPOEIRA_CATEGORY_ID, POSTS_URL} from "./const";
 import {urls} from "@/config/urls";
 import {PER_PAGE} from "@/helpers/const";
 

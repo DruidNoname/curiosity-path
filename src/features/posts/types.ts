@@ -28,3 +28,11 @@ export interface PostsByTodayResponse {
     month: number;
     day: number;
 }
+
+export interface SongsResponse {
+    songs: TransformedPost[];
+    total: number;
+    totalPages: number;
+    currentPage: number;
+    perPage: number;
+}

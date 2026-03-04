@@ -5,7 +5,7 @@ import {Box, Card, Link, Typography} from "@mui/material";
 import {useCourses} from "@/features/recipes/hooks";
 import Loader from "@/ui/Loader";
 import {Stack} from "@mui/system";
-import PageTitle from "@/components/SingleEntry/PageTitle";
+import PageTitle from "../../components/Title";
 
 
 const Recipes: React.FC = () => {

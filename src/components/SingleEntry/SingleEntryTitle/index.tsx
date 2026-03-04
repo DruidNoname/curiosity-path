@@ -48,7 +48,6 @@ const SingleEntryTitle: React.FC<Props> = ({title, isLoading, date, tags, varian
                 {tags ? <Typography
                     variant="body1"
                     component="div"> { `Теги: ${tags}` } </Typography> : null }
-
             </Box>
             <Button
                 className={styles.BackButton}

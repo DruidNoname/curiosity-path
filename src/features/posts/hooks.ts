@@ -1,12 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import {ADDON_POSTS_URL, POSTS_URL} from "./const";
+import {ADDON_POSTS_URL, CAPOEIRA_CATEGORY_ID, POSTS_URL} from "./const";
 import {fetchPostsByTag} from "./api";
 import {WP_REST_API_Post} from "wp-types";
 import {PER_PAGE} from "@/helpers/const";
-import {PostsResponse, PostsByTodayResponse} from "@/features/posts/types";
-
-
-
+import {PostsResponse, PostsByTodayResponse, SongsResponse} from "@/features/posts/types";
 
 export const usePosts = (page = 1, perPage = PER_PAGE) => {
     return useQuery<PostsResponse>({
@@ -14,7 +11,7 @@ export const usePosts = (page = 1, perPage = PER_PAGE) => {
         queryFn: async () => {
             // Убрал slug=example-post, добавил _embed и правильные параметры пагинации
             const res = await fetch(
-                `${POSTS_URL}?page=${page}&per_page=${perPage}&_embed&status=publish`
+                `${POSTS_URL}?page=${page}&per_page=${perPage}&_embed&status=publish&categories_exclude=${CAPOEIRA_CATEGORY_ID}`
             );
 
             if (!res.ok) throw new Error('Ошибка при получении постов');
@@ -134,7 +131,7 @@ export const usePostsByToday = () => {
 
 export const usePost = (slug: string, options = {}) => {
     return useQuery<WP_REST_API_Post>({
-        queryKey: ['posts', slug],
+        queryKey: ['post', slug],
         queryFn: async () => {
             const res = await fetch(`${POSTS_URL}?slug=${slug}`);
             if (!res.ok) throw new Error('Ошибка при получении поста');
@@ -154,5 +151,50 @@ export const usePostsByTag = (tagSlug: string, page = 1, perPage = PER_PAGE) => 
         queryFn: () => fetchPostsByTag(tagSlug, page, perPage),
         enabled: !!tagSlug,
         staleTime: 5 * 60 * 1000,
+    });
+};
+
+export const useCapoeiraSongsPosts = (page = 1, perPage = PER_PAGE) => {
+    return useQuery<SongsResponse>({
+        queryKey: ['capoeira-songs', page, perPage],
+        queryFn: async () => {
+            // Используем параметр categories для фильтрации по рубрике
+            // ID рубрики "capoeira songs" нужно заменить на актуальный
+            const res = await fetch(
+                `${POSTS_URL}?page=${page}&per_page=${perPage}&_embed&status=publish&categories=${CAPOEIRA_CATEGORY_ID}`
+            );
+
+            if (!res.ok) throw new Error('Ошибка при получении постов из рубрики capoeira songs');
+
+            const total = res.headers.get('X-WP-Total') || '0';
+            const totalPages = res.headers.get('X-WP-TotalPages') || '1';
+            const songs = await res.json();
+
+            const transformedPosts = songs.map((song: any) => {
+                const featuredMedia = song._embedded?.['wp:featuredmedia']?.[0];
+
+                return {
+                    ...song,
+                    featuredImage: featuredMedia ? {
+                        full: featuredMedia.source_url,
+                        thumbnail: featuredMedia.media_details?.sizes?.thumbnail?.source_url,
+                        medium: featuredMedia.media_details?.sizes?.medium?.source_url,
+                        large: featuredMedia.media_details?.sizes?.large?.source_url,
+                        alt: featuredMedia.alt_text || song.title.rendered,
+                        caption: featuredMedia.caption?.rendered || '',
+                    } : null,
+                    featuredImageUrl: featuredMedia?.source_url || null,
+                };
+            });
+
+            return {
+                songs: transformedPosts,
+                total: parseInt(total, 10),
+                totalPages: parseInt(totalPages, 10),
+                currentPage: page,
+                perPage: perPage
+            };
+        },
+        staleTime: 1000 * 60 * 5
     });
 };
