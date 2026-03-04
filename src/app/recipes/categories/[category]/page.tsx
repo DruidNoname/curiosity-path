@@ -10,7 +10,7 @@ import { EntryPreview } from "@/modules";
 import EntriesListLayout from "@/components/Layouts/EntriesListLayout";
 import Courses from "@/app/recipes/components/Courses";
 import {useParams} from "next/navigation";
-import PageTitle from "@/components/SingleEntry/PageTitle";
+import PageTitle from "../../../../components/Title";
 
 
 const RecipesCat: React.FC = () => {

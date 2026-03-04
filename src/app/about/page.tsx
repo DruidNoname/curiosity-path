@@ -3,9 +3,9 @@
 import React from "react";
 import styles from './style.module.css';
 import { differenceInYears } from 'date-fns';
-import {Box, Divider, Link, Typography} from "@mui/material";
+import {Box, Divider, Link} from "@mui/material";
 import {ImageBordered} from "@/components/Images";
-import SingleEntryTitle from "@/components/SingleEntry/SingleEntryTitle";
+import Title from "@/components/Title";
 
 const About: React.FC = () => {
     const birthDate = new Date('1987-02-20');
@@ -16,7 +16,7 @@ const About: React.FC = () => {
     const experience = differenceInYears(currentDate, workDate);
     return(
         <Box sx={{px: '24px'}}>
-            <SingleEntryTitle title={ 'О проекте и об авторе' } variant={"h2"} subtitle={'Coffee. Coding. Capoeira.'}/>
+            <Title title={ 'О проекте и об авторе' } variant={"h2"} subtitle={'Coffee. Coding. Capoeira.'}/>
             <Box>
                 <p>...а можно&nbsp;ж я&nbsp;напишу вот это вот всё не&nbsp;в&nbsp;косорукой админке headless-системы, а&nbsp;в&nbsp;родной, уютной IDEшечке, да?</p>
                 <p> Вот так хорошо. Полный контроль. Спасибо.</p>
@@ -28,7 +28,7 @@ const About: React.FC = () => {
                 <p>Этот микропроект создан, продуман и&nbsp;написан лично мной с&nbsp;помощью <b>React</b> и&nbsp;<b>Next.js</b> на&nbsp;<b>Typescript</b>. Клиентская часть лежит на&nbsp;next-овской&nbsp;же облачной платформе vercel. Серверная - собрана из дипсика и палок на headless-wordpress.</p>
                 <p>Кроме <b>постов блога</b> здесь планируется размещение <b>нескольких инструментов разной степени нужности</b> и&nbsp;упоротости. На&nbsp;странице dev-экспериментов можно посмотреть, над чем я&nbsp;работаю в&nbsp;данный момент. Или не&nbsp;работаю, если выдохлась. Пока собирается справочник рецептов с&nbsp;расчётом граммовки ингредиентов.</p>
                 <p>Хотя <b><i>программирование</i></b>&nbsp;&mdash; моя любимая до&nbsp;одержимости профессия, проект этот в&nbsp;первую очередь про тексты. Тексты&nbsp;&mdash; о&nbsp;мире вокруг меня на&nbsp;расстоянии разной длины радиусов. Потому, что жизнь&nbsp;&mdash; любая жизнь, в&nbsp;том числе и&nbsp;моя&nbsp;&mdash; слишком яркая и&nbsp;интересная штука, чтобы её&nbsp;забывать.</p>
-                <p>Помимо программирования я&nbsp;увлекаюсь
+                <p>Помимо программирования я&nbsp;увлекаюсь:
                     <br/> &mdash;&nbsp;<Link component={'a'} href={'/tag/kapoejira'}><b><i>капоэйрой</i></b></Link> (это такое бразильское боевое искусство с&nbsp;музыкальной составляющей);
                     <br/> &mdash;&nbsp;<Link component={'a'} href={'/tag/tag/istoricheskaya-rekonstrukcziya'}><b><i>исторической реконструкцией</i></b></Link> (это когда делают вид, что живут&nbsp;X веков назад);
                     <br/> &mdash;&nbsp;<Link component={'a'} href={'/tag/gusevskie-marshruty'}><b><i>бегом по&nbsp;пересеченной местности</i></b></Link> или хотя&nbsp;бы по&nbsp;природе&nbsp;&mdash; в&nbsp;небольших дозах;

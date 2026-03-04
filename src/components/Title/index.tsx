@@ -4,14 +4,13 @@ import Skeleton from "@/ui/Skeleton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
 import {useRouter} from "next/navigation";
-import {getCleanEntry} from "@/helpers/utils";
 
 type Props = {
     title: string;
-    isLoading: boolean;
-    actions?: any; //я ещё не решила, чем они будут приходить
+    variant?: 'h2' |  'h1' |  'h4';
+    subtitle?: string;
 }
-const PageTitle: React.FC<Props> = ({title, isLoading, actions}) => {
+const Title: React.FC<Props> = ({title, variant, subtitle}) => {
     const router = useRouter();
     const [canGoBack, setCanGoBack] = React.useState(false);
 
@@ -27,18 +26,19 @@ const PageTitle: React.FC<Props> = ({title, isLoading, actions}) => {
     };
 
     return (
-        <Box className={styles.PageTitleBlock}>
+        <Box className={styles.TitleBlock}>
             <Box>
                 <Typography
-                    variant="h3"
+                    variant={variant ? variant : 'h3'}
                     component="h1"
-                    className={styles.PageTitle}
+                    className={styles.Title}
                 >
-                    { isLoading ? <Skeleton width={320}/> : getCleanEntry(title) }
+                    { title }
                 </Typography>
-                {actions ? <Typography
-                    variant="body1"
-                    component="div"> { `Запись от ${actions}` } </Typography> : null }
+                { subtitle ? <Typography
+                    variant="h4"
+                    component="h2"
+                    className={styles.Subtitle}> { subtitle } </Typography> : null }
             </Box>
             <Button
                 className={styles.BackButton}
@@ -52,4 +52,4 @@ const PageTitle: React.FC<Props> = ({title, isLoading, actions}) => {
     );
 };
 
-export default PageTitle;
+export default Title;

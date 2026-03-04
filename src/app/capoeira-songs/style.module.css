@@ -1,0 +1,31 @@
+.Song {
+    padding: 24px 0;
+
+    .SongBlock:not(:last-of-type) {
+        margin-bottom: 16px;
+    }
+
+    .SongSummary :global(.MuiAccordionSummary-content) {
+        margin: 16px 0;
+    }
+
+    .SongSummary :global(.MuiAccordionSummary-content.Mui-expanded) {
+        margin: 16px 0;
+    }
+
+    .SongSummary :global(.MuiAccordionSummary-root) {
+        min-height: 48px;
+    }
+
+    .SongTitle {
+        margin-bottom: 12px;
+    }
+
+    .SongSubtitle {
+        padding: 0;
+
+        p:last-of-type {
+            padding: 0;
+        }
+    }
+}
