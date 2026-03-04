@@ -10,8 +10,7 @@ import { EntryPreview } from "@/modules";
 import EntriesListLayout from "@/components/Layouts/EntriesListLayout";
 import Courses from "@/app/recipes/components/Courses";
 import {useParams} from "next/navigation";
-import PageTitle from "../../../../components/Title";
-
+import Title from "@/components/Title";
 
 const RecipesCat: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -40,7 +39,7 @@ const RecipesCat: React.FC = () => {
 
     return(
         <Box sx={{px: '24px'}}>
-            <PageTitle title={'Книга рецептов'} isLoading={isLoading}/>
+            <Title title={'Книга рецептов'} isLoading={isLoading}/>
             <EntriesListLayout
                 mainContent={
                     <>
