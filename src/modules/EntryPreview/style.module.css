@@ -4,21 +4,14 @@
     &:not(:last-of-type) {
         margin-bottom: 16px;
     }
-
-    &:has(img) {
-        @media (min-width: 600px) {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-        }
-    }
 }
 
 .ImageBox {
     margin-bottom: 16px;
 
     @media (min-width: 600px) {
-        margin-bottom: 0;
+        float: left;
+        margin-right: 30px;
         flex: 0;
         max-width: 210px;
         min-width: 190px;
@@ -28,4 +21,19 @@
 
 .ButtonLink {
     font-size: var(--body2-font-size);
+}
+
+.EntryPreviewSeparated {
+    @media (min-width: 600px) {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .ImageBox {
+        @media (min-width: 600px) {
+            float: none;
+            margin-bottom: 0;
+        }
+    }
 }

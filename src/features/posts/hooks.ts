@@ -3,7 +3,7 @@ import {ADDON_POSTS_URL, CAPOEIRA_CATEGORY_ID, POSTS_URL} from "./const";
 import {fetchPostsByTag} from "./api";
 import {WP_REST_API_Post} from "wp-types";
 import {PER_PAGE} from "@/helpers/const";
-import {PostsResponse, PostsByTodayResponse, SongsResponse} from "@/features/posts/types";
+import {PostsResponse, PostsByTodayResponse, SongsResponse, TransformedPost} from "@/features/posts/types";
 
 export const usePosts = (page = 1, perPage = PER_PAGE) => {
     return useQuery<PostsResponse>({
@@ -130,13 +130,18 @@ export const usePostsByToday = () => {
 
 
 export const usePost = (slug: string, options = {}) => {
-    return useQuery<WP_REST_API_Post>({
+    return useQuery<TransformedPost>({
         queryKey: ['post', slug],
         queryFn: async () => {
-            const res = await fetch(`${POSTS_URL}?slug=${slug}`);
+            const res = await fetch(`${POSTS_URL}?slug=${slug}&_embed`);
             if (!res.ok) throw new Error('Ошибка при получении поста');
             const posts = await res.json();
-            return posts[0] || null; // WordPress возвращает массив
+            const post = posts[0] || null;
+            const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
+            return {
+                ...post,
+                featuredImageUrl: featuredMedia?.source_url || null,
+            };
         },
         enabled: !!slug, // Запрос выполняется только если slug существует
         staleTime: 1000 * 60 * 10, // 10 минут
@@ -161,7 +166,7 @@ export const useCapoeiraSongsPosts = (page = 1, perPage = PER_PAGE) => {
             // Используем параметр categories для фильтрации по рубрике
             // ID рубрики "capoeira songs" нужно заменить на актуальный
             const res = await fetch(
-                `${POSTS_URL}?page=${page}&per_page=${perPage}&_embed&status=publish&categories=${CAPOEIRA_CATEGORY_ID}`
+                `${POSTS_URL}?page=${page}&per_page=${perPage}&status=publish&categories=${CAPOEIRA_CATEGORY_ID}`
             );
 
             if (!res.ok) throw new Error('Ошибка при получении постов из рубрики capoeira songs');

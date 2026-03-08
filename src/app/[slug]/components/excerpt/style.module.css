@@ -1,0 +1,23 @@
+.excerpt {
+    margin-bottom: 24px;
+
+    p:last-of-type {
+        padding-bottom: 0;
+    }
+}
+
+.ImageBox {
+    margin-bottom: 16px;
+    float: left;
+
+    @media (min-width: 600px) {
+        margin-right: 16px;
+        max-width: 230px;
+        min-width: 190px;
+        box-sizing: content-box;
+    }
+}
+
+.clear {
+    clear: both;
+}
