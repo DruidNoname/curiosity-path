@@ -15,8 +15,9 @@ type Props = {
     entryDate?: string;
     entryTags?: number[];
     entryImage?: string | null;
+    isSeparated?: boolean;
 }
-export const EntryPreview: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage }) => {
+export const EntryPreview: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage, isSeparated }) => {
     const title = getCleanEntry(entryTitle) || 'Без названия';
     const date = entryDate ? new Date(entryDate).toLocaleDateString('ru-RU') : '';
     const excerpt = createExcerpt(entryPreview || '');
@@ -24,9 +25,11 @@ export const EntryPreview: React.FC<Props> = ({ entryTitle, entryPreview, entryD
 
     const { tags, isLoading } = useTagsByIds(tagIds);
 
+    const classes = isSeparated ? [styles.EntryPreview, styles.EntryPreviewSeparated].join(' ') : styles.EntryPreview;
+
     return (
         <ErrorBoundary componentName={'EntryPreview'}>
-            <Paper key={entryId} className={styles.EntryPreview}>
+            <Paper key={entryId} className={classes}>
                 { entryImage ?
                     <>
                         <ImageBordered src={ entryImage } alt={ entryTitle } classNameWrapper={styles.ImageBox}/>
@@ -40,6 +43,7 @@ export const EntryPreview: React.FC<Props> = ({ entryTitle, entryPreview, entryD
                                 tagsAreLoading={isLoading}
                             />
                         </Box>
+                        <Box sx={{clear: 'both'}}></Box>
                     </>
                     :
                     <EntryPreviewContent

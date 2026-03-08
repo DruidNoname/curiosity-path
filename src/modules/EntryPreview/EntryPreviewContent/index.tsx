@@ -33,7 +33,6 @@ export const EntryPreviewContent: React.FC<Props> = ({title, link, date, excerpt
                     dangerouslySetInnerHTML={{ __html: excerpt }}
                 />
             }
-
             {tags && tags.length > 0 && (
                 <Typography variant="body2" component="div">
                     Теги: {

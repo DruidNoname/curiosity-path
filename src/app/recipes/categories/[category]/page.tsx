@@ -54,6 +54,7 @@ const RecipesCat: React.FC = () => {
                                     entryPreview={recipe.summary || ''}
                                     entryImage={recipe.image_url}
                                     key={`recipe_${recipe.id}`}
+                                    isSeparated={true}
                                 />
                             );
                         })}

@@ -7,6 +7,7 @@ import { usePost } from "@/features/posts/hooks";
 import Skeleton from "@/ui/Skeleton";
 import { getCleanEntry} from "@/helpers/utils";
 import SingleEntryTitle from "@/components/SingleEntry/SingleEntryTitle";
+import {Excerpt} from "@/app/[slug]/components/excerpt";
 
 interface PostProps {
     params: Promise<{ slug: string }>;
@@ -19,6 +20,7 @@ const Post: React.FC<PostProps> = ({ params }) => {
     const date = post?.date ? new Date(post.date).toLocaleDateString('ru-RU') : '';
     const excerpt = getCleanEntry(post?.excerpt?.rendered || '');
     const content = getCleanEntry(post?.content.rendered || '');
+    const featuredImage = post?.featuredImageUrl;
 
     if (isError) return <div>Ошибка: {error.message}</div>;
 
@@ -38,11 +40,7 @@ const Post: React.FC<PostProps> = ({ params }) => {
                             </>
                             :
                             <>
-                                <Typography
-                                    variant="body1"
-                                    component="div"
-                                    dangerouslySetInnerHTML={{ __html: excerpt }}
-                                />
+                                <Excerpt excerpt={excerpt} title={title} image={featuredImage || undefined}/>
                                 <Divider sx={{ mb: 3, borderStyle: 'dashed' }} />
                                 <Typography
                                     variant="body1"

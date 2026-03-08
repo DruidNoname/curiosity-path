@@ -27,8 +27,8 @@ const EntriesListLayout: React.FC<EntriesListLayoutProps> = ({ mainContent, asid
                     <Box
                         component="aside"
                         sx={{
-                            width: '20%',
-                            minWidth: '300px',
+                            width: {sm: '40%', lg: '20%' },
+                            minWidth: { xs: 'auto', sm: '300px' },
                             p: 3,
                             bgcolor: 'background.paper',
                             borderLeft: 1,
