@@ -66,6 +66,7 @@ export const usePostsByMonth = (
                 per_page: perPage.toString(),
                 orderby: 'date',
                 order: 'desc',
+                categories_exclude: String(CAPOEIRA_CATEGORY_ID)
             });
 
             // WordPress API использует параметры after и before
@@ -102,7 +103,7 @@ export const usePostsByToday = () => {
     const currentMonth = today.getMonth() + 1; // 1-12
     const currentDay = today.getDate(); // 1-31
 
-    const apiUrl = `${ADDON_POSTS_URL}/${currentMonth}/${currentDay}`;
+    const apiUrl = `${ADDON_POSTS_URL}/${currentMonth}/${currentDay}?exclude_category_ids=${CAPOEIRA_CATEGORY_ID}`;
 
     return useQuery<PostsByTodayResponse, Error>({
         queryKey: ['posts-by-today', currentMonth, currentDay],
