@@ -9,9 +9,15 @@ export const usePosts = (page = 1, perPage = PER_PAGE) => {
     return useQuery<PostsResponse>({
         queryKey: ['posts', page, perPage],
         queryFn: async () => {
-            // Убрал slug=example-post, добавил _embed и правильные параметры пагинации
+            const params = new URLSearchParams({
+                page: page.toString(),
+                per_page: perPage.toString(),
+                status: 'publish',
+                categories_exclude: CAPOEIRA_CATEGORY_ID.toString()
+            });
+
             const res = await fetch(
-                `${POSTS_URL}?page=${page}&per_page=${perPage}&_embed&status=publish&categories_exclude=${CAPOEIRA_CATEGORY_ID}`
+                `${POSTS_URL}?${params.toString()}&_embed`
             );
 
             if (!res.ok) throw new Error('Ошибка при получении постов');
