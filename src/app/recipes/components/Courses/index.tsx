@@ -16,7 +16,7 @@ const Courses: React.FC = () => {
     const courseElements = displayCourses.map((course, index, array) => (
         <React.Fragment key={course.id}>
             <Link
-                href={`/recipes/${course.slug}`}
+                href={`/recipes/categories/${course.slug}`}
                 style={{ textDecoration: 'none' }}
             >
                 {course.name}
@@ -33,7 +33,7 @@ const Courses: React.FC = () => {
 
                 <>
                     <Typography variant={'h5'} sx={{ mb: '16px' }}>
-                        {`Доступные теги (${totalTags || 0}): `}
+                        {`Категории (${totalTags || 0}): `}
                     </Typography>
                     <Typography variant={'body1'}>
                         { courseElements }
