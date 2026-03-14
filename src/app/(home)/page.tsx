@@ -1,18 +1,18 @@
 'use client';
 import React from "react";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import {Box, Divider, Typography} from "@mui/material";
+import {Box} from "@mui/material";
 import {usePosts} from "@/features/posts/hooks";
 import InfoWidget from "@/app/(home)/components/InfoWidget";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
 import Tags from "@/app/(home)/components/Tags";
 import {PER_PAGE} from "@/helpers/const";
-import {PostCalendar} from "../../modules/PostCalendar";
 import HistoryWidget from "@/app/(home)/components/HistoryWidget";
-import { EntryPreview } from "../../modules/EntryPreview";
+import { PostPreview } from "../../modules/EntryPreview/components/PostPreview";
 import {TransformedPost} from "@/features/posts/types";
 import EntriesListLayout from "@/components/Layouts/EntriesListLayout";
+import {PostCalendar} from "@/modules";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -44,7 +44,7 @@ const MainPage: React.FC = () => {
                         mainContent={
                             <>
                                 { posts?.map((post: TransformedPost) => (
-                                    <EntryPreview
+                                    <PostPreview
                                         entryId={post.id}
                                         entrySlug={post.slug}
                                         entryTitle={post.title?.rendered || 'Без названия'}

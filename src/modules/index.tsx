@@ -1,2 +1,2 @@
-export { EntryPreview } from './EntryPreview';
+export { PostPreview } from './EntryPreview/components/PostPreview';
 export { PostCalendar } from './PostCalendar';

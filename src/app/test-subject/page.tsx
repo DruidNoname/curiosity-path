@@ -11,13 +11,15 @@ const TestSubject: React.FC = () => {
             <Typography variant={'h4'} sx={{mt: '16px', mb: '24px'}}>
                 Территория самых бесчеловечных экспериментов.
             </Typography>
-            <Typography variant={'h5'} sx={{mt: '16px', mb: '16px'}}>
+            <Typography variant={'h5'} sx={{mb: '16px'}}>
                 Join the <b>Dark Launching</b>.
             </Typography>
-            <Typography variant={'body1'} sx={{mt: '16px', mb: '32px'}}>
+            <Typography variant={'body1'} sx={{mb: '32px'}}>
                 Опасно. Бесплатно. Нелепо.
             </Typography>
-            <Link href={'/recipes'} title={'Тут есть рецептики'}>Тут есть рецептики (но мы пока не умеем с ними работать)</Link>
+            <Typography variant={'body1'} sx={{ mb: '32px'}}>
+                В настоящее время преддеплоев нет.
+            </Typography>
         </ErrorBoundary>
     );
 };
