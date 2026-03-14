@@ -1,12 +1,12 @@
 'use client';
 
 import React from "react";
-import {Box, Pagination, Typography} from "@mui/material";
+import {Box, Pagination} from "@mui/material";
 import {useCourses, useRecipes} from "@/features/recipes/hooks";
 import {PER_PAGE} from "@/helpers/const";
 import {RecipeListItem} from "@/features/recipes/types";
 import Loader from "@/ui/Loader";
-import { EntryPreview } from "@/modules";
+import { RecipePreview } from "@/modules/EntryPreview";
 import EntriesListLayout from "@/components/Layouts/EntriesListLayout";
 import Courses from "@/app/recipes/components/Courses";
 import {useParams} from "next/navigation";
@@ -39,7 +39,7 @@ const RecipesCat: React.FC = () => {
 
     return(
         <Box sx={{px: '24px'}}>
-            <Title title={'Книга рецептов'} isLoading={isLoading}/>
+            <Title title={course?.name ? `Категория ${course.name}` : 'Без категории'} isLoading={isLoading}/>
             <EntriesListLayout
                 mainContent={
                     <>
@@ -47,14 +47,13 @@ const RecipesCat: React.FC = () => {
                             const recipe = item?.recipe;
 
                             return(
-                                <EntryPreview
+                                <RecipePreview
                                     entryId={recipe.id}
                                     entrySlug={`/recipes/${item.slug}`}
                                     entryTitle={recipe.name || 'Без названия'}
                                     entryPreview={recipe.summary || ''}
                                     entryImage={recipe.image_url}
                                     key={`recipe_${recipe.id}`}
-                                    isSeparated={true}
                                 />
                             );
                         })}

@@ -5,7 +5,7 @@ import {Box, Card, Link, Typography} from "@mui/material";
 import {useCourses} from "@/features/recipes/hooks";
 import Loader from "@/ui/Loader";
 import {Stack} from "@mui/system";
-import PageTitle from "../../components/Title";
+import Title from "../../components/Title";
 
 
 const Recipes: React.FC = () => {
@@ -17,7 +17,22 @@ const Recipes: React.FC = () => {
 
     return(
         <Box sx={{px: '24px'}}>
-            <PageTitle title={'Книга рецептов: категории'} isLoading={isLoading}/>
+            <Title title={'Книга рецептов'} isLoading={isLoading}/>
+            <Box sx={{ mb: '32px'}}>
+                <p>
+                    Справочник обкатанных рецептов на каждый день. Пополняется по мере появления фоточек/ресурса на размещение.
+                </p>
+                <p>
+                    Наибольший интерес представляет работа с числами. Инструментарий позволяет "подбить" под количество одного из ингредиентов граммовку остального состава блюда. Или просто использовать один из предложенных множителей.
+                </p>
+                <p>
+                    Больших красивых картинок нет. Зато все рецепты проверены временем.
+                </p>
+            </Box>
+            <Typography
+                variant="h4"
+                component="h2"
+                sx={{mb: '16px'}}> Категории: </Typography>
             <Stack
                 direction="row"        // Элементы в ряд
                 useFlexGap             // Обязательно! Позволяет Stack'у правильно обрабатывать gap при переносе
@@ -45,7 +60,7 @@ const Recipes: React.FC = () => {
                                     {`${cat.name} (${cat.count})`}
                                 </Link>
                                 :
-                                <Typography variant={'body1'} color={'textDisabled'}>
+                                <Typography variant={'body1'} color={'textDisabled'} component={'span'}>
                                     { cat.name } (0)
                                 </Typography>
                             }

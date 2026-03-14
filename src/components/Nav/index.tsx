@@ -11,6 +11,7 @@ const Menu: React.FC = () => {
     const navigationItems = [
         { label: 'Главная', path: '/' },
         { label: 'Капоэйра', path: '/capoeira-songs' },
+        { label: 'Рецепты', path: '/recipes' },
         { label: 'Эксперименты (dev)', path: '/test-subject' },
         { label: 'Обо мне', path: '/about' },
     ];

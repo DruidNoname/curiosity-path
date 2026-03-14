@@ -11,7 +11,7 @@ import Pagination from "@/ui/Pagination";
 import TagIcon from '@mui/icons-material/Tag';
 import { PER_PAGE } from "@/helpers/const";
 import {useTag} from "@/features/tags/hooks";
-import { EntryPreview } from "../../../modules/EntryPreview";
+import { PostPreview } from "../../../modules/EntryPreview/components/PostPreview";
 
 const TagPage: React.FC = () => {
     const params = useParams();
@@ -108,7 +108,7 @@ const TagPage: React.FC = () => {
                 ) : (
                     <>
                         {posts?.map((post: WP_REST_API_Post) => (
-                            <EntryPreview
+                            <PostPreview
                             entryId={post.id}
                             entrySlug={`/${post.slug}`}
                             entryTitle={post.title?.rendered || 'Без названия'}
