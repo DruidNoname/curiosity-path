@@ -7,6 +7,9 @@ const isEmptyParagraph = (element: Element): boolean => {
     if (!element || element.nodeType !== 1) return false;
     if (element.tagName !== 'P') return false;
 
+    // Параграф с изображением не считается пустым
+    if (element.querySelector('img')) return false;
+
     const innerHTML = element.innerHTML || '';
     const textContent = element.textContent || '';
 
@@ -79,7 +82,7 @@ const processFigures = (doc: Document): void => {
     figures.forEach(figure => {
         const caption = figure.querySelector('figcaption');
         if (!caption) return;
-        const classedImg = figure.querySelector('img[class*="wp-image-"]');
+        const classedImg = figure.querySelector('img[class*="wp-image"]');
         const unclassedImg = figure.querySelector('img');
         if (!classedImg && !unclassedImg) return;
         let width = null;
@@ -150,14 +153,14 @@ export const getCleanEntry = (html: string): string => {
     let result = sanitizeHtml(html, {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat([
             'h1', 'h2', 'h3', 'h4', 'h5', 'h6', //headers
-            'img', 'figure', 'figcaption', 'pre', 'code', //images
+            'img', 'figure', 'figcaption', 'pre', 'code', 'div', //images
             'p', 'del', 'em', 'strong', 'b' //typography
         ]),
         allowedAttributes: {
             ...sanitizeHtml.defaults.allowedAttributes,
             'a': ['href', 'target', 'rel', 'title'],
-            'img': ['src', 'alt', 'title', 'width', 'height'],
-            '*': ['class', 'id']
+            'img': ['src', 'alt', 'title', 'width', 'height', 'loading', 'decoding', 'srcset', 'sizes'],
+            '*': ['class', 'id', 'style', 'data-*']
         },
         allowedIframeHostnames: [],
         allowedSchemes: ['http', 'https'],

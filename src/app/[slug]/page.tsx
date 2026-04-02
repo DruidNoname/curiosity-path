@@ -19,10 +19,12 @@ const Post: React.FC<PostProps> = ({ params }) => {
     const title = getCleanEntry(post?.title?.rendered  || 'Без названия');
     const date = post?.date ? new Date(post.date).toLocaleDateString('ru-RU') : '';
     const excerpt = getCleanEntry(post?.excerpt?.rendered || '');
-    const content = getCleanEntry(post?.content.rendered || '');
+    const content = getCleanEntry(post?.content?.rendered || '');
     const featuredImage = post?.featuredImageUrl;
 
     if (isError) return <div>Ошибка: {error.message}</div>;
+
+    console.log(content);
 
     return (
         <ErrorBoundary componentName={'Post'}>
