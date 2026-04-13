@@ -111,6 +111,29 @@ const processFigures = (doc: Document): void => {
     });
 };
 
+//PROCESS SPOILERS (HTML structure)
+const processSpoilers = (doc: Document): void => {
+    const spoilers = Array.from(doc.querySelectorAll('.spoiler-wrap'));
+
+    spoilers.forEach(spoilerWrap => {
+        const head = spoilerWrap.querySelector('.spoiler-head');
+        const body = spoilerWrap.querySelector('.spoiler-body');
+
+        if (!head || !body) return;
+
+        const details = doc.createElement('details');
+        details.className = 'wp-spoiler';
+
+        const summary = doc.createElement('summary');
+        summary.innerHTML = head.innerHTML;
+
+        details.appendChild(summary);
+        details.innerHTML += body.innerHTML;
+
+        spoilerWrap.parentNode?.replaceChild(details, spoilerWrap);
+    });
+};
+
 // Основная функция, использующая один парсер
 const processHTML = (html: string, options = {}): string => {
     try {
@@ -123,6 +146,8 @@ const processHTML = (html: string, options = {}): string => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         const body = doc.body;
+
+        processSpoilers(doc);
 
         const allParagraphs = Array.from(body.getElementsByTagName('p'));
         allParagraphs.forEach(paragraph => {
@@ -154,7 +179,8 @@ export const getCleanEntry = (html: string): string => {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat([
             'h1', 'h2', 'h3', 'h4', 'h5', 'h6', //headers
             'img', 'figure', 'figcaption', 'pre', 'code', 'div', //images
-            'p', 'del', 'em', 'strong', 'b' //typography
+            'p', 'del', 'em', 'strong', 'b', //typography
+            'summary', 'details' //spoiler
         ]),
         allowedAttributes: {
             ...sanitizeHtml.defaults.allowedAttributes,

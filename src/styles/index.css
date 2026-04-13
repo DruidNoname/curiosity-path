@@ -9,17 +9,29 @@
   box-sizing: border-box;
 }
 
+h1, h2, h3 {
+  padding-bottom: 20px;
+}
+
+h4, h5, h6 {
+  padding-bottom: 18px;
+}
+
 p {
   padding-bottom: 16px;
 }
 
 ul, ol {
   margin-left: 30px;
-  padding-bottom: 16px;
+  padding-bottom: 18px;
 }
 
 li {
   padding-bottom: 8px;
+
+  &::marker {
+    color: var(--color-action-active);
+  }
 }
 
 body {
@@ -50,10 +62,73 @@ img {
 
 /*WP styles*/
 
+/*WP spoiler*/
+.wp-spoiler {
+  --spoiler-size: 16px;
+  padding: 12px 0;
+  font-size: 0.9em;
+  padding-left: 20px;
+  padding-bottom: 24px;
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::marker {
+    display: none;
+  }
+
+  summary {
+    font-size: initial;
+    list-style: none;
+    color: var(--color-action-active);
+    padding-left: calc(var(--spoiler-size) + 12px);
+    padding-bottom: 16px;
+    position: relative;
+    cursor: pointer;
+
+    &:before {
+      position: absolute;
+      content: '';
+      background-image: url('@/assets/images/chevron.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      width: var(--spoiler-size);
+      height: var(--spoiler-size);
+      top: 5px;
+      left: 0;
+      transition: all ease-in-out 100ms;
+    }
+  }
+
+  &[open] {
+    summary:before {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+/*WP blockquote*/
+blockquote {
+  text-align: right;
+  margin: 24px 0 24px auto;
+  padding: 36px 36px 20px;
+  padding-left: 72px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-background-paper) 92px, var(--color-background-paper) 97%, transparent 100%);
+
+  @media (min-width: 768px) {
+    max-width: 57%;
+  }
+}
+
+
+/*WP images*/
 .aligncenter,
 .alignleft,
-.alignright {
+.alignright,
+.alignnone {
   margin-bottom: 28px;
+  max-width: 600px!important;
 }
 
 .aligncenter {
@@ -66,7 +141,6 @@ img {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 500px;
 }
 
 .lonely-image__wrapper:not(.aligncenter) {
@@ -134,5 +208,9 @@ img {
     border-radius: 6px;
   }
 }
+
+
+
+
 
 
