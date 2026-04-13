@@ -3,6 +3,5 @@
     "allow": [
       "Bash(yarn test)"
     ]
-  },
-  "$version": 3
+  }
 }
