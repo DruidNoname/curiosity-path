@@ -7,7 +7,7 @@ import {PER_PAGE} from "@/helpers/const";
 import {RecipeListItem} from "@/features/recipes/types";
 import Loader from "@/ui/Loader";
 import { RecipePreview } from "@/modules/EntryPreview";
-import EntriesListLayout from "@/components/Layouts/EntriesListLayout";
+import MainNAsideLayout from "@/components/Layouts/MainNAsideLayout";
 import Courses from "@/app/recipes/components/Courses";
 import {useParams} from "next/navigation";
 import Title from "@/components/Title";
@@ -40,7 +40,7 @@ const RecipesCat: React.FC = () => {
     return(
         <Box sx={{px: '24px'}}>
             <Title title={course?.name ? `Категория ${course.name}` : 'Без категории'} isLoading={isLoading}/>
-            <EntriesListLayout
+            <MainNAsideLayout
                 mainContent={
                     <>
                         { recipes?.map((item: RecipeListItem) => {

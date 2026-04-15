@@ -1,0 +1,42 @@
+.mainContent {
+    display: block;
+    gap: 0;
+}
+
+@media (min-width: 600px) {
+    .mainContent {
+        display: flex;
+        gap: 16px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .mainContent {
+        gap: 32px;
+    }
+}
+
+.asideContent {
+    width: 100%;
+    min-width: auto;
+    padding: 24px;
+    background-color: var(--mui-palette-background-paper);
+    border-left: 1px solid var(--mui-palette-divider);
+
+    &:empty {
+        display: none;
+    }
+}
+
+@media (min-width: 600px) {
+    .asideContent {
+        width: 40%;
+        min-width: 300px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .asideContent {
+        width: 20%;
+    }
+}
