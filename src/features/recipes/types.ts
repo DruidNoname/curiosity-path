@@ -31,7 +31,9 @@ export interface InstructionsFull {
 
 export interface Recipe {
     id: number;
+    slug: string;
     name: string; // Название рецепта (дублирует title.rendered)
+    content: string;
     summary: string; // Краткое описание в HTML
     servings: string; // Количество порций
     prep_time: string; // Время подготовки (в минутах)
@@ -42,6 +44,7 @@ export interface Recipe {
     instructions: InstructionsFull[];
     ingredients_flat: Ingredient[];
     instructions_flat: Instruction[];
+    notes?: string;
 }
 
 

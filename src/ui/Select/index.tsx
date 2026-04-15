@@ -9,10 +9,14 @@ interface OptionType {
 
 type PropsSelect = Props<any, boolean> & {
     className?: string;
+    /** Включить портал для меню */
+    usePortal?: boolean;
+    /** Кастомный target для портала (по умолчанию document.body) */
+    portalTarget?: HTMLElement;
 }
 
 const Select: React.FC<PropsSelect> = (props) => {
-    const {className, ...selectProps} = props;
+    const {className, usePortal = true, portalTarget, ...selectProps} = props;
     const theme = useTheme();
     const generatedId = React.useId();
 
@@ -23,7 +27,7 @@ const Select: React.FC<PropsSelect> = (props) => {
             ...base,
             minHeight: '40px',
             borderRadius: theme.shape.borderRadius,
-            backgroundColor: 'var(--color-background-paper-rgb)', // или используй свою переменную
+            backgroundColor: 'var(--color-background-paper-rgb)',
             backdropFilter: 'blur(10px)',
             borderColor: state.isFocused
                 ? theme.palette.primary.main
@@ -39,7 +43,7 @@ const Select: React.FC<PropsSelect> = (props) => {
         option: (base, state) => ({
             ...base,
             backgroundColor: state.isSelected
-                ? `${theme.palette.primary.main}20` // 20 = 12% прозрачности
+                ? `${theme.palette.primary.main}20`
                 : state.isFocused
                     ? `${theme.palette.primary.main}30`
                     : 'transparent',
@@ -48,10 +52,10 @@ const Select: React.FC<PropsSelect> = (props) => {
                 : theme.palette.text.primary,
             backdropFilter: state.isFocused ? 'blur(4px)' : 'none',
             '&:hover': {
-                backgroundColor: `${theme.palette.primary.main}30` // 40 = 25% прозрачности
+                backgroundColor: `${theme.palette.primary.main}30`
             },
             '&:active': {
-                backgroundColor: `${theme.palette.primary.main}40` // 40 = 25% прозрачности
+                backgroundColor: `${theme.palette.primary.main}40`
             },
             cursor: 'pointer'
         }),
@@ -63,7 +67,7 @@ const Select: React.FC<PropsSelect> = (props) => {
             borderRadius: theme.shape.borderRadius,
             boxShadow: theme.shadows[1],
             border: `1px solid ${theme.palette.primary.main}20`,
-            zIndex: 1300
+            zIndex: 1400 // Увеличиваем z-index для портала
         }),
         menuList: (base) => ({
             ...base,
@@ -105,7 +109,6 @@ const Select: React.FC<PropsSelect> = (props) => {
         })
     };
 
-
     return (
         <ReactSelect
             // @ts-ignore
@@ -113,6 +116,8 @@ const Select: React.FC<PropsSelect> = (props) => {
             {...selectProps}
             className={className}
             instanceId={instanceId}
+            menuPortalTarget={usePortal ? (portalTarget || document.body) : null}
+            menuPosition={usePortal ? "fixed" : "absolute"}
         />
     );
 };

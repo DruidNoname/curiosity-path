@@ -11,7 +11,7 @@ import {PER_PAGE} from "@/helpers/const";
 import HistoryWidget from "@/app/(home)/components/HistoryWidget";
 import { PostPreview } from "../../modules/EntryPreview/components/PostPreview";
 import {TransformedPost} from "@/features/posts/types";
-import EntriesListLayout from "@/components/Layouts/EntriesListLayout";
+import MainNAsideLayout from "@/components/Layouts/MainNAsideLayout";
 import {PostCalendar} from "@/modules";
 
 const MainPage: React.FC = () => {
@@ -40,7 +40,7 @@ const MainPage: React.FC = () => {
 
                     :
 
-                    <EntriesListLayout
+                    <MainNAsideLayout
                         mainContent={
                             <>
                                 { posts?.map((post: TransformedPost) => (

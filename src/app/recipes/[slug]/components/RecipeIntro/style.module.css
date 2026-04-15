@@ -1,0 +1,18 @@
+.container {
+}
+
+.imageBox {
+    margin-bottom: 16px;
+
+    @media (min-width: 1200px) {
+        margin-bottom: 0;
+    }
+}
+
+.image {
+    max-width: 100%;
+    height: auto;
+}
+
+.preview {
+}

@@ -1,0 +1,9 @@
+.recipeContainer {
+    margin-bottom: 24px;
+
+    .layoutAside {
+        @media (min-width: 1200px) {
+            min-width: 450px;
+        }
+    }
+}

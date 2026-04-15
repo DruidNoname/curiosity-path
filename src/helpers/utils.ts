@@ -216,3 +216,41 @@ export const createExcerpt = (html: string, maxLength: number = 1200): string =>
     const truncatedText = textContent.substring(0, maxLength - 3) + '...';
     return `<p>${truncatedText}</p>`;
 };
+
+export const createTips = (html: string): string => {
+    if (!html || typeof html !== 'string') return '';
+
+    const allTips: string[] = [];
+
+    // Extract tips and remove shortcode blocks from HTML
+    const tipRegex = /\[wprm-tip(?:\s+icon="[^"]*")?\]([\s\S]*?)\[\/wprm-tip\]/g;
+    let match;
+    let remainingHtml = html;
+
+    while ((match = tipRegex.exec(html)) !== null) {
+        const tipContent = match[1].trim();
+        if (tipContent) {
+            allTips.push(tipContent);
+        }
+        // Remove the full shortcode block from remaining HTML
+        remainingHtml = remainingHtml.replace(match[0], '');
+    }
+
+    // Clean up remaining HTML (remove wrapping <p> if empty after removal)
+    remainingHtml = remainingHtml.replace(/<p[^>]*>\s*<\/p>/gi, '').trim();
+
+    let result = '';
+
+    // Build tips list
+    if (allTips.length > 0) {
+        const listItems = allTips.map(tip => `<li>${tip}</li>`).join('');
+        result += `<ul>${listItems}</ul>`;
+    }
+
+    // Append remaining HTML processed through getCleanEntry
+    if (remainingHtml) {
+        result += getCleanEntry(remainingHtml);
+    }
+
+    return result;
+};

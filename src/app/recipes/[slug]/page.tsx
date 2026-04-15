@@ -2,67 +2,47 @@
 
 import React from 'react';
 import {useRecipeBySlug} from "@/features/recipes/hooks";
-import {Box, Container, Divider, Typography} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Box, Divider, Typography} from "@mui/material";
 import styles from "./style.module.css";
-import Skeleton from "@/ui/Skeleton";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Recipe as RecipeType} from "@/features/recipes/types";
 import SingleEntryTitle from "../../../components/SingleEntry/SingleEntryTitle";
 import {IngredientsList} from "@/app/recipes/[slug]/components/IngredientsList";
 import Loader from "@/ui/Loader";
 import {UNIT_MAP} from "@/features/recipes/const";
-import {ImageBordered} from "@/components/Images";
-
-// import {useRouter} from "next/navigation";
+import MainNAsideLayout from "@/components/Layouts/MainNAsideLayout";
+import RecipeCalculator from "@/app/recipes/[slug]/components/RecipeCalculator";
+import RecipeInstructions from "@/app/recipes/[slug]/components/RecipeInstructions";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import RecipeIntro from "@/app/recipes/[slug]/components/RecipeIntro";
+import RecipeTips from "@/app/recipes/[slug]/components/RecipeTips";
+import {useTheme} from "@mui/material/styles";
+import {useMediaQuery} from "@mui/system";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface Props {
     params: Promise<{ slug: string }>;
 }
 const Recipe: React.FC<Props> = ({ params }) =>  {
     const { slug } = React.use(params);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
 
     const { data, isLoading } = useRecipeBySlug(slug);
     const recipe: RecipeType = data?.recipe || [];
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const router = useRouter();
 
-    const createInstructionsList = (recipeData: RecipeType) => {
-        const additionalImgs: string[] = [];
-        const instructionsFlat = recipeData?.instructions_flat || [];
-        if (instructionsFlat.length === 0) {
-            return []; // Или можно вернуть [<Box key="no-instructions">Нет инструкций</Box>]
-        }
-
-        const steps = instructionsFlat.map((step, index) => {
-            if (step?.image_url) {
-                additionalImgs.push(step?.image_url);
-            }
-            return (
-                <Box key={`instruction_step_${index}`}>
-                    <div dangerouslySetInnerHTML={{ __html: step.text || '' }} />
-                </Box>
-            );
-        });
-
-        const images = additionalImgs.map(imgLink => <ImageBordered src={imgLink} key={imgLink.slice(-8, -1)} sx={{ maxWidth: '350px;'}}/>);
-
-        return(
-            <>
-                <Typography variant={'h4'} sx={{mb: 2}}>
-                    Приготовление:
-                </Typography>
-                { steps }
-                { images.length > 0 &&
-                    <>
-                        <Typography variant={'h4'} sx={{mb: 2}}>
-                            Изображения:
-                        </Typography>
-                        { images }
-                    </>
-                }
-            </>
-        );
+    const handleMultiplierChange = (newMultiplier: number) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('multiplier', newMultiplier.toString());
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
     const rawIngs = recipe?.ingredients_flat || [];
+    const notes = recipe?.notes || null;
 
     const ingredientsWithFixedUnits = rawIngs.map((ing) => {
         if (ing?.unit && ing.unit in UNIT_MAP) {
@@ -83,16 +63,52 @@ const Recipe: React.FC<Props> = ({ params }) =>  {
 
     return(
         <ErrorBoundary componentName={'Recipe'}>
-            <Container maxWidth="lg">
-                <Box sx={{ mt: 4, mb: 2 }} className={styles.Post}>
-                    <SingleEntryTitle title={recipe?.name || ''} isLoading={isLoading}/>
-                    <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
-                    <IngredientsList ingredients={ ingredientsWithFixedUnits } isLoading={isLoading}/>
-                    <Divider sx={{ mb: 4, borderStyle: 'dashed' }} />
-
-                    { createInstructionsList(recipe) }
-                </Box>
-            </Container>
+            <Box className={styles.recipeContainer}>
+                <SingleEntryTitle title={recipe?.name || ''} isLoading={isLoading}/>
+                <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
+                <MainNAsideLayout
+                    mainContent={
+                        <>
+                            <RecipeIntro imageUrl={recipe?.image_url || ''} imageTitle={recipe?.name || 'Изображение блюда'} recipePreview={recipe?.summary || ''} />
+                            {isMobile && <>
+                                <IngredientsList ingredients={ ingredientsWithFixedUnits } isLoading={isLoading}/>
+                                <Accordion sx={{mb: 2}}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                        <Typography variant="h5" sx={{ paddingBottom: 0 }}>
+                                        Калькулятор расчёта ингредиентов
+                                        </Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <RecipeCalculator
+                                            ingredients={ingredientsWithFixedUnits}
+                                            setMultiplier={handleMultiplierChange}
+                                            disabled={isLoading}
+                                        />
+                                    </AccordionDetails>
+                                </Accordion>
+                            </>}
+                            <Divider sx={{ mb: 4, borderStyle: 'dashed' }} />
+                            <RecipeInstructions recipe={recipe} />
+                        </>
+                    }
+                    asideContent={
+                        <>
+                            {!isMobile &&
+                                <>
+                                    <IngredientsList ingredients={ ingredientsWithFixedUnits } isLoading={isLoading}/>
+                                    <RecipeCalculator
+                                        ingredients={ingredientsWithFixedUnits}
+                                        setMultiplier={handleMultiplierChange}
+                                        disabled={isLoading}
+                                    />
+                                </>
+                            }
+                            { notes && <RecipeTips notes={notes} /> }
+                        </>
+                    }
+                    asideClassName={styles.layoutAside}
+                />
+            </Box>
         </ErrorBoundary>
     );
 };
