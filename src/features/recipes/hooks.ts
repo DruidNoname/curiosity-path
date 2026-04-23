@@ -1,7 +1,14 @@
-import {COURSES_URL, RECIPES_URL} from "@/features/recipes/const";
+import {COURSES_URL, KEYWORDS_URL, RECIPES_URL} from "@/features/recipes/const";
 import {PER_PAGE} from "@/helpers/const";
 import { useQuery } from '@tanstack/react-query';
-import {Course, RecipeListItem, RecipesResponse, UseCoursesParams} from "@/features/recipes/types";
+import {
+    Course,
+    Keyword,
+    RecipeListItem,
+    RecipesResponse,
+    UseCoursesParams,
+    UseKeywordsParams
+} from "@/features/recipes/types";
 export const useRecipes = (page = 1, perPage  = PER_PAGE, courseID?: number, enabled?: boolean) => {
     return useQuery<RecipesResponse>({
         queryKey: ['recipes', page, perPage],
@@ -60,6 +67,39 @@ export const useCourses = ({
             const courses: Course[] = await res.json();
 
             return courses;
+        },
+        staleTime: 1000 * 60 * 5,
+    });
+};
+
+export const useKeywords = ({
+                                orderby = 'count',
+                                order = 'desc',
+                                perPage = 100,
+                                hideEmpty = true
+                            }: UseKeywordsParams = {}) => {
+
+    return useQuery<Keyword[]>({
+        queryKey: ['keywords', { orderby, order, perPage, hideEmpty }],
+        queryFn: async () => {
+            // Строим URL с параметрами
+            const params = new URLSearchParams({
+                per_page: perPage.toString(),
+                orderby: orderby,
+                order: order,
+                ...(hideEmpty && { hide_empty: 'true' })
+            });
+
+            const res = await fetch(`${KEYWORDS_URL}?${params}`);
+
+            if (!res.ok) {
+                const error = await res.json().catch(() => ({}));
+                throw new Error(error.message || 'Ошибка при получении ключевых слов');
+            }
+
+            const keywords: Keyword[] = await res.json();
+
+            return keywords;
         },
         staleTime: 1000 * 60 * 5,
     });

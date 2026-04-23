@@ -96,6 +96,24 @@ export interface UseCoursesParams {
     hideEmpty?: boolean;
 }
 
+export interface UseKeywordsParams {
+    orderby?: 'count' | 'name' | 'slug' | 'term_id' | 'description';
+    order?: 'asc' | 'desc';
+    perPage?: number;
+    hideEmpty?: boolean;
+}
+
+export interface Keyword {
+    id: number;
+    count: number;
+    description: string;
+    link: string;
+    name: string;
+    slug: string;
+    taxonomy: string;
+    meta?: Record<string, unknown>;
+}
+
 export interface Course {
     id: number;
     name: string;

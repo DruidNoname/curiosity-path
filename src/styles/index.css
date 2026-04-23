@@ -65,10 +65,11 @@ img {
 /*WP spoiler*/
 .wp-spoiler {
   --spoiler-size: 16px;
-  padding: 12px 0;
+  margin: 16px 20px;
+  padding: 12px 20px;
   font-size: 0.9em;
-  padding-left: 20px;
-  padding-bottom: 24px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-background-paper) 2%, var(--color-background-paper) 98%, transparent 100%);
+
 
   summary::-webkit-details-marker {
     display: none;
@@ -83,7 +84,6 @@ img {
     list-style: none;
     color: var(--color-action-active);
     padding-left: calc(var(--spoiler-size) + 12px);
-    padding-bottom: 16px;
     position: relative;
     cursor: pointer;
 
@@ -97,13 +97,16 @@ img {
       height: var(--spoiler-size);
       top: 5px;
       left: 0;
-      transition: all ease-in-out 100ms;
+      transition: all ease-in-out 200ms;
     }
   }
 
   &[open] {
-    summary:before {
-      transform: rotate(90deg);
+    summary {
+      padding-bottom: 20px;
+      &:before {
+        transform: rotate(90deg);
+      }
     }
   }
 }
@@ -128,7 +131,10 @@ blockquote {
 .alignright,
 .alignnone {
   margin-bottom: 28px;
-  max-width: 600px!important;
+  max-width: 100%!important;
+  @media (min-width: 768px) {
+    max-width: 600px!important;
+  }
 }
 
 .aligncenter {

@@ -25,9 +25,14 @@
             padding-left: 0;
         }
         @media (min-width: 650px) {
-            margin-top: 10px;
             margin-left: 30px;
             box-sizing: content-box;
+        }
+    }
+
+    &:has(.SingleEntrySubtitle) .BackButton {
+        @media (min-width: 650px) {
+            margin-top: 5px;
         }
     }
 }
