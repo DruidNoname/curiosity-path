@@ -30,7 +30,7 @@ const Recipe: React.FC<Props> = ({ params }) =>  {
 
 
     const { data, isLoading } = useRecipeBySlug(slug);
-    const recipe: RecipeType = data?.recipe || [];
+    const recipe: RecipeType | undefined = data?.recipe;
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const router = useRouter();
