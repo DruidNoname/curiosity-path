@@ -4,7 +4,7 @@ import { ImageBordered } from "@/components/Images";
 import { Recipe } from "@/features/recipes/types";
 
 interface RecipeInstructionsProps {
-    recipe: Recipe;
+    recipe: Recipe | undefined;
 }
 
 const RecipeInstructions: React.FC<RecipeInstructionsProps> = React.memo(({ recipe }) => {

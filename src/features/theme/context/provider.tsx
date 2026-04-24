@@ -7,39 +7,31 @@ import { darkTheme, lightTheme } from '../index';
 import { ThemeProviderProps, ThemeMode } from "@/features/theme/model/types";
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-    const [mode, setMode] = useState<ThemeMode>('light'); // Всегда light по умолчанию
-    const [mounted, setMounted] = useState(false); // Флаг монтирования
+    const [mode, setMode] = useState<ThemeMode>('light');
+
+    const applyMode = (newMode: ThemeMode) => {
+        setMode(newMode);
+        localStorage.setItem('theme-mode', newMode);
+        document.documentElement.setAttribute('data-theme', newMode);
+    };
+
+    const toggleTheme = () => applyMode(mode === 'dark' ? 'light' : 'dark');
 
     useEffect(() => {
-        setMounted(true);
         const savedTheme = localStorage.getItem('theme-mode') as ThemeMode;
-        if (savedTheme) {
+        if (savedTheme === 'dark' || savedTheme === 'light') {
             setMode(savedTheme);
         } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
             setMode('dark');
         }
     }, []);
 
-    // Переключение темы
-    const toggleTheme = () => {
-        const newMode = mode === 'dark' ? 'light' : 'dark';
-        setMode(newMode);
-        localStorage.setItem('theme-mode', newMode);
-    };
-
-    // Изменение темы
-    const handleSetMode = (newMode: ThemeMode) => {
-        setMode(newMode);
-        localStorage.setItem('theme-mode', newMode);
-    };
-
-    // Синхронизация с системными настройками
     useEffect(() => {
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
         const handleChange = (e: MediaQueryListEvent) => {
             if (!localStorage.getItem('theme-mode')) {
-                setMode(e.matches ? 'dark' : 'light');
+                applyMode(e.matches ? 'dark' : 'light');
             }
         };
 
@@ -47,20 +39,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         return () => mediaQuery.removeEventListener('change', handleChange);
     }, []);
 
-    const theme = mounted ? (mode === 'dark' ? darkTheme : lightTheme) : lightTheme;
+    const theme = mode === 'dark' ? darkTheme : lightTheme;
 
     return (
-        <ThemeContext.Provider value={{ mode, toggleTheme, setMode: handleSetMode }}>
+        <ThemeContext.Provider value={{ mode, toggleTheme, setMode: applyMode }}>
             <MuiThemeProvider theme={theme}>
                 <CssBaseline />
-                {/* Скрываем контент до гидратации */}
-                <div style={{
-                    visibility: mounted ? 'visible' : 'hidden',
-                    opacity: mounted ? 1 : 0,
-                    transition: 'opacity 0.3s ease'
-                }}>
-                    {children}
-                </div>
+                {children}
             </MuiThemeProvider>
         </ThemeContext.Provider>
     );

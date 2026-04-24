@@ -1,0 +1,52 @@
+.course {
+    --icon-height: 45px;
+    min-height: 60px;
+    position: relative;
+
+    @media (min-width: 600px) {
+        min-height: 80px;
+    }
+
+    @media (min-width: 1200px) {
+        min-height: 100px;
+    }
+
+    &:after {
+        position: absolute;
+        content: '';
+        padding: 10px;
+        width: var(--icon-height);
+        height: var(--icon-height);
+        background-image: url(@/assets/images/recipes-icons/complex.svg);
+        background-repeat: no-repeat;
+        background-position: top left;
+        background-size: contain;
+        top: calc(50% - var(--icon-height)/2);
+        right: 24px;
+    }
+
+    &.course-35:after {
+        --icon-height: 38px;
+        background-image: url(@/assets/images/recipes-icons/dessert.svg);
+    }
+
+    &.course-32:after {
+        background-image: url(@/assets/images/recipes-icons/meat.svg);
+    }
+
+    &.course-209:after {
+        background-image: url(@/assets/images/recipes-icons/complex.svg);
+    }
+
+    &.course-29:after {
+        background-image: url(@/assets/images/recipes-icons/breakfast.svg);
+    }
+
+    &.course-33:after {
+        background-image: url(@/assets/images/recipes-icons/garnier.svg);
+    }
+
+    &.course-34:after {
+        background-image: url(@/assets/images/recipes-icons/salad.svg);
+    }
+}

@@ -14,8 +14,9 @@ interface RootLayoutProps {
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
     return (
-        <html lang="ru" className={robotoMono.variable}>
+        <html lang="ru" className={robotoMono.variable} suppressHydrationWarning>
         <body>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme-mode');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})()` }} />
         <AppRouterCacheProvider>
             <ClientLayout>
                 {children}

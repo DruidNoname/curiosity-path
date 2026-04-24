@@ -1,16 +1,16 @@
 'use client';
 
 import React from "react";
-import {Box, Card, Link, Typography} from "@mui/material";
-import {useCourses} from "@/features/recipes/hooks";
+import {Box, Typography} from "@mui/material";
+import {useCourses, useKeywords} from "@/features/recipes/hooks";
 import Loader from "@/ui/Loader";
 import {Stack} from "@mui/system";
 import Title from "../../components/Title";
+import {CourseCard} from "@/app/recipes/components/CourseCard";
 
 
 const Recipes: React.FC = () => {
     const { data, isLoading } = useCourses({hideEmpty: false});
-
     const categories = data || [];
 
     if (isLoading) return <Loader/>;
@@ -32,42 +32,23 @@ const Recipes: React.FC = () => {
             <Typography
                 variant="h4"
                 component="h2"
-                sx={{mb: '16px'}}> Категории: </Typography>
+                sx={{pb: '36px'}}> Категории: </Typography>
             <Stack
                 direction="row"        // Элементы в ряд
                 useFlexGap             // Обязательно! Позволяет Stack'у правильно обрабатывать gap при переносе
-                spacing={2}            // Gap между элементами (2 = 16px)
+                spacing={3}            // Gap между элементами (2 = 16px)
                 sx={{
                     flexWrap: 'wrap',    // Разрешаем перенос на новую строку
+                    mb: '32px'
                 }}
             >
-                { categories.map(cat => {
+                {categories.map(cat => {
                     const isContent = cat.count !== undefined && cat.count > 0;
-                    return(
-                        <Card key={cat.id} sx={{
-                            width: {
-                                xs: '100%',      // 1 колонка на мобилках
-                                sm: 'calc(50% - 8px)', // 2 колонки (16px/2 = вычитаем 8px)
-                                lg: 'calc(25% - 12px)' // 4 колонки (16px * 3/4 = вычитаем 12px)
-                            },
-                            padding: 2
-                        }}>
-                            { isContent ?
-                                <Link
-                                    href={`/recipes/categories/${cat.slug}`}
-                                    style={{ textDecoration: 'none' }}
-                                >
-                                    {`${cat.name} (${cat.count})`}
-                                </Link>
-                                :
-                                <Typography variant={'body1'} color={'textDisabled'} component={'span'}>
-                                    { cat.name } (0)
-                                </Typography>
-                            }
-                        </Card>
+                    if (!isContent) return null;
+                    return (
+                        <CourseCard key={cat.id} cat={cat}/>
                     );
-                })
-                }
+                })}
             </Stack>
         </Box>
     );

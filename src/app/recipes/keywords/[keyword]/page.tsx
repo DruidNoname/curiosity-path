@@ -2,7 +2,7 @@
 
 import React from "react";
 import {Box, Pagination} from "@mui/material";
-import {useCourses, useRecipes} from "@/features/recipes/hooks";
+import {useKeywords, useRecipes, useRecipesByTagSlug} from "@/features/recipes/hooks";
 import {PER_PAGE} from "@/helpers/const";
 import {RecipeListItem} from "@/features/recipes/types";
 import Loader from "@/ui/Loader";
@@ -12,34 +12,29 @@ import Courses from "@/app/recipes/components/Courses";
 import {useParams} from "next/navigation";
 import Title from "@/components/Title";
 
-const RecipesCat: React.FC = () => {
+const RecipesKeyword: React.FC = () => {
     const [page, setPage] = React.useState(1);
     const params = useParams();
-    const slug = params?.category as string;
+    const slug = params?.keyword as string;
 
-    const {
-        data: courses,
-        isLoading: isLoadingCourses,
-    } = useCourses();
-
-    const course = courses?.find(c => c.slug === slug);
-    const courseId = course?.id || undefined;
+    const { data: keywords } = useKeywords();
+    const keywordName = keywords?.find(k => k.slug === slug)?.name;
 
     const {
         data,
         isLoading,
-    } = useRecipes(page, PER_PAGE, courseId, !!courseId );
+    } = useRecipesByTagSlug(page, PER_PAGE, `${slug}`);
 
     const {
         recipes = [],
         totalPages = 1,
     } = data || {};
 
-    if (isLoading || isLoadingCourses) return <Loader/>;
+    if (isLoading) return <Loader/>;
 
     return(
         <Box sx={{px: '24px'}}>
-            <Title title={course?.name ? `Категория ${course.name}` : 'Без категории'} isLoading={isLoading}/>
+            <Title title={keywordName ? `Ключевое слово: ${keywordName}` : ''} isLoading={isLoading}/>
             <MainNAsideLayout
                 mainContent={
                     <>
@@ -81,4 +76,4 @@ const RecipesCat: React.FC = () => {
     );
 };
 
-export default RecipesCat;
+export default RecipesKeyword;
