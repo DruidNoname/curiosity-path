@@ -3,7 +3,7 @@ import { deepmerge } from '@mui/utils';
 import { deadSpaceBaseTheme } from "./BaseTheme/dsBaseTheme";
 import { colors as darkThemeColors } from "./DarkTheme/Colors";
 import { colors as lightThemeColors } from "./LightTheme/Colors";
-import {generateRGBfromHEX} from "@/features/theme/model/utils";
+import {buildCssVars} from "@/features/theme/model/utils";
 
 
 const deadSpaceBlueShadows = [
@@ -83,38 +83,7 @@ export const deadSpaceTheme = createTheme(
             MuiCssBaseline: {
                 styleOverrides: {
                     ':root': {
-                        // Определяем CSS переменные в HEX (для обычного использования)
-                        '--color-primary-main': darkThemeColors.primary.main,
-                        '--color-primary-light': darkThemeColors.primary.light,
-                        '--color-primary-dark': darkThemeColors.primary.dark,
-                        '--color-primary-contrast': darkThemeColors.primary.contrastText,
-                        '--color-secondary-main': darkThemeColors.secondary.main,
-                        '--color-secondary-light': darkThemeColors.secondary.light,
-                        '--color-secondary-dark': darkThemeColors.secondary.dark,
-                        '--color-secondary-contrast': darkThemeColors.secondary.contrastText,
-                        '--color-background-default': darkThemeColors.background.default,
-                        '--color-background-paper': darkThemeColors.background.paper,
-                        '--color-text-primary': darkThemeColors.text.primary,
-                        '--color-text-secondary': darkThemeColors.text.secondary,
-                        '--color-text-disabled': darkThemeColors.text.disabled,
-                        '--color-action-active': darkThemeColors.action.active,
-                        '--color-action-disabled': darkThemeColors.action.disabled,
-
-                        // Добавляем RGB переменные для использования с rgba()
-                        '--color-primary-main-rgb': generateRGBfromHEX(darkThemeColors.primary.main),
-                        '--color-primary-light-rgb': generateRGBfromHEX(darkThemeColors.primary.light),
-                        '--color-primary-dark-rgb': generateRGBfromHEX(darkThemeColors.primary.dark),
-                        '--color-secondary-main-rgb': generateRGBfromHEX(darkThemeColors.secondary.main),
-                        '--color-secondary-light-rgb': generateRGBfromHEX(darkThemeColors.secondary.light),
-                        '--color-secondary-dark-rgb': generateRGBfromHEX(darkThemeColors.secondary.dark),
-                        '--color-background-default-rgb': generateRGBfromHEX(darkThemeColors.background.default),
-                        '--color-background-paper-rgb': generateRGBfromHEX(darkThemeColors.background.paper),
-                        '--color-text-primary-rgb': generateRGBfromHEX(darkThemeColors.text.primary),
-                        '--color-text-secondary-rgb': generateRGBfromHEX(darkThemeColors.text.secondary),
-                        '--color-text-disabled-rgb': generateRGBfromHEX(darkThemeColors.text.disabled),
-                        '--color-action-active-rgb': generateRGBfromHEX(darkThemeColors.action.active),
-                        '--color-action-disabled-rgb': generateRGBfromHEX(darkThemeColors.action.disabled),
-
+                        ...buildCssVars(darkThemeColors),
                         '--shadow-widget': '0 4px 16px rgba(var(--color-primary-main-rgb), 0.2)',
                         '--shadow-widget-hover': '0 6px 20px rgba(var(--color-primary-main-rgb), 0.3)',
                     }
@@ -150,6 +119,26 @@ export const deadSpaceLightTheme = createTheme(
                 dark: lightThemeColors.secondary.dark,
                 contrastText: lightThemeColors.secondary.contrastText,
             },
+            info: {
+                main: lightThemeColors.info.main,
+                light: lightThemeColors.info.light,
+                dark: lightThemeColors.info.dark,
+            },
+            warning: {
+                main: lightThemeColors.warning.main,
+                light: lightThemeColors.warning.light,
+                dark: lightThemeColors.warning.dark,
+            },
+            error: {
+                main: lightThemeColors.error.main,
+                light: lightThemeColors.error.light,
+                dark: lightThemeColors.error.dark,
+            },
+            success: {
+                main: lightThemeColors.success.main,
+                light: lightThemeColors.success.light,
+                dark: lightThemeColors.success.dark,
+            },
             background: {
                 default: lightThemeColors.background.default,
                 paper: lightThemeColors.background.paper,
@@ -171,42 +160,9 @@ export const deadSpaceLightTheme = createTheme(
                 styleOverrides: {
                     ':root': {
                         colorScheme: 'light',
-                        // Обновляем переменные для светлой темы
-                        '--color-primary-main': lightThemeColors.primary.main,
-                        '--color-primary-light': lightThemeColors.primary.light,
-                        '--color-primary-dark': lightThemeColors.primary.dark,
-                        '--color-primary-contrast': lightThemeColors.primary.contrastText,
-                        '--color-secondary-main': lightThemeColors.secondary.main,
-                        '--color-secondary-light': lightThemeColors.secondary.light,
-                        '--color-secondary-dark': lightThemeColors.secondary.dark,
-                        '--color-secondary-contrast': lightThemeColors.secondary.contrastText,
-                        '--color-background-default': lightThemeColors.background.default,
-                        '--color-background-paper': lightThemeColors.background.paper,
-                        '--color-text-primary': lightThemeColors.text.primary,
-                        '--color-text-secondary': lightThemeColors.text.secondary,
-                        '--color-text-disabled': lightThemeColors.text.disabled,
-                        '--color-action-active': lightThemeColors.action.active,
-                        '--color-action-disabled': lightThemeColors.action.disabled,
-
-                        // RGB переменные для светлой темы
-                        '--color-primary-main-rgb': generateRGBfromHEX(lightThemeColors.primary.main),
-                        '--color-primary-light-rgb': generateRGBfromHEX(lightThemeColors.primary.light),
-                        '--color-primary-dark-rgb': generateRGBfromHEX(lightThemeColors.primary.dark),
-                        '--color-primary-contrast-rgb': generateRGBfromHEX(lightThemeColors.primary.contrastText),
-                        '--color-secondary-main-rgb': generateRGBfromHEX(lightThemeColors.secondary.main),
-                        '--color-secondary-light-rgb': generateRGBfromHEX(lightThemeColors.secondary.light),
-                        '--color-secondary-dark-rgb': generateRGBfromHEX(lightThemeColors.secondary.dark),
-                        '--color-background-default-rgb': generateRGBfromHEX(lightThemeColors.background.default),
-                        '--color-background-paper-rgb': generateRGBfromHEX(lightThemeColors.background.paper),
-                        '--color-text-primary-rgb': generateRGBfromHEX(lightThemeColors.text.primary),
-                        '--color-text-secondary-rgb': generateRGBfromHEX(lightThemeColors.text.secondary),
-                        '--color-text-disabled-rgb': generateRGBfromHEX(lightThemeColors.text.disabled),
-                        '--color-action-active-rgb': generateRGBfromHEX(lightThemeColors.action.active),
-                        '--color-action-disabled-rgb': generateRGBfromHEX(lightThemeColors.action.disabled),
-
-                        // Тени для светлой темы
+                        ...buildCssVars(lightThemeColors),
                         '--shadow-widget': '0 4px 16px rgba(var(--color-primary-main-rgb), 0.15)',
-                        '--shadow-widget-hover': '0 6px 20px rgba(var(--color-primary-main-rgb), 0.25)'
+                        '--shadow-widget-hover': '0 6px 20px rgba(var(--color-primary-main-rgb), 0.25)',
                     },
                     body: {
                         backgroundImage: 'none',
