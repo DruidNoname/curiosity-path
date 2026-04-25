@@ -112,8 +112,7 @@ export const useCourses = (params: UseCoursesParams = {}) =>
     useTaxonomy<Course>(COURSES_URL, 'courses', params);
 
 export const useKeywords = (params: UseKeywordsParams = {}) =>
-    // useTaxonomy<Keyword>(KEYWORDS_URL, 'keywords', params);
-       useTaxonomy<Keyword>(`${COURSES_URL}&wprm_keyword`, 'keywords', params);
+    useTaxonomy<Keyword>(KEYWORDS_URL, 'keywords', params);
 
 export const useRecipeBySlug = (slug: string) =>
     useQuery<RecipeListItem>({
