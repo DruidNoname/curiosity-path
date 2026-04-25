@@ -58,14 +58,12 @@ const useTagId = (tagSlug?: string) => {
     });
 };
 
-
-
 export const useRecipes = (
     page = 1,
     perPage = PER_PAGE,
     courseID?: number,
     enabled?: boolean,
-    tagId?: number  // Принимаем готовый ID вместо slug
+    tagId?: number
 ) => {
     return useQuery<RecipesResponse>({
         queryKey: ['recipes', page, perPage, courseID, tagId],
@@ -114,7 +112,8 @@ export const useCourses = (params: UseCoursesParams = {}) =>
     useTaxonomy<Course>(COURSES_URL, 'courses', params);
 
 export const useKeywords = (params: UseKeywordsParams = {}) =>
-    useTaxonomy<Keyword>(KEYWORDS_URL, 'keywords', params);
+    // useTaxonomy<Keyword>(KEYWORDS_URL, 'keywords', params);
+       useTaxonomy<Keyword>(`${COURSES_URL}&wprm_keyword`, 'keywords', params);
 
 export const useRecipeBySlug = (slug: string) =>
     useQuery<RecipeListItem>({

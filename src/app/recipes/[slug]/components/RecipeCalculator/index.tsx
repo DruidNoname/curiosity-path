@@ -11,7 +11,7 @@ interface RecipeCalculatorProps {
 }
 
 const RecipeCalculator: React.FC<RecipeCalculatorProps> = ({ ingredients, setMultiplier, disabled }) => {
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
 
     return (
         <Paper sx={{ mb: 3, padding: "16px", width: { lg: "400px" }}}>
