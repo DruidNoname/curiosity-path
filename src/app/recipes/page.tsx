@@ -7,6 +7,8 @@ import Loader from "@/ui/Loader";
 import {Stack} from "@mui/system";
 import Title from "../../components/Title";
 import {CourseCard} from "@/app/recipes/components/CourseCard";
+import Image from 'next/image';
+import foodSvg from '@/assets/images/recipes-icons/food.svg';
 
 
 const Recipes: React.FC = () => {
@@ -18,7 +20,11 @@ const Recipes: React.FC = () => {
     return(
         <Box sx={{px: '24px'}}>
             <Title title={'Книга рецептов'} isLoading={isLoading}/>
-            <Box sx={{ mb: '32px'}}>
+            <Box sx={{ mb: {xs: '32px', md: '48px'}, display: {md: 'flex'}}}>
+                <Box sx={{textAlign: 'center', minWidth: 210}}>
+                    <Image src={foodSvg} alt={'food'} width={150}/>
+                </Box>
+                <Box sx={{ mt: {xs: '32px', md: 0},  ml: {xs: 0, md: '16px'}}}>
                 <p>
                     Справочник обкатанных рецептов на каждый день. Пополняется по мере появления фоточек/ресурса на размещение.
                 </p>
@@ -28,6 +34,7 @@ const Recipes: React.FC = () => {
                 <p>
                     Больших красивых картинок нет. Зато все рецепты проверены временем.
                 </p>
+                </Box>
             </Box>
             <Typography
                 variant="h4"
