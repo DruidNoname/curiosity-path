@@ -1,60 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import {ADDON_POSTS_URL, CAPOEIRA_CATEGORY_ID, POSTS_URL} from "./const";
-import {fetchPostsByTag} from "./api";
-import {WP_REST_API_Post} from "wp-types";
+import {
+    fetchPosts,
+    fetchPostsByMonth,
+    fetchPostsByToday,
+    fetchPost,
+    fetchPostsByTag,
+    fetchCapoeiraSongs
+} from "./api";
 import {PER_PAGE} from "@/helpers/const";
 import {PostsResponse, PostsByTodayResponse, SongsResponse, TransformedPost} from "@/features/posts/types";
 
 export const usePosts = (page = 1, perPage = PER_PAGE) => {
     return useQuery<PostsResponse>({
         queryKey: ['posts', page, perPage],
-        queryFn: async () => {
-            const params = new URLSearchParams({
-                page: page.toString(),
-                per_page: perPage.toString(),
-                status: 'publish',
-                categories_exclude: CAPOEIRA_CATEGORY_ID.toString()
-            });
-
-            const res = await fetch(
-                `${POSTS_URL}?${params.toString()}&_embed`
-            );
-
-            if (!res.ok) throw new Error('Ошибка при получении постов');
-
-            const total = res.headers.get('X-WP-Total') || '0';
-            const totalPages = res.headers.get('X-WP-TotalPages') || '1';
-            const posts = await res.json();
-
-            // Трансформируем посты, добавляя удобный доступ к featured image
-            const transformedPosts = posts.map((post: any) => {
-                // Получаем featured image из _embedded если оно есть
-                const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
-
-                return {
-                    ...post,
-                    // Добавляем удобные поля для изображений
-                    featuredImage: featuredMedia ? {
-                        full: featuredMedia.source_url,
-                        thumbnail: featuredMedia.media_details?.sizes?.thumbnail?.source_url,
-                        medium: featuredMedia.media_details?.sizes?.medium?.source_url,
-                        large: featuredMedia.media_details?.sizes?.large?.source_url,
-                        alt: featuredMedia.alt_text || post.title.rendered,
-                        caption: featuredMedia.caption?.rendered || '',
-                    } : null,
-                    // Или просто URL если нужно только это
-                    featuredImageUrl: featuredMedia?.source_url || null,
-                };
-            });
-
-            return {
-                posts: transformedPosts,
-                total: parseInt(total, 10),
-                totalPages: parseInt(totalPages, 10),
-                currentPage: page,
-                perPage: perPage
-            };
-        },
+        queryFn: () => fetchPosts(page, perPage),
         staleTime: 1000 * 60 * 5
     });
 };
@@ -66,40 +25,7 @@ export const usePostsByMonth = (
 ) => {
     return useQuery<PostsResponse>({
         queryKey: ['posts', page, perPage, selectedMonth?.start, selectedMonth?.end],
-        queryFn: async () => {
-            const params = new URLSearchParams({
-                page: page.toString(),
-                per_page: perPage.toString(),
-                orderby: 'date',
-                order: 'desc',
-                categories_exclude: String(CAPOEIRA_CATEGORY_ID)
-            });
-
-            // WordPress API использует параметры after и before
-            if (selectedMonth) {
-                // Форматируем даты в ISO строки
-                const after = selectedMonth.start.toISOString();
-                const before = selectedMonth.end.toISOString();
-
-                params.append('after', after);
-                params.append('before', before);
-            }
-
-            const res = await fetch(`${POSTS_URL}?${params.toString()}`);
-            if (!res.ok) throw new Error('Ошибка при получении постов');
-
-            const total = res.headers.get('X-WP-Total') || '0';
-            const totalPages = res.headers.get('X-WP-TotalPages') || '1';
-            const posts = await res.json();
-
-            return {
-                posts,
-                total: parseInt(total, 10),
-                totalPages: parseInt(totalPages, 10),
-                currentPage: page,
-                perPage: perPage
-            };
-        },
+        queryFn: () => fetchPostsByMonth(page, perPage, selectedMonth),
         staleTime: 1000 * 60 * 5
     });
 };
@@ -109,27 +35,9 @@ export const usePostsByToday = () => {
     const currentMonth = today.getMonth() + 1; // 1-12
     const currentDay = today.getDate(); // 1-31
 
-    const apiUrl = `${ADDON_POSTS_URL}/${currentMonth}/${currentDay}?exclude_category_ids=${CAPOEIRA_CATEGORY_ID}`;
-
     return useQuery<PostsByTodayResponse, Error>({
         queryKey: ['posts-by-today', currentMonth, currentDay],
-        queryFn: async () => {
-            const res = await fetch(apiUrl);
-
-            if (!res.ok) {
-                throw new Error(`Ошибка API: ${res.status}`);
-            }
-
-            const posts: WP_REST_API_Post[] = await res.json();
-
-            return {
-                posts,
-                count: posts.length,
-                date: today.toISOString().split('T')[0],
-                month: currentMonth,
-                day: currentDay
-            };
-        },
+        queryFn: () => fetchPostsByToday(currentMonth, currentDay, today),
         staleTime: 1000 * 60 * 60 * 12, // 12 часов
         gcTime: 1000 * 60 * 60 * 24,    // 24 часа (вместо cacheTime)
     });
@@ -139,17 +47,7 @@ export const usePostsByToday = () => {
 export const usePost = (slug: string, options = {}) => {
     return useQuery<TransformedPost>({
         queryKey: ['post', slug],
-        queryFn: async () => {
-            const res = await fetch(`${POSTS_URL}?slug=${slug}&_embed`);
-            if (!res.ok) throw new Error('Ошибка при получении поста');
-            const posts = await res.json();
-            const post = posts[0] || null;
-            const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
-            return {
-                ...post,
-                featuredImageUrl: featuredMedia?.source_url || null,
-            };
-        },
+        queryFn: () => fetchPost(slug),
         enabled: !!slug, // Запрос выполняется только если slug существует
         staleTime: 1000 * 60 * 10, // 10 минут
         ...options,
@@ -169,44 +67,7 @@ export const usePostsByTag = (tagSlug: string, page = 1, perPage = PER_PAGE) => 
 export const useCapoeiraSongsPosts = (page = 1, perPage = PER_PAGE) => {
     return useQuery<SongsResponse>({
         queryKey: ['capoeira-songs', page, perPage],
-        queryFn: async () => {
-            // Используем параметр categories для фильтрации по рубрике
-            // ID рубрики "capoeira songs" нужно заменить на актуальный
-            const res = await fetch(
-                `${POSTS_URL}?page=${page}&per_page=${perPage}&status=publish&categories=${CAPOEIRA_CATEGORY_ID}`
-            );
-
-            if (!res.ok) throw new Error('Ошибка при получении постов из рубрики capoeira songs');
-
-            const total = res.headers.get('X-WP-Total') || '0';
-            const totalPages = res.headers.get('X-WP-TotalPages') || '1';
-            const songs = await res.json();
-
-            const transformedPosts = songs.map((song: any) => {
-                const featuredMedia = song._embedded?.['wp:featuredmedia']?.[0];
-
-                return {
-                    ...song,
-                    featuredImage: featuredMedia ? {
-                        full: featuredMedia.source_url,
-                        thumbnail: featuredMedia.media_details?.sizes?.thumbnail?.source_url,
-                        medium: featuredMedia.media_details?.sizes?.medium?.source_url,
-                        large: featuredMedia.media_details?.sizes?.large?.source_url,
-                        alt: featuredMedia.alt_text || song.title.rendered,
-                        caption: featuredMedia.caption?.rendered || '',
-                    } : null,
-                    featuredImageUrl: featuredMedia?.source_url || null,
-                };
-            });
-
-            return {
-                songs: transformedPosts,
-                total: parseInt(total, 10),
-                totalPages: parseInt(totalPages, 10),
-                currentPage: page,
-                perPage: perPage
-            };
-        },
+        queryFn: () => fetchCapoeiraSongs(page, perPage),
         staleTime: 1000 * 60 * 5
     });
 };
