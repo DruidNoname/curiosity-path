@@ -21,30 +21,32 @@ const HistoryWidget: React.FC = ( ) => {
 
     return(
         <ErrorBoundary componentName={'HistoryWidget'}>
-            { !isError ?
-                <Box  sx={{marginBottom: '4px'}}>
-                    <Typography variant={'h5'} sx={{marginBottom: '8px'}}>
-                        Окно в историю {isLoading && <Loader isDots={true}/> }
-                    </Typography>
-                    <Typography variant={'body2'}>
-                        Что было в&nbsp;фокусе в&nbsp;этот&nbsp;день, <strong>{new Date().toLocaleDateString('ru-RU', {
-                        day: 'numeric',
-                        month: 'long'
-                    })}</strong>:
-                    </Typography>
-                </Box>
-                :
-                <Typography variant={'h6'} sx={{ lineHeight: '1.25em', fontSize: '12px'}}>
-                    {error?.message}
+            <Box  sx={{marginBottom: '4px'}}>
+                <Typography variant={'h5'} sx={{marginBottom: '8px'}}>
+                    Окно в историю
                 </Typography>
-            }
+                <Typography variant={'body2'}>
+                    Что было в&nbsp;фокусе в&nbsp;этот&nbsp;день, <strong>{new Date().toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long'
+                })}</strong>:
+                </Typography>
+            </Box>
             <Paper
                 variant={'iced'}
                 sx={{padding: '16px', marginBottom: '20px;', minHeight: '130px', marginRight: '-3px', marginLeft: '-3px',}}
             >
-                {   posts?.length > 0
+                { isError
                     ?
-                    posts?.map((post: WP_REST_API_Post) => {
+                    <Typography variant={'body2'} sx={{ lineHeight: '1.25em', fontSize: '12px'}}>
+                        {error?.message}
+                    </Typography>
+                    : isLoading
+                    ?
+                    <Loader isDots={true}/>
+                    : posts.length > 0
+                    ?
+                    posts.map((post: WP_REST_API_Post) => {
                     const postDate = new Date(post.date);
                     const postYear = postDate.getFullYear();
 

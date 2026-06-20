@@ -13,6 +13,7 @@ import { PostPreview } from "../../modules/EntryPreview/components/PostPreview";
 import {TransformedPost} from "@/features/posts/types";
 import MainNAsideLayout from "@/components/Layouts/MainNAsideLayout";
 import {PostCalendar} from "@/modules";
+// import SearchWidget from "@/app/(home)/components/SearchWidget";
 
 const MainPage: React.FC = () => {
     const [page, setPage] = React.useState(1);
@@ -72,6 +73,7 @@ const MainPage: React.FC = () => {
                                 <HistoryWidget/>
                                 <PostCalendar/>
                                 <Tags/>
+                                {/*<SearchWidget/>*/}
                             </>
                         }
                     />
