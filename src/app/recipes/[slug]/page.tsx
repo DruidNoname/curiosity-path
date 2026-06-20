@@ -41,23 +41,27 @@ const Recipe: React.FC<Props> = ({ params }) =>  {
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
-    const rawIngs = recipe?.ingredients_flat || [];
     const notes = recipe?.notes || null;
 
-    const ingredientsWithFixedUnits = rawIngs.map((ing) => {
-        if (ing?.unit && ing.unit in UNIT_MAP) {
-            return {
-                ...ing,
-                unit: UNIT_MAP[ing.unit]
-            };
-        } else if (!ing?.unit) {
-            return {
-                ...ing,
-                unit: 'шт.'
-            };
-        }
-        return ing;
-    });
+    // Стабилизируем ссылку: иначе новый массив на каждый рендер родителя сбрасывает
+    // useMemo внутри IngredientsList и ProportionByIngredientForm.
+    const ingredientsWithFixedUnits = React.useMemo(
+        () => (recipe?.ingredients_flat || []).map((ing) => {
+            if (ing?.unit && ing.unit in UNIT_MAP) {
+                return {
+                    ...ing,
+                    unit: UNIT_MAP[ing.unit]
+                };
+            } else if (!ing?.unit) {
+                return {
+                    ...ing,
+                    unit: 'шт.'
+                };
+            }
+            return ing;
+        }),
+        [recipe?.ingredients_flat]
+    );
 
     if (isLoading) return <Loader />;
 

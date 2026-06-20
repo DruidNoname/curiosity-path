@@ -16,15 +16,14 @@ const Post: React.FC<PostProps> = ({ params }) => {
     const { slug } = React.use(params);
     const { data: post, isLoading, isError, error } = usePost(slug);
 
-    const title = getCleanEntry(post?.title?.rendered  || 'Без названия');
+    // getCleanEntry запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входному HTML.
+    const title = React.useMemo(() => getCleanEntry(post?.title?.rendered || 'Без названия'), [post?.title?.rendered]);
     const date = post?.date ? new Date(post.date).toLocaleDateString('ru-RU') : '';
-    const excerpt = getCleanEntry(post?.excerpt?.rendered || '');
-    const content = getCleanEntry(post?.content?.rendered || '');
+    const excerpt = React.useMemo(() => getCleanEntry(post?.excerpt?.rendered || ''), [post?.excerpt?.rendered]);
+    const content = React.useMemo(() => getCleanEntry(post?.content?.rendered || ''), [post?.content?.rendered]);
     const featuredImage = post?.featuredImageUrl;
 
     if (isError) return <div>Ошибка: {error.message}</div>;
-
-    console.log(content);
 
     return (
         <ErrorBoundary componentName={'Post'}>

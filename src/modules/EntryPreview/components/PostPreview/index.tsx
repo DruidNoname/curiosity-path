@@ -16,10 +16,11 @@ type Props = {
     entryTags?: number[];
     entryImage?: string | null;
 }
-export const PostPreview: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage }) => {
-    const title = getCleanEntry(entryTitle) || 'Без названия';
+const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage }) => {
+    // getCleanEntry/createExcerpt запускают sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
+    const title = React.useMemo(() => getCleanEntry(entryTitle) || 'Без названия', [entryTitle]);
+    const excerpt = React.useMemo(() => createExcerpt(entryPreview || ''), [entryPreview]);
     const date = entryDate ? new Date(entryDate).toLocaleDateString('ru-RU') : '';
-    const excerpt = createExcerpt(entryPreview || '');
     const tagIds = entryTags || [];
 
     const { tags, isLoading } = useTagsByIds(tagIds);
@@ -60,3 +61,5 @@ export const PostPreview: React.FC<Props> = ({ entryTitle, entryPreview, entryDa
         </ErrorBoundary>
     );
 };
+
+export const PostPreview = React.memo(PostPreviewComponent);

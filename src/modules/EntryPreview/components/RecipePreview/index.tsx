@@ -17,13 +17,17 @@ type Props = {
     entryImage?: string | null;
     isRecipe?: boolean;
 }
-export const RecipePreview: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage, isRecipe }) => {
-    const title = getCleanEntry(entryTitle) || 'Без названия';
+const RecipePreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage }) => {
+    // getCleanEntry/createExcerpt запускают sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
+    const title = React.useMemo(() => getCleanEntry(entryTitle) || 'Без названия', [entryTitle]);
+    const excerpt = React.useMemo(() => createExcerpt(entryPreview || ''), [entryPreview]);
     const date = entryDate ? new Date(entryDate).toLocaleDateString('ru-RU') : '';
-    const excerpt = createExcerpt(entryPreview || '');
 
     const { data: allKeywords, isLoading: keywordsLoading } = useKeywords();
-    const keywords = allKeywords?.filter(k => entryTags?.includes(k.id)) ?? [];
+    const keywords = React.useMemo(
+        () => allKeywords?.filter(k => entryTags?.includes(k.id)) ?? [],
+        [allKeywords, entryTags]
+    );
 
     return (
         <ErrorBoundary componentName={'RecipePreview'}>
@@ -67,3 +71,5 @@ export const RecipePreview: React.FC<Props> = ({ entryTitle, entryPreview, entry
         </ErrorBoundary>
     );
 };
+
+export const RecipePreview = React.memo(RecipePreviewComponent);

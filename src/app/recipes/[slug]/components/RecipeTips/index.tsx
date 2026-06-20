@@ -10,6 +10,9 @@ interface RecipeTipsProps {
 }
 
 const RecipeTips: React.FC<RecipeTipsProps> = ({ notes }) => {
+    // createTips использует getCleanEntry (sanitizeHtml + DOMParser) — мемоизируем по входу.
+    const tipsHtml = React.useMemo(() => createTips(notes), [notes]);
+
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -19,7 +22,7 @@ const RecipeTips: React.FC<RecipeTipsProps> = ({ notes }) => {
                 <Typography
                     variant="body1"
                     component="div"
-                    dangerouslySetInnerHTML={{ __html: createTips(notes) }}
+                    dangerouslySetInnerHTML={{ __html: tipsHtml }}
                 />
             </AccordionDetails>
         </Accordion>

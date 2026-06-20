@@ -28,8 +28,19 @@ const CapoeiraSongs: React.FC = () => {
 
     const {
         songs = [],
-        total = 0,
     } = data || {};
+
+    // getCleanEntry (sanitizeHtml + DOMParser) — дорого. Хук нельзя вызывать внутри .map,
+    // поэтому санитизируем весь список один раз и мемоизируем по songs.
+    const preparedSongs = React.useMemo(
+        () => songs.map((song: TransformedPost) => ({
+            song,
+            title: getCleanEntry(song?.title?.rendered || 'Без названия'),
+            excerpt: getCleanEntry(song?.excerpt?.rendered || ''),
+            content: getCleanEntry(song?.content.rendered || ''),
+        })),
+        [songs]
+    );
 
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpanded(isExpanded ? panel : false);
@@ -56,11 +67,7 @@ const CapoeiraSongs: React.FC = () => {
                 <Loader /> :
                 <Box>
                     {
-                        songs?.map((song: TransformedPost) => {
-                            const title = getCleanEntry(song?.title?.rendered || 'Без названия');
-                            const excerpt = getCleanEntry(song?.excerpt?.rendered || '');
-                            const content = getCleanEntry(song?.content.rendered || '');
-
+                        preparedSongs.map(({ song, title, excerpt, content }) => {
                             return(
                                 <Accordion
                                     key={`song_${song?.id}`}
