@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {
@@ -7,7 +9,7 @@ import {
     Toolbar,
     Typography,
 } from '@mui/material';
-import {useThemeContext} from "@/features/theme/context/context";
+import { useColorScheme } from '@mui/material/styles';
 import { Brightness4, Brightness7 } from '@mui/icons-material';
 import Menu from '../Nav';
 import {TextSimilarLink} from '@/ui/Link';
@@ -17,7 +19,18 @@ type Props = {
 }
 
 const Header: React.FC<Props> = ({ title }) => {
-    const { mode, toggleTheme } = useThemeContext();
+    const { mode, systemMode, setMode } = useColorScheme();
+
+    // До монтирования cхема ещё неизвестна на клиенте — рендерим детерминированный
+    // вариант, чтобы не вызвать рассинхронизацию гидрации (саму тему задаёт
+    // InitColorSchemeScript до отрисовки, так что визуальной вспышки нет).
+    const [mounted, setMounted] = React.useState(false);
+    React.useEffect(() => setMounted(true), []);
+
+    const resolvedMode = mode === 'system' ? systemMode : mode;
+    const isDark = mounted && resolvedMode === 'dark';
+
+    const toggleTheme = () => setMode(isDark ? 'light' : 'dark');
 
     return (
         <ErrorBoundary componentName={'Header'}>
@@ -30,8 +43,8 @@ const Header: React.FC<Props> = ({ title }) => {
                             </TextSimilarLink>
                         </Typography>
                         <Menu/>
-                        <IconButton onClick={toggleTheme} color="inherit">
-                            {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+                        <IconButton onClick={toggleTheme} color="inherit" suppressHydrationWarning>
+                            {isDark ? <Brightness7 /> : <Brightness4 />}
                         </IconButton>
                     </Toolbar>
                 </Container>

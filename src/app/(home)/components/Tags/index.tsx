@@ -12,8 +12,10 @@ const Tags: React.FC = () => {
     const { data, loading, error} = useQuery<GraphQLTagsResponse>(GET_ALL_TAGS, {
         variables: { first: 100 },
     });
-    const rawTags = data?.tags?.nodes || [];
-    const tags = [...rawTags].sort((a, b) => b.count - a.count) || [];
+    const tags = React.useMemo(
+        () => [...(data?.tags?.nodes ?? [])].sort((a, b) => b.count - a.count),
+        [data]
+    );
     const totalTags = tags.length || 0;
 
     const errorMessage =  error?.graphQLErrors?.[0]?.message || error?.message || 'Неизвестная ошибка';

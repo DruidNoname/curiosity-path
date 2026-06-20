@@ -10,11 +10,12 @@ import Calendar from "@/ui/Calendar";
 import {getPostsByDate} from "@/modules/PostCalendar/utils";
 import Loader from "@/ui/Loader";
 
+const MIN_DATE = new Date(2011, 0, 1);
+
 export const PostCalendar: React.FC = () => {
     const today = new Date();
     const monthStart = startOfMonth(today);
     const monthEnd = endOfMonth(today);
-    const minDate = new Date(2011, 0, 1);
     const maxDate = addMonths(today, 1);
 
     const thisMonthInterval = {
@@ -43,7 +44,7 @@ export const PostCalendar: React.FC = () => {
         });
     };
 
-    const posts = data?.posts || [];
+    const postsByDate = React.useMemo(() => getPostsByDate(data?.posts || []), [data]);
 
     return (
         <ErrorBoundary componentName={'PostCalendar'}>
@@ -62,20 +63,19 @@ export const PostCalendar: React.FC = () => {
                         views={['year', 'month', 'day']}
                         onMonthChange={handleMonthChange}
                         onYearChange={handleYearChange}
-                        minDate={minDate}
+                        minDate={MIN_DATE}
                         maxDate={maxDate}
                         slots={{
                             day: (props) => {
                                 const { day, ...other } = props;
                                 const dateKey = format(day, 'yyyy-MM-dd');
-                                const postsForDay = getPostsByDate(posts).get(dateKey) || [];
-                                const hasPosts = postsForDay.length > 0;
+                                const hasPosts = (postsByDate.get(dateKey)?.length ?? 0) > 0;
 
                                 return (
                                     <PostCalendarDay
                                         day={day}
                                         hasPosts={hasPosts}
-                                        postsByDate={getPostsByDate(posts)}
+                                        postsByDate={postsByDate}
                                         {...other}
                                     />
                                 );

@@ -1,6 +1,12 @@
-import {createTheme} from "@mui/material/styles";
-import {colors as darkThemeColors} from "@/features/theme/DarkTheme/Colors";
-export const deadSpaceBaseTheme = createTheme({
+import type { ThemeOptions } from "@mui/material/styles";
+
+/**
+ * Базовые опции темы: типографика, форма и общие (scheme-agnostic) переопределения
+ * компонентов. Все цвета выражены через CSS-переменные var(--color-*), поэтому один
+ * и тот же набор стилей корректно работает в обеих цветовых схемах — конкретные
+ * значения переменных подставляются per-scheme в theme.ts.
+ */
+export const baseThemeOptions: ThemeOptions = {
     typography: {
         fontFamily: 'var(--font-roboto-mono), "Courier New", monospace',
         h1: {
@@ -778,4 +784,4 @@ export const deadSpaceBaseTheme = createTheme({
             },
         },
     }
-});
+};

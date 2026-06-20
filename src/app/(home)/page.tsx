@@ -50,7 +50,7 @@ const MainPage: React.FC = () => {
                                         entryTitle={post.title?.rendered || 'Без названия'}
                                         entryPreview={post.excerpt?.rendered || ''}
                                         entryDate={post.date || ''}
-                                        entryTags={post.tags || []}
+                                        entryTags={post.tags}
                                         entryImage={post.featuredImage ? post.featuredImage?.medium : undefined}
                                         key={`post_${post.id}`}
                                     />
