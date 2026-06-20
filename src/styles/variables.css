@@ -1,7 +1,6 @@
-:root {
-  /* Основные переменные будут установлены через JavaScript в MuiCssBaseline */
-}
-
-.theme-light {
-  /* Переопределяются через JavaScript */
-}
+/*
+  CSS-переменные тем (--color-*) генерируются MUI в MuiCssBaseline (см. theme.ts)
+  и scoped по селекторам :root / [data-theme="dark"] / [data-theme="light"].
+  Этот файл намеренно оставлен пустым как точка расширения для глобальных переменных,
+  не зависящих от схемы.
+*/

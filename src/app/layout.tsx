@@ -3,6 +3,7 @@ import '../styles/index.css';
 import ClientLayout from './ClientLayout';
 import { robotoMono } from '@/assets/fonts/robotoMono';
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
+import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 
 export const metadata: Metadata = {
     title: 'Журнал открытой миру',
@@ -16,7 +17,12 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
     return (
         <html lang="ru" className={robotoMono.variable} suppressHydrationWarning>
         <body>
-        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme-mode');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})()` }} />
+        {/*
+          Блокирующий скрипт MUI: выставляет data-theme на <html> ДО первой отрисовки,
+          исходя из сохранённого режима / системной темы. Должен идти первым в <body>.
+          attribute='data-theme' совпадает с colorSchemeSelector в theme.ts.
+        */}
+        <InitColorSchemeScript attribute="data-theme" defaultMode="system" />
         <AppRouterCacheProvider>
             <ClientLayout>
                 {children}
