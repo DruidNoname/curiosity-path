@@ -25,6 +25,6 @@ const nextConfig = {
         WORDPRESS_API_BASE: process.env.NEXT_PUBLIC_WORDPRESS_API_BASE,
         BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
     },
-}
+};
 
 module.exports = nextConfig;

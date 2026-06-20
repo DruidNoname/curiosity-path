@@ -9,6 +9,8 @@ import Loader from "@/ui/Loader";
 import {TransformedPost} from "@/features/posts/types";
 import {getCleanEntry} from "@/helpers/utils";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Image from "next/image";
+import capoeiraMusicSvg from "@/assets/images/capoeira/capoeira-music.svg";
 
 const CapoeiraSongs: React.FC = () => {
     const [expanded, setExpanded] = React.useState<string | false>(false);
@@ -36,6 +38,20 @@ const CapoeiraSongs: React.FC = () => {
     return(
         <Box className={styles.Song}>
             <Title title={ 'Песни капоэйры' } variant={"h2"} subtitle={'Учить и не думать. А подумать потом.'}/>
+            <Box sx={{ mb: {xs: '32px', md: '48px'}, display: {md: 'flex'}}}>
+                <Box sx={{textAlign: 'center', minWidth: 210}}>
+                    <Image src={capoeiraMusicSvg} alt={'berimbau'} width={100}/>
+                </Box>
+                <Box sx={{ mt: {xs: '32px', md: 0},  ml: {xs: 0, md: '16px'}}}>
+                    <p>
+                        Песни капоэйры, в основном или выученные, или заинтересовавшие, или зацепившие. Ну или те, которые часто играются в роде и которые стыдно не знать. </p>
+                    <p>Ни перевода, ни транскрипции - только тексты.
+                    </p>
+                    <p>
+                        Их мало, но они в тельняшках.
+                    </p>
+                </Box>
+            </Box>
             { isLoading ?
                 <Loader /> :
                 <Box>
