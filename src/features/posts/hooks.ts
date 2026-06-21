@@ -5,6 +5,7 @@ import {
     fetchPostsByToday,
     fetchPost,
     fetchPostsByTag,
+    fetchPostsBySearch,
     fetchCapoeiraSongs
 } from "./api";
 import {PER_PAGE} from "@/helpers/const";
@@ -61,6 +62,15 @@ export const usePostsByTag = (tagSlug: string, page = 1, perPage = PER_PAGE) => 
         queryFn: () => fetchPostsByTag(tagSlug, page, perPage),
         enabled: !!tagSlug,
         staleTime: 5 * 60 * 1000,
+    });
+};
+
+export const usePostsBySearch = (search: string, page = 1, perPage = PER_PAGE) => {
+    return useQuery<PostsResponse>({
+        queryKey: ['posts', 'search', search, page, perPage],
+        queryFn: () => fetchPostsBySearch(search, page, perPage),
+        enabled: !!search,
+        staleTime: 1000 * 60 * 5,
     });
 };
 
