@@ -20,11 +20,6 @@ const SearchResults: React.FC = () => {
 
     const [page, setPage] = useState(1);
 
-    // Сбрасываем пагинацию при смене поискового запроса
-    React.useEffect(() => {
-        setPage(1);
-    }, [query]);
-
     const {
         data,
         isLoading,
