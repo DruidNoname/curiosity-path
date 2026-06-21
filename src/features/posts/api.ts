@@ -127,6 +127,31 @@ export const fetchPost = async (slug: string): Promise<TransformedPost> => {
     };
 };
 
+export const fetchPostsBySearch = async (search: string, page: number = 1, perPage: number = PER_PAGE): Promise<PostsResponse> => {
+    const params = new URLSearchParams({
+        search,
+        page: page.toString(),
+        per_page: perPage.toString(),
+        status: 'publish',
+        categories_exclude: CAPOEIRA_CATEGORY_ID.toString()
+    });
+
+    const res = await fetch(`${POSTS_URL}?${params.toString()}&_embed`);
+    if (!res.ok) throw new Error('Ошибка при поиске постов');
+
+    const total = res.headers.get('X-WP-Total') || '0';
+    const totalPages = res.headers.get('X-WP-TotalPages') || '1';
+    const posts = await res.json();
+
+    return {
+        posts,
+        total: parseInt(total, 10),
+        totalPages: parseInt(totalPages, 10),
+        currentPage: page,
+        perPage: perPage
+    };
+};
+
 export const fetchPostsByTag = async (tagSlug: string, page: number = 1, perPage: number = PER_PAGE) => {
     try {
         // Сначала получаем ID тега по slug

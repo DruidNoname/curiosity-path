@@ -4,7 +4,9 @@ import React, { useState } from "react";
 import { useParams } from 'next/navigation';
 import { WP_REST_API_Post } from 'wp-types';
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { Box, Divider, Typography, Chip } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
+import FilteredTitle from "@/components/FilteredTitle";
+import ResultsCount from "@/components/ResultsCount";
 import { usePostsByTag } from "@/features/posts/hooks";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
@@ -68,17 +70,11 @@ const TagPage: React.FC = () => {
                     { isError ? <div> Ошибка загрузки тега. </div>
                         :
                         <>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                                <Chip
-                                    icon={<TagIcon />}
-                                    label="Тег"
-                                    color="primary"
-                                    size="small"
-                                />
-                                <Typography variant="h4" component="h1">
-                                    {tagData?.name || decodeURIComponent(slug)}
-                                </Typography>
-                            </Box>
+                            <FilteredTitle
+                                icon={<TagIcon />}
+                                label="Тег"
+                                title={tagData?.name || decodeURIComponent(slug)}
+                            />
 
                             {tagData?.description && (
                                 <Typography
@@ -89,15 +85,7 @@ const TagPage: React.FC = () => {
                                     {tagData?.description}
                                 </Typography>
                             )}
-                            {tagData?.count ?
-                                <Typography variant="body2" color="text.secondary">
-                                    Постов: {tagData.count}
-                                </Typography>
-                                :
-                                <Typography variant="body2" color="text.secondary">
-                                    Постов: {total}
-                                </Typography>
-                            }
+                            <ResultsCount key={slug} label="Постов" count={tagData?.count || total} />
                         </>
                     }
                 </Box>
