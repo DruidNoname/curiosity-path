@@ -1,5 +1,5 @@
 import ErrorBoundary from "@/components/ErrorBoundary";
-import {Box, Card, Paper, Tooltip, Typography} from "@mui/material";
+import {Box, Paper, Tooltip, Typography} from "@mui/material";
 import Loader from "@/ui/Loader";
 import React from "react";
 import {usePostsByToday} from "@/features/posts/hooks";
@@ -34,7 +34,7 @@ const HistoryWidget: React.FC = ( ) => {
             </Box>
             <Paper
                 variant={'iced'}
-                sx={{padding: '16px', marginBottom: '20px;', minHeight: '130px', marginRight: '-3px', marginLeft: '-3px',}}
+                sx={{padding: '16px', marginBottom: '20px', minHeight: '130px', marginRight: '-3px', marginLeft: '-3px',}}
             >
                 { isError
                     ?
@@ -46,7 +46,8 @@ const HistoryWidget: React.FC = ( ) => {
                     <Loader isDots={true}/>
                     : posts.length > 0
                     ?
-                    posts.map((post: WP_REST_API_Post) => {
+                    <Box sx={{display: 'flex', flexWrap: 'wrap', columnGap: '16px', rowGap: '4px'}}>
+                    {posts.map((post: WP_REST_API_Post) => {
                     const postDate = new Date(post.date);
                     const postYear = postDate.getFullYear();
 
@@ -57,12 +58,13 @@ const HistoryWidget: React.FC = ( ) => {
                             arrow
                             placement="bottom-end"
                         >
-                            <Link key={post.id} href={`/${post.slug}`} sx={{ margin: '0 8px'}}>
+                            <Link href={`/${post.slug}`}>
                                 { `${postYear}`}
                             </Link>
                         </Tooltip>
                     );
-                })
+                })}
+                    </Box>
                 :
                     <Typography variant={'body2'}>
                         ...ничего не произошло.
