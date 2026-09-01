@@ -1,7 +1,7 @@
 // PostDay/SimpleErrorBoundary.tsx
-'use client'
+'use client';
 
-import React, { Component, ErrorInfo } from 'react'
+import React, { Component, ErrorInfo } from 'react';
 
 interface Props {
     children: React.ReactNode;
@@ -15,12 +15,12 @@ interface State {
 
 export default class ErrorBoundary extends Component<Props, State> {
     constructor(props: Props) {
-        super(props)
-        this.state = { hasError: false }
+        super(props);
+        this.state = { hasError: false };
     }
 
     static getDerivedStateFromError() {
-        return { hasError: true }
+        return { hasError: true };
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -30,7 +30,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             `Error: ${error.message}\n`,
             `Component Stack: ${errorInfo.componentStack}\n`,
             `Error Stack: ${error.stack}`
-        )
+        );
 
         // Можно также отправить в сервис мониторинга
         // this.sendErrorToMonitoring(error, errorInfo)
@@ -65,9 +65,9 @@ export default class ErrorBoundary extends Component<Props, State> {
                         Обновить страницу
                     </button>
                 </div>
-            )
+            );
         }
 
-        return this.props.children
+        return this.props.children;
     }
 }

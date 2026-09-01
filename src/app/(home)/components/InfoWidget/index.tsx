@@ -38,7 +38,7 @@ const InfoWidget: React.FC<Props> = ( { count, isLoading, isError, error }) => {
                             <Skeleton width={200} sx={{ ml: 'auto' }}/>
                         ) : isError ? (
                             <>
-                                <p>'У самурая нет цели... Только ожидание бека.'</p>
+                                <p>«У самурая нет цели… Только ожидание бека.»</p>
                                 <p>Ошибка чего-то: {error?.message}</p>
                             </>
                         ) : (
