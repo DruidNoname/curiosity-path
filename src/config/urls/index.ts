@@ -17,7 +17,9 @@ const required = (name: string, value: string | undefined): string => {
     if (!value) {
         throw new Error(
             `Не задана переменная окружения ${name}. ` +
-            `Скопируйте .env.example в .env.local и заполните значения.`
+            `Локально: скопируйте .env.example в .env.local и заполните значения. ` +
+            `На хостинге (Vercel и любой CI): задайте её в настройках окружения проекта — ` +
+            `env-файлы в git не попадают. Список переменных — в .env.example.`
         );
     }
     return trimSlashes(value);
