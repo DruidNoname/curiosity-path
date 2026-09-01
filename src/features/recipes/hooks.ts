@@ -10,6 +10,7 @@ import {
     UseKeywordsParams
 } from "@/features/recipes/types";
 import {urls} from "@/config/urls";
+import {fetchRecipeBySlug} from "./api";
 
 
 type TaxonomyParams = {
@@ -117,16 +118,7 @@ export const useKeywords = (params: UseKeywordsParams = {}) =>
 export const useRecipeBySlug = (slug: string) =>
     useQuery<RecipeListItem>({
         queryKey: ['recipe', slug],
-        queryFn: async () => {
-            const res = await fetch(`${RECIPES_URL}?slug=${slug}`);
-            if (!res.ok) throw new Error('Recipe not found');
-
-            const recipes: RecipeListItem[] = await res.json();
-            const recipe = recipes[0];
-
-            if (!recipe) throw new Error('Recipe not found');
-            return recipe;
-        },
+        queryFn: () => fetchRecipeBySlug(slug),
         enabled: !!slug,
         staleTime: STALE_5M,
     });

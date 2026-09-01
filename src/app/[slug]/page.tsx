@@ -1,60 +1,58 @@
-'use client';
+import type { Metadata } from 'next';
+import { fetchPost } from '@/features/posts/api';
+import { toPlainText, toMetaText } from '@/helpers/meta';
+import { urls } from '@/config/urls';
+import PostView from './PostView';
 
-import React from 'react';
-import ErrorBoundary from "@/components/ErrorBoundary";
-import {Box, Container, Divider, Typography} from "@mui/material";
-import { usePost } from "@/features/posts/hooks";
-import Skeleton from "@/ui/Skeleton";
-import { getCleanEntry} from "@/helpers/utils";
-import SingleEntryTitle from "@/components/SingleEntry/SingleEntryTitle";
-import {Excerpt} from "@/app/[slug]/components/excerpt";
-
-interface PostProps {
+interface Props {
     params: Promise<{ slug: string }>;
 }
-const Post: React.FC<PostProps> = ({ params }) => {
-    const { slug } = React.use(params);
-    const { data: post, isLoading, isError, error } = usePost(slug);
 
-    // getCleanEntry запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входному HTML.
-    const title = React.useMemo(() => getCleanEntry(post?.title?.rendered || 'Без названия'), [post?.title?.rendered]);
-    const date = post?.date ? new Date(post.date).toLocaleDateString('ru-RU') : '';
-    const excerpt = React.useMemo(() => getCleanEntry(post?.excerpt?.rendered || ''), [post?.excerpt?.rendered]);
-    const content = React.useMemo(() => getCleanEntry(post?.content?.rendered || ''), [post?.content?.rendered]);
-    const featuredImage = post?.featuredImageUrl;
+/**
+ * Серверная обёртка над клиентской страницей поста.
+ *
+ * Нужна только ради метаданных: `generateMetadata` нельзя экспортировать из файла
+ * с `'use client'`, а превью ссылок в мессенджерах строится по HTML без выполнения
+ * JS. Сама отрисовка осталась прежней, клиентской, — данные по-прежнему тянет
+ * React Query в браузере.
+ */
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params;
 
-    if (isError) return <div>Ошибка: {error.message}</div>;
+    try {
+        const post = await fetchPost(slug);
+        const title = toPlainText(post?.title?.rendered);
+        if (!title) return {};
 
-    return (
-        <ErrorBoundary componentName={'Post'}>
-            <Container maxWidth="lg">
-                <Box sx={{ mt: 4, mb: 2 }}>
-                    <SingleEntryTitle title={title} isLoading={isLoading} date={date}/>
-                    <Divider sx={{ marginTop: '32px', marginBottom: '32px',  }} />
+        const description = toMetaText(post?.excerpt?.rendered);
+        const image = post?.featuredImageUrl || undefined;
 
-                    <Box sx={{ typography: 'body1' }}>
-                        { isLoading ?
-                            <>
-                                <Skeleton width={180}/><br/>
-                                <Skeleton width={320}/><br/>
-                                <Skeleton width={180}/><br/>
-                            </>
-                            :
-                            <>
-                                <Excerpt excerpt={excerpt} title={title} image={featuredImage || undefined}/>
-                                <Divider sx={{ mb: 3, borderStyle: 'dashed' }} />
-                                <Typography
-                                    variant="body1"
-                                    component="div"
-                                    dangerouslySetInnerHTML={{ __html: content }}
-                                />
-                            </>
-                        }
-                    </Box>
-                </Box>
-            </Container>
-        </ErrorBoundary>
-    );
-};
+        return {
+            title,
+            description: description || undefined,
+            openGraph: {
+                type: 'article',
+                title,
+                description: description || undefined,
+                url: `${urls.base}/${slug}`,
+                publishedTime: post?.date,
+                images: image ? [{ url: image, alt: title }] : undefined,
+            },
+            twitter: {
+                card: image ? 'summary_large_image' : 'summary',
+                title,
+                description: description || undefined,
+            },
+        };
+    } catch {
+        // Метаданные — не повод ронять страницу: если WordPress недоступен или
+        // поста нет, отдаём дефолты из корневого layout.
+        return {};
+    }
+}
 
-export default Post;
+export default async function PostPage({ params }: Props) {
+    const { slug } = await params;
+
+    return <PostView slug={slug} />;
+}

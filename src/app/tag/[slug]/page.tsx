@@ -13,7 +13,7 @@ import Pagination from "@/ui/Pagination";
 import TagIcon from '@mui/icons-material/Tag';
 import { PER_PAGE } from "@/helpers/const";
 import {useTag} from "@/features/tags/hooks";
-import { PostPreview } from "../../../modules/EntryPreview/components/PostPreview";
+import { PostPreview } from "@/modules/EntryPreview/components/PostPreview";
 
 const TagPage: React.FC = () => {
     const params = useParams();
@@ -60,8 +60,6 @@ const TagPage: React.FC = () => {
             </Box>
         );
     }
-
-    console.log(tagData);
 
     return (
         <ErrorBoundary componentName={'TagPage'}>

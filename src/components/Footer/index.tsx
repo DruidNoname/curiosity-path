@@ -26,7 +26,7 @@ const Footer: React.FC<Props> = ({ copyright }) => {
                 </Typography>
             </Container>
         </Paper>
-    )
+    );
 };
 
 export default Footer;

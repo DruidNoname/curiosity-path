@@ -6,10 +6,16 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import prettierPlugin from 'eslint-plugin-prettier';
 import pluginQuery from '@tanstack/eslint-plugin-query';
+import { FlatCompat } from '@eslint/eslintrc';
+
+// eslint-config-next 15.x ещё не отдаёт flat-конфиг, поэтому подтягиваем его через
+// слой совместимости. При обновлении пакета до 16.x это можно заменить прямым импортом.
+const compat = new FlatCompat({ baseDirectory: import.meta.dirname });
 
 
 export default tseslint.config(
-    { ignores: ['dist', 'build', 'node_modules'] },
+    { ignores: ['dist', 'build', 'node_modules', '.next', 'coverage', 'next-env.d.ts'] },
+    ...compat.extends('next/core-web-vitals'),
     {
         extends: [js.configs.recommended, ...tseslint.configs.recommended],
         files: ['**/*.{ts,tsx}'],
@@ -48,6 +54,14 @@ export default tseslint.config(
                     "caughtErrorsIgnorePattern": "^_"
                 }
             ],
+        },
+    },
+    {
+        // В тестах нужен require(): модуль перечитывается после jest.resetModules(),
+        // чтобы проверить поведение при разных переменных окружения.
+        files: ['**/*.test.ts', '**/*.test.tsx'],
+        rules: {
+            '@typescript-eslint/no-require-imports': 'off',
         },
     },
 )
