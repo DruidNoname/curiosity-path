@@ -1,5 +1,5 @@
 'use client';
-import React from "react";
+import React, { Suspense } from "react";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Box} from "@mui/material";
 import {usePosts} from "@/features/posts/hooks";
@@ -14,9 +14,10 @@ import {TransformedPost} from "@/features/posts/types";
 import MainNAsideLayout from "@/components/Layouts/MainNAsideLayout";
 import {PostCalendar} from "@/modules";
 import SearchWidget from "@/app/(home)/components/SearchWidget";
+import { usePageParam } from "@/helpers/usePageParam";
 
-const MainPage: React.FC = () => {
-    const [page, setPage] = React.useState(1);
+const MainPageContent: React.FC = () => {
+    const { page, setPage } = usePageParam();
 
     const {
         data,
@@ -29,6 +30,8 @@ const MainPage: React.FC = () => {
         posts = [],
         total = 0,
     } = data || {};
+
+    const totalPages = Math.ceil(total / PER_PAGE) || 1;
 
     return (
         <ErrorBoundary componentName={'MainPage'}>
@@ -59,11 +62,9 @@ const MainPage: React.FC = () => {
                                 }
                                 <Pagination
                                     sx={{ mt: 3, mb: 4 }}
-                                    count={Math.ceil(total / PER_PAGE) || 1}
-                                    page={page}
-                                    onChange={(_e, page) => {
-                                        setPage(page);
-                                    }}
+                                    count={totalPages}
+                                    page={Math.min(page, totalPages)}
+                                    onChange={(_e, nextPage) => setPage(nextPage)}
                                     disabled={isLoading}
                                 />
                             </>
@@ -82,5 +83,13 @@ const MainPage: React.FC = () => {
         </ErrorBoundary>
     );
 };
+
+// usePageParam опирается на useSearchParams, а тот требует Suspense:
+// без него статическая страница не соберётся.
+const MainPage: React.FC = () => (
+    <Suspense fallback={<Loader />}>
+        <MainPageContent />
+    </Suspense>
+);
 
 export default MainPage;

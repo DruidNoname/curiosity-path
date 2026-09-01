@@ -125,6 +125,37 @@ features/<name>/
   через `next/link` с клиентскими переходами и prefetch. Не писать `component={'a'}` —
   это перебивает дефолт и возвращает полную перезагрузку страницы.
 
+## Пагинация
+
+Номер страницы живёт в URL (`/tag/les?page=3`), а не в стейте компонента, — чтобы
+ссылку на конкретную страницу можно было переслать, положить в закладки и вернуться
+к ней кнопкой «назад».
+
+Единая точка — хук `usePageParam` из `@/helpers/usePageParam`:
+
+```tsx
+const { page, setPage } = usePageParam();
+const { data } = usePosts(page, PER_PAGE);
+...
+<Pagination count={totalPages} page={Math.min(page, totalPages)}
+            onChange={(_e, next) => setPage(next)} />
+```
+
+- **Первая страница параметра не получает** — `/` вместо `/?page=1`.
+- **Остальные query-параметры сохраняются**: на `/search?q=лес` пагинация не потеряет
+  запрос.
+- **Мусор в параметре — это первая страница.** По ссылке из чужих рук приходит что
+  угодно; `?page=abc`, `?page=0`, `?page=-3` не должны ничего ронять.
+- **Компонент с `usePageParam` обязан быть под `<Suspense>`.** Этого требует
+  `useSearchParams`: без него статическая страница не собирается. Поэтому у `/` и
+  `/tag/[slug]` страница разделена на `…Content` и тонкую обёртку с Suspense.
+- `Math.min(page, totalPages)` в `page` — чтобы MUI не ругался, когда в адресе номер
+  больше, чем есть страниц.
+
+Так сделаны `/`, `/search` и `/tag/[slug]`. Списки рецептов
+(`/recipes/categories/[category]`, `/recipes/keywords/[keyword]`) пока на локальном
+`useState` — при правках их стоит перевести на тот же хук.
+
 ## Метаданные и превью ссылок
 
 Мессенджеры строят превью по HTML и **не выполняют JavaScript**, поэтому всё нужное
@@ -192,8 +223,8 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 ## Тесты
 
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
-в `jest.setup.env.js`. Сейчас покрыты `src/helpers/utils.ts`, `src/helpers/meta.ts` и `src/config/urls`
-(48 тестов, 3 сьюта). Тесты кладутся рядом с кодом: `utils.test.ts`, `meta.test.ts`, `index.test.ts`.
+в `jest.setup.env.js`. Сейчас покрыты `src/helpers/utils.ts`, `src/helpers/meta.ts`, `src/helpers/usePageParam.ts`
+и `src/config/urls` (63 теста, 5 сьютов). Тесты кладутся рядом с кодом: `utils.test.ts`, `meta.test.ts`, `index.test.ts`.
 
 ## Грабли
 
@@ -221,8 +252,8 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 - `useTagsByIds` делает по запросу на каждый тег (N+1). На странице тега тег грузится дважды:
   отдельно в `useTag` и внутри `fetchPostsByTag`.
 - Apollo подключён глобально в `ClientLayout` ради одного виджета.
-- Пагинация продублирована в каждом листинге локальным `useState(1)`; идёт работа над
-  выносом её в URL (ветка `url-pagination-params`).
+- Пагинация списков рецептов всё ещё на локальном `useState(1)` — в отличие от списков
+  постов, ссылку с номером страницы там переслать нельзя.
 
 ## Skills
 
