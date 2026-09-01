@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { fetchRecipeBySlug } from '@/features/recipes/api';
 import { toPlainText, toMetaText } from '@/helpers/meta';
 import { urls } from '@/config/urls';
-import { ogImages } from '@/config/site';
 import RecipeView from './RecipeView';
 
 interface Props {
@@ -22,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         if (!title) return {};
 
         const description = toMetaText(item?.recipe?.summary || item?.content?.rendered);
-        const images = ogImages(item?.recipe?.image_url, title);
+        const image = item?.recipe?.image_url || undefined;
 
         return {
             title,
@@ -32,10 +31,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
                 title,
                 description: description || undefined,
                 url: `${urls.base}/recipes/${slug}`,
-                images,
+                images: image ? [{ url: image, alt: title }] : undefined,
             },
             twitter: {
-                card: 'summary_large_image',
+                card: image ? 'summary_large_image' : 'summary',
                 title,
                 description: description || undefined,
             },

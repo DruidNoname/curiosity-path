@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { fetchPost } from '@/features/posts/api';
 import { toPlainText, toMetaText } from '@/helpers/meta';
 import { urls } from '@/config/urls';
-import { ogImages } from '@/config/site';
 import PostView from './PostView';
 
 interface Props {
@@ -26,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         if (!title) return {};
 
         const description = toMetaText(post?.excerpt?.rendered);
-        const images = ogImages(post?.featuredImageUrl, title);
+        const image = post?.featuredImageUrl || undefined;
 
         return {
             title,
@@ -37,10 +36,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
                 description: description || undefined,
                 url: `${urls.base}/${slug}`,
                 publishedTime: post?.date,
-                images,
+                images: image ? [{ url: image, alt: title }] : undefined,
             },
             twitter: {
-                card: 'summary_large_image',
+                card: image ? 'summary_large_image' : 'summary',
                 title,
                 description: description || undefined,
             },

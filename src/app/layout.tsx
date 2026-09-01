@@ -5,7 +5,7 @@ import { robotoMono } from '@/assets/fonts/robotoMono';
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import { urls } from '@/config/urls';
-import { SITE_NAME, SITE_DESCRIPTION, DEFAULT_OG_IMAGE } from '@/config/site';
+import { SITE_NAME, SITE_DESCRIPTION } from '@/config/site';
 
 /**
  * Дефолтные метаданные и OG-теги для всего сайта.
@@ -32,10 +32,9 @@ export const metadata: Metadata = {
         url: urls.base,
         title: SITE_NAME,
         description: SITE_DESCRIPTION,
-        images: [{ ...DEFAULT_OG_IMAGE, alt: SITE_NAME }],
     },
     twitter: {
-        card: 'summary_large_image',
+        card: 'summary',
         title: SITE_NAME,
         description: SITE_DESCRIPTION,
     },
