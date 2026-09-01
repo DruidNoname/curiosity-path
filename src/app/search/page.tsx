@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense, useState } from "react";
+import React, { Suspense } from "react";
 import { useSearchParams } from 'next/navigation';
 import { WP_REST_API_Post } from 'wp-types';
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -13,12 +13,13 @@ import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
 import { PER_PAGE } from "@/helpers/const";
 import { PostPreview } from "@/modules/EntryPreview/components/PostPreview";
+import { usePageParam } from "@/helpers/usePageParam";
 
 const SearchResults: React.FC = () => {
     const searchParams = useSearchParams();
     const query = (searchParams.get('q') || '').trim();
 
-    const [page, setPage] = useState(1);
+    const { page, setPage } = usePageParam();
 
     const {
         data,
@@ -88,11 +89,8 @@ const SearchResults: React.FC = () => {
                             <Pagination
                                 sx={{ mt: 3, mb: 4 }}
                                 count={totalPages}
-                                page={page}
-                                onChange={(_e, newPage) => {
-                                    setPage(newPage);
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }}
+                                page={Math.min(page, totalPages)}
+                                onChange={(_e, nextPage) => setPage(nextPage)}
                             />
                         )}
                     </>
