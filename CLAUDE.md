@@ -125,6 +125,28 @@ features/<name>/
   через `next/link` с клиентскими переходами и prefetch. Не писать `component={'a'}` —
   это перебивает дефолт и возвращает полную перезагрузку страницы.
 
+## Метаданные и превью ссылок
+
+Мессенджеры строят превью по HTML и **не выполняют JavaScript**, поэтому всё нужное
+для превью считается на сервере.
+
+Схема на маршрут: серверный `page.tsx` экспортирует `generateMetadata` и рендерит
+клиентский компонент (`PostView`, `RecipeView`), который и тянет данные через React
+Query, как раньше. Разделение вынужденное: `generateMetadata` нельзя экспортировать
+из файла с `'use client'`. Так сделаны `/[slug]` и `/recipes/[slug]`.
+
+- **Текст для метатегов — через `@/helpers/meta`.** WP отдаёт заголовки с тегами и
+  сущностями; `toPlainText`/`toMetaText` их снимают. Отдельный модуль от
+  `helpers/utils.ts`, потому что тот помечен `'use client'` (нужен DOMParser).
+- **Общие константы и картинка по умолчанию — в `@/config/site`.**
+- **`generateMetadata` всегда в try/catch.** WordPress отвечает не всегда; метаданные
+  не повод ронять страницу, при ошибке отдаются дефолты из корневого layout.
+- **openGraph страницы перекрывает layout целиком, а не сливается с ним.** Если задать
+  свой `openGraph` без `images`, превью останется вообще без картинки — поэтому
+  дефолт подставляет хелпер `ogImages()`, а не наследование.
+- `metadataBase` в корневом layout берётся из `urls.base`; без него относительные пути
+  картинок не превратятся в абсолютные URL и превью их не найдёт.
+
 ## Работа с HTML из WordPress
 
 WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `content.rendered`.
@@ -167,8 +189,8 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 ## Тесты
 
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
-в `jest.setup.env.js`. Сейчас покрыты `src/helpers/utils.ts` и `src/config/urls`
-(35 тестов, 2 сьюта). Тесты кладутся рядом с кодом: `utils.test.ts`, `index.test.ts`.
+в `jest.setup.env.js`. Сейчас покрыты `src/helpers/utils.ts`, `src/helpers/meta.ts` и `src/config/urls`
+(48 тестов, 3 сьюта). Тесты кладутся рядом с кодом: `utils.test.ts`, `meta.test.ts`, `index.test.ts`.
 
 ## Грабли
 
@@ -187,9 +209,12 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 
 Держать в голове при правках в соответствующих местах:
 
-- Все `page.tsx` — клиентские, серверных компонентов нет. Отсюда нет `generateMetadata`
-  (у всех страниц один title из root layout), нет `sitemap.ts`/`robots.ts`, нет
-  `loading.tsx`/`error.tsx`/`not-found.tsx`.
+- Отрисовка целиком клиентская: серверные `page.tsx` у постов и рецептов — тонкие
+  обёртки ради метаданных, данные по-прежнему грузятся в браузере. Осознанное решение:
+  блог личный, сторонний трафик не нужен, поэтому SSR контента не делали.
+- `generateMetadata` есть только у `/[slug]` и `/recipes/[slug]`. У страниц тега, поиска
+  и статических — дефолты из корневого layout. `sitemap.ts`/`robots.ts`,
+  `loading.tsx`/`error.tsx`/`not-found.tsx` отсутствуют.
 - `useTagsByIds` делает по запросу на каждый тег (N+1). На странице тега тег грузится дважды:
   отдельно в `useTag` и внутри `fetchPostsByTag`.
 - Apollo подключён глобально в `ClientLayout` ради одного виджета.
