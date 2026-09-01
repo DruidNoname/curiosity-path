@@ -1,5 +1,4 @@
 # Идеальный .gitignore для Next.js
-cat > .gitignore << 'EOF'
 # Dependencies
 node_modules/
 .yarn/
@@ -12,13 +11,11 @@ build/
 dist/
 *.tsbuildinfo
 
-# Production
+# Переменные окружения. Игнорируем всё, кроме шаблона без значений.
 env/
-.env
-.env.local
-.env.*.local
+.env*
 *.env
-.env.production
+!.env.example
 
 # Logs
 *.log
@@ -44,6 +41,41 @@ coverage/
 # System
 .DS_Store
 Thumbs.db
+
+# Ключи, сертификаты, учётные данные
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+.npmrc
+.netrc
+.htpasswd
+secrets.json
+credentials.json
+*service-account*.json
+
+# Привязка к хостингу (содержит идентификаторы проекта и организации)
+.vercel/
+.netlify/
+
+# Локальные настройки инструментов и агентов.
+# CLAUDE.md и .claude/skills/ — общие для команды, они остаются в репозитории.
+.claude/settings.local.json
+.qwen/
+.cursor/
+.aider*
+
+# Артефакты слияния и резервные копии — могут содержать куски старых версий файлов
+*.orig
+*.rej
+*.bak
+*~
 
 # Optional
 .yarnrc.yml
