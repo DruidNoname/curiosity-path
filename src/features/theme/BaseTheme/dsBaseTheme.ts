@@ -1,4 +1,5 @@
 import type { ThemeOptions } from "@mui/material/styles";
+import NextLink from 'next/link';
 
 /**
  * Базовые опции темы: типографика, форма и общие (scheme-agnostic) переопределения
@@ -579,6 +580,12 @@ export const baseThemeOptions: ThemeOptions = {
             },
         },
         MuiLink: {
+            // Вся внутренняя навигация должна идти через next/link: клиентские переходы
+            // и prefetch вместо полной перезагрузки страницы. Задано здесь, чтобы это
+            // работало для любого <Link> из @mui/material без правки каждого вызова.
+            defaultProps: {
+                component: NextLink,
+            },
             styleOverrides: {
                 root: {
                     textDecoration: 'none',
