@@ -22,10 +22,6 @@ const CapoeiraSongs: React.FC = () => {
         error
     } = useCapoeiraSongsPosts();
 
-    if (isError) {
-        console.log(error);
-    }
-
     const {
         songs = [],
     } = data || {};
@@ -45,6 +41,10 @@ const CapoeiraSongs: React.FC = () => {
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpanded(isExpanded ? panel : false);
     };
+
+    if (isError) {
+        return <div>Ошибка: {error?.message || 'Не удалось загрузить песни'}</div>;
+    }
 
     return(
         <Box className={styles.Song}>

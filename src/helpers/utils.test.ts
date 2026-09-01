@@ -50,7 +50,6 @@ describe('utils', () => {
         it('should wrap lonely images with alignnone class', () => {
             const html = `<p><img loading="lazy" decoding="async" class="wp-image-683 size-large alignnone" src="https://suffer.curiosity-path.ru/wp-content/uploads/2026/04/achivement-2-576x1024.png" alt="" width="576" height="1024" srcset="https://suffer.curiosity-path.ru/wp-content/uploads/2026/04/achivement-2-576x1024.png 576w, https://suffer.curiosity-path.ru/wp-content/uploads/2026/04/achivement-2-169x300.png 169w, https://suffer.curiosity-path.ru/wp-content/uploads/2026/04/achivement-2.png 720w" sizes="auto, (max-width: 576px) 100vw, 576px" /></p>`;
             const result = getCleanEntry(html);
-            console.log('Result for alignnone image:', result);
             expect(result).toContain('lonely-image__wrapper');
             expect(result).toContain('alignnone');
         });
