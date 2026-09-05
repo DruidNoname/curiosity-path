@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { usePageParam } from './usePageParam';
+import { usePageParam } from './index';
 
 const push = jest.fn();
 let currentSearch = '';

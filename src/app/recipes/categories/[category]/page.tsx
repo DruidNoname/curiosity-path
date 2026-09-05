@@ -3,7 +3,7 @@
 import React from "react";
 import {Box, Pagination} from "@mui/material";
 import {useCourses, useRecipes} from "@/features/recipes/hooks";
-import {PER_PAGE} from "@/helpers/const";
+import {PER_PAGE} from "@/config/pagination";
 import {RecipeListItem} from "@/features/recipes/types";
 import Loader from "@/ui/Loader";
 import { RecipePreview } from "@/modules/EntryPreview";

@@ -5,7 +5,8 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import {Box, Container, Divider, Typography} from "@mui/material";
 import { usePost } from "@/features/posts/hooks";
 import Skeleton from "@/ui/Skeleton";
-import { getCleanEntry} from "@/helpers/utils";
+import { getCleanEntry} from "@/helpers/wp-html";
+import { toPlainText } from "@/helpers/wp-text";
 import SingleEntryTitle from "@/components/SingleEntry/SingleEntryTitle";
 import {Excerpt} from "@/app/[slug]/components/excerpt";
 
@@ -15,8 +16,10 @@ interface PostProps {
 const Post: React.FC<PostProps> = ({ slug }) => {
     const { data: post, isLoading, isError, error } = usePost(slug);
 
-    // getCleanEntry запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входному HTML.
-    const title = React.useMemo(() => getCleanEntry(post?.title?.rendered || 'Без названия'), [post?.title?.rendered]);
+    // Заголовок рендерится текстом (в SingleEntryTitle и в alt картинки), разметка в нём
+    // не нужна — хватает toPlainText. Анонс и тело идут в разметку, там getCleanEntry:
+    // он запускает sanitizeHtml + DOMParser, это дорого, поэтому мемоизируем по входному HTML.
+    const title = React.useMemo(() => toPlainText(post?.title?.rendered) || 'Без названия', [post?.title?.rendered]);
     const date = post?.date ? new Date(post.date).toLocaleDateString('ru-RU') : '';
     const excerpt = React.useMemo(() => getCleanEntry(post?.excerpt?.rendered || ''), [post?.excerpt?.rendered]);
     const content = React.useMemo(() => getCleanEntry(post?.content?.rendered || ''), [post?.content?.rendered]);

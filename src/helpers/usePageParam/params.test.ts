@@ -1,4 +1,4 @@
-import { parsePage, buildPageHref, PAGE_PARAM } from './usePageParam';
+import { parsePage, buildPageHref, PAGE_PARAM } from './params';
 
 describe('parsePage', () => {
     it('читает нормальный номер страницы', () => {

@@ -111,6 +111,16 @@ img {
   }
 }
 
+/*WP pre*/
+/* WP отдаёт блоки «Форматированный текст» как <pre>: с дефолтным white-space: pre
+   длинные строки не переносятся и растягивают страницу по горизонтали. */
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
 /*WP blockquote*/
 blockquote {
   text-align: right;
@@ -173,6 +183,13 @@ blockquote {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
+}
+
+/* Фигуру с подписью ограничивает по ширине processFigures: max-width он ставит инлайном
+   (у каждой картинки своя), статика — здесь. */
+.wp-image-limited figcaption {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .wp-caption-text {
