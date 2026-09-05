@@ -3,7 +3,7 @@
 import React from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { createTips } from '@/helpers/utils';
+import { createTips } from '@/helpers/wp-html';
 
 interface RecipeTipsProps {
     notes: string;

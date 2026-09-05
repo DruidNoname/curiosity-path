@@ -1,6 +1,7 @@
 import {ADDON_POSTS_URL, CAPOEIRA_CATEGORY_ID, POSTS_URL} from "./const";
 import {urls} from "@/config/urls";
-import {PER_PAGE} from "@/helpers/const";
+import {PER_PAGE} from "@/config/pagination";
+import {toPlainText} from "@/helpers/wp-text";
 import {WP_REST_API_Post} from "wp-types";
 import {PostsResponse, PostsByTodayResponse, SongsResponse, TransformedPost} from "./types";
 
@@ -35,7 +36,7 @@ export const fetchPosts = async (page: number = 1, perPage: number = PER_PAGE): 
                 thumbnail: featuredMedia.media_details?.sizes?.thumbnail?.source_url,
                 medium: featuredMedia.media_details?.sizes?.medium?.source_url,
                 large: featuredMedia.media_details?.sizes?.large?.source_url,
-                alt: featuredMedia.alt_text || post.title.rendered,
+                alt: featuredMedia.alt_text || toPlainText(post.title.rendered),
                 caption: featuredMedia.caption?.rendered || '',
             } : null,
             // Или просто URL если нужно только это
@@ -214,7 +215,7 @@ export const fetchCapoeiraSongs = async (page: number = 1, perPage: number = PER
                 thumbnail: featuredMedia.media_details?.sizes?.thumbnail?.source_url,
                 medium: featuredMedia.media_details?.sizes?.medium?.source_url,
                 large: featuredMedia.media_details?.sizes?.large?.source_url,
-                alt: featuredMedia.alt_text || song.title.rendered,
+                alt: featuredMedia.alt_text || toPlainText(song.title.rendered),
                 caption: featuredMedia.caption?.rendered || '',
             } : null,
             featuredImageUrl: featuredMedia?.source_url || null,

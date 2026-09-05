@@ -9,8 +9,6 @@ interface Props extends PickersDayProps {
     postsByDate?: any;
 }
 
-const stripHtml = (html: string) => html.replace(/<[^>]*>/g, ''); // Убираем HTML-теги
-
 const PostCalendarDay: React.FC<Props> = ({day, hasPosts, postsByDate, ...other}) => {
     const dateKey = format(day, 'yyyy-MM-dd');
     const postsForDay = (hasPosts && postsByDate?.get(dateKey)) || [];
@@ -28,7 +26,7 @@ const PostCalendarDay: React.FC<Props> = ({day, hasPosts, postsByDate, ...other}
     const tooltipTitle = (
         <>
             {postsForDay.map((post: any) => (
-                <div key={post.id}>{stripHtml(post.title)}</div>
+                <div key={post.id}>{post.title}</div>
             ))}
         </>
     );

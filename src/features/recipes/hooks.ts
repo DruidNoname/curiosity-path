@@ -1,5 +1,5 @@
 import {COURSES_URL, KEYWORDS_URL, RECIPES_URL, STALE_1H, STALE_5M} from "@/features/recipes/const";
-import {PER_PAGE} from "@/helpers/const";
+import {PER_PAGE} from "@/config/pagination";
 import { useQuery } from '@tanstack/react-query';
 import {
     Course,

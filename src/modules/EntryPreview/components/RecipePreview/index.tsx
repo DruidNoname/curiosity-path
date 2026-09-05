@@ -2,7 +2,8 @@ import React from "react";
 import styles from './style.module.css';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Paper, Box, Typography, Link, Skeleton} from "@mui/material";
-import {createExcerpt, getCleanEntry} from "@/helpers/utils";
+import {createExcerpt} from "@/helpers/wp-html";
+import {toPlainText} from "@/helpers/wp-text";
 import {EntryPreviewContent} from "../EntryPreviewContent";
 import {ImageBordered} from "@/components/Images";
 import {useKeywords} from "@/features/recipes/hooks";
@@ -18,8 +19,9 @@ type Props = {
     isRecipe?: boolean;
 }
 const RecipePreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage }) => {
-    // getCleanEntry/createExcerpt запускают sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
-    const title = React.useMemo(() => getCleanEntry(entryTitle) || 'Без названия', [entryTitle]);
+    // Заголовок идёт в текстовый узел и в alt — нужен простой текст, не разметка.
+    const title = React.useMemo(() => toPlainText(entryTitle) || 'Без названия', [entryTitle]);
+    // createExcerpt запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
     const excerpt = React.useMemo(() => createExcerpt(entryPreview || ''), [entryPreview]);
     const date = entryDate ? new Date(entryDate).toLocaleDateString('ru-RU') : '';
 
@@ -34,7 +36,7 @@ const RecipePreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, ent
             <Paper key={entryId} className={styles.RecipePreview}>
                 { entryImage ?
                     <>
-                        <ImageBordered src={ entryImage } alt={ entryTitle } classNameWrapper={styles.ImageBox}/>
+                        <ImageBordered src={ entryImage } alt={ title } classNameWrapper={styles.ImageBox}/>
                         <Box>
                             <EntryPreviewContent
                                 title={title}

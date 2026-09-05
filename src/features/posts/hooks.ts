@@ -8,7 +8,7 @@ import {
     fetchPostsBySearch,
     fetchCapoeiraSongs
 } from "./api";
-import {PER_PAGE} from "@/helpers/const";
+import {PER_PAGE} from "@/config/pagination";
 import {PostsResponse, PostsByTodayResponse, SongsResponse, TransformedPost} from "@/features/posts/types";
 
 export const usePosts = (page = 1, perPage = PER_PAGE) => {

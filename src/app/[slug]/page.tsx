@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { fetchPost } from '@/features/posts/api';
-import { toPlainText, toMetaText } from '@/helpers/meta';
+import { toPlainText, toMetaText } from '@/helpers/wp-text';
 import { urls } from '@/config/urls';
 import PostView from './PostView';
 

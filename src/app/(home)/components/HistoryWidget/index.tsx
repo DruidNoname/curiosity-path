@@ -5,6 +5,7 @@ import React from "react";
 import {usePostsByToday} from "@/features/posts/hooks";
 import {WP_REST_API_Post} from "wp-types";
 import {Link} from "@/ui/Link";
+import {toPlainText} from "@/helpers/wp-text";
 
 const HistoryWidget: React.FC = ( ) => {
     const {
@@ -54,7 +55,7 @@ const HistoryWidget: React.FC = ( ) => {
                     return (
                         <Tooltip
                             key={post.id}
-                            title={post.title.rendered.replace(/<[^>]*>/g, '')} // Убираем HTML-теги
+                            title={toPlainText(post.title.rendered)}
                             arrow
                             placement="bottom-end"
                         >

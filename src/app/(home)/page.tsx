@@ -7,7 +7,7 @@ import InfoWidget from "@/app/(home)/components/InfoWidget";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
 import Tags from "@/app/(home)/components/Tags";
-import {PER_PAGE} from "@/helpers/const";
+import {PER_PAGE} from "@/config/pagination";
 import HistoryWidget from "@/app/(home)/components/HistoryWidget";
 import { PostPreview } from "../../modules/EntryPreview/components/PostPreview";
 import {TransformedPost} from "@/features/posts/types";

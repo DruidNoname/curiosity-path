@@ -11,7 +11,7 @@ import ResultsCount from "@/components/ResultsCount";
 import { usePostsBySearch } from "@/features/posts/hooks";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
-import { PER_PAGE } from "@/helpers/const";
+import { PER_PAGE } from "@/config/pagination";
 import { PostPreview } from "@/modules/EntryPreview/components/PostPreview";
 import { usePageParam } from "@/helpers/usePageParam";
 

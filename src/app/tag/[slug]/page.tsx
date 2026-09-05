@@ -11,7 +11,7 @@ import { usePostsByTag } from "@/features/posts/hooks";
 import Loader from "@/ui/Loader";
 import Pagination from "@/ui/Pagination";
 import TagIcon from '@mui/icons-material/Tag';
-import { PER_PAGE } from "@/helpers/const";
+import { PER_PAGE } from "@/config/pagination";
 import {useTag} from "@/features/tags/hooks";
 import { PostPreview } from "@/modules/EntryPreview/components/PostPreview";
 import { usePageParam } from "@/helpers/usePageParam";

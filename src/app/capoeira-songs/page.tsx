@@ -7,7 +7,8 @@ import Title from "@/components/Title";
 import {useCapoeiraSongsPosts} from "@/features/posts/hooks";
 import Loader from "@/ui/Loader";
 import {TransformedPost} from "@/features/posts/types";
-import {getCleanEntry} from "@/helpers/utils";
+import {getCleanEntry} from "@/helpers/wp-html";
+import {toPlainText} from "@/helpers/wp-text";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Image from "next/image";
 import capoeiraMusicSvg from "@/assets/images/capoeira/capoeira-music.svg";
@@ -31,7 +32,7 @@ const CapoeiraSongs: React.FC = () => {
     const preparedSongs = React.useMemo(
         () => songs.map((song: TransformedPost) => ({
             song,
-            title: getCleanEntry(song?.title?.rendered || 'Без названия'),
+            title: toPlainText(song?.title?.rendered) || 'Без названия',
             excerpt: getCleanEntry(song?.excerpt?.rendered || ''),
             content: getCleanEntry(song?.content.rendered || ''),
         })),
@@ -81,8 +82,9 @@ const CapoeiraSongs: React.FC = () => {
                                                 variant={'h5'}
                                                 component="h2"
                                                 className={styles.SongTitle}
-                                                dangerouslySetInnerHTML={{__html: title}}
-                                            />
+                                            >
+                                                { title }
+                                            </Typography>
                                             <Typography
                                                 variant="caption"
                                                 component="h5"

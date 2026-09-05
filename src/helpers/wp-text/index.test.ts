@@ -1,4 +1,4 @@
-import { toPlainText, truncate, toMetaText } from './meta';
+import { toPlainText, truncate, toMetaText } from './index';
 
 describe('toPlainText', () => {
     it('снимает теги', () => {

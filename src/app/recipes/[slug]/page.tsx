@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { fetchRecipeBySlug } from '@/features/recipes/api';
-import { toPlainText, toMetaText } from '@/helpers/meta';
+import { toPlainText, toMetaText } from '@/helpers/wp-text';
 import { urls } from '@/config/urls';
 import RecipeView from './RecipeView';
 
