@@ -18,7 +18,7 @@ const TestSubject: React.FC = () => {
                 Опасно. Бесплатно. Нелепо.
             </Typography>
             <Typography variant={'body1'} sx={{ mb: '32px'}}>
-                В настоящее время преддеплоев нет.
+                Сейчас на столе: <Link href={'/breather'}><b>Бризер</b></Link> — дыхательный метроном: счёт на вдох и на выдох.
             </Typography>
         </ErrorBoundary>
     );
