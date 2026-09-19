@@ -1,0 +1,23 @@
+/* Две колонки: слева форма со строкой состояния, справа практики.
+   Раскладка на grid, а не на flex-wrap: у flex перенос зависел от того, сколько
+   места запросит каждая колонка, и практики срывались вниз раньше времени.
+   Ниже 900px (тот же порог, что у меню) колонки складываются в одну. */
+.Layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 56px;
+    max-width: 780px;
+    margin-bottom: 16px;
+}
+
+.FormColumn {
+    min-width: 0;
+}
+
+@media (max-width: 899px) {
+    .Layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+    }
+}
