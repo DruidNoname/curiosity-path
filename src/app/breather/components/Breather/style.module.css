@@ -4,10 +4,11 @@
    Ниже 900px (тот же порог, что у меню) колонки складываются в одну. */
 .Layout {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* Форме нужно вдвое больше места: в ней два фильдсета в строку. */
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     align-items: start;
     gap: 56px;
-    max-width: 780px;
+    max-width: 1040px;
     margin-bottom: 16px;
 }
 

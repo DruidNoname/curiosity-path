@@ -1,0 +1,91 @@
+.Form {
+    flex: 0 1 auto;
+}
+
+/* Тот же контур, что у калькулятора рецептов: цвет берётся из темы через --color-*,
+   поэтому рамка живёт в обеих цветовых схемах. */
+.Frame {
+    border: 1px solid rgba(var(--color-primary-main-rgb), 0.5);
+    border-radius: 4px;
+    padding: 32px 24px;
+    margin-bottom: 12px;
+}
+
+/* Группа полей с подписью: рисунок, повторения. Браузерные стили fieldset
+   (толстая рамка, свои отступы) сброшены, контур вдвое прозрачнее внешней рамки,
+   чтобы рамка в рамке не спорила. */
+/* Оба фильдсета в строку; ниже 900px — друг под другом, как и вся раскладка. */
+.Groups {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 899px) {
+    .Groups {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.Group {
+    border: 1px solid rgba(var(--color-primary-main-rgb), 0.25);
+    border-radius: 4px;
+    /* Сверху чуть больше: часть отступа съедает врезанная в контур легенда. */
+    padding: 24px 20px 20px;
+    margin: 0;
+    min-width: 0;
+}
+
+/* Легенда рендерится вне потока фильдсета — отступы и размер ей нужны собственные. */
+.Legend {
+    padding: 0 8px;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.Fields {
+    display: grid;
+    /* Колонки тянутся, а не стоят фиксированными: рамка ровно в половину блока,
+       и поля должны укладываться в её ширину. */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    /* Сразу под сеткой идёт подпись про ноль: она поясняет поля паузы, поэтому
+       держится вплотную к ним, а воздух до кнопок задаёт уже она. */
+    margin-bottom: 8px;
+}
+
+/* Спойлер с подходами: нативные details/summary, только маркер и курсор поправлены. */
+.Spoiler {
+    margin-top: 16px;
+}
+
+.SpoilerSummary {
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--color-primary-main);
+    list-style: none;
+}
+
+.SpoilerSummary::-webkit-details-marker {
+    display: none;
+}
+
+.SpoilerSummary::before {
+    content: '+ ';
+}
+
+.Spoiler[open] .SpoilerSummary::before {
+    content: '− ';
+}
+
+.Actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Подсказки под полями выровнены по тексту поля, а не по краю фильдсета —
+   так же, как MUI отбивает свой helperText. */
+.Hint {
+    margin-left: 16px!important;
+}
