@@ -4,8 +4,9 @@ import React from "react";
 import {Box, Tooltip, Typography} from "@mui/material";
 import styles from './style.module.css';
 import TextButton from "@/ui/Buttons/TextButton";
-import {buildPlan, describePlan, toSettingsInput, type BreathSettings, type BreathSettingsInput} from "../../plan";
-import {BREATH_PRESETS, type BreathPreset} from "./config";
+import {toSettingsInput} from "@/features/breath/plan";
+import {BREATH_PRESETS, describePreset, type BreathPreset} from "@/features/breath/presets";
+import type {BreathSettings, BreathSettingsInput} from "@/features/breath/types";
 
 type Props = {
     /** Текущее содержимое полей — по нему подсвечивается практика, которая сейчас набрана. */
@@ -14,8 +15,6 @@ type Props = {
     /** Пока цикл играет, практики тоже недоступны — подставлять им некуда. */
     disabled?: boolean;
 };
-
-const describePreset = (preset: BreathPreset): string => describePlan(buildPlan(preset.settings));
 
 const isPresetActive = (preset: BreathPreset, values: BreathSettingsInput): boolean => {
     const presetValues = toSettingsInput(preset.settings);
@@ -27,7 +26,7 @@ const isPresetActive = (preset: BreathPreset, values: BreathSettingsInput): bool
 const BreathPresets: React.FC<Props> = ({values, onApply, disabled}) => {
     return (
         <Box className={styles.Presets}>
-            <Typography variant={'body1'}>
+            <Typography variant={'body2'} color={'text.secondary'}>
                 Готовые практики
             </Typography>
             {BREATH_PRESETS.map((preset) => (
