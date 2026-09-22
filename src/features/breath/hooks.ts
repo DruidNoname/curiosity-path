@@ -2,7 +2,7 @@
 
 import React from "react";
 import {createBeeper, getAudioContextCtor, type Beeper} from "./audio";
-import {TICK_MS} from "./const";
+import {COUNTDOWN_SECONDS, TICK_MS} from "./const";
 import type {BreathRun, BreathStep, BreathTick} from "./types";
 
 /** Где именно стоит прогон. Живёт в рефе, чтобы паузу можно было снять с того же места. */
@@ -12,11 +12,19 @@ type CyclePosition = {
     repeat: number;
     set: number;
     restLeft: number;
+    countdownLeft: number;
 };
 
 type CycleStatus = 'idle' | 'running' | 'paused';
 
-const initialPosition = (): CyclePosition => ({stepIndex: 0, count: 0, repeat: 0, set: 1, restLeft: 0});
+const initialPosition = (): CyclePosition => ({
+    stepIndex: 0,
+    count: 0,
+    repeat: 0,
+    set: 1,
+    restLeft: 0,
+    countdownLeft: COUNTDOWN_SECONDS,
+});
 
 /**
  * Дыхательный цикл на счёт: сигнал раз в секунду, каждая фаза плана держится
@@ -75,6 +83,20 @@ export const useBreathCycle = () => {
             });
             position.restLeft -= 1;
         };
+
+        // Обратный отсчёт перед стартом: пять щелчков, чтобы успеть сесть и выдохнуть.
+        if (position.countdownLeft > 0) {
+            beeper.beep('countdown');
+            setTick({
+                phase: 'countdown',
+                count: position.countdownLeft,
+                total: COUNTDOWN_SECONDS,
+                repeat: position.repeat,
+                set: position.set,
+            });
+            position.countdownLeft -= 1;
+            return;
+        }
 
         // Отдых между подходами: шум уже запущен одним куском, тики только считают.
         if (position.restLeft > 0) {

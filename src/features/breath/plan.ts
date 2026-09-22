@@ -28,7 +28,7 @@ export const toSettingsInput = (settings: BreathSettings): BreathSettingsInput =
     holdAfterExhale: String(settings.holdAfterExhale),
 });
 
-export const parseCount = (value: string): number => Number(value.trim());
+const parseCount = (value: string): number => Number(value.trim());
 
 /**
  * Целое в своих границах. Минимум у каждого поля свой (у вдоха с выдохом 1, у пауз 0),

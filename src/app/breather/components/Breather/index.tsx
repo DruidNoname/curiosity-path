@@ -12,11 +12,11 @@ import type {
     BreathRunInput,
     BreathSettings,
     BreathSettingsInput,
-    BreathStep,
 } from "@/features/breath/types";
 import BreathForm from "../BreathForm";
 import {INITIAL_RUN, INITIAL_VALUES} from "../BreathForm/config";
 import BreathPresets from "../BreathPresets";
+import BreathRunDialog from "../BreathRunDialog";
 import BreathStatus from "../BreathStatus";
 
 const Breather: React.FC = () => {
@@ -24,7 +24,6 @@ const Breather: React.FC = () => {
     // практики из соседней колонки.
     const [values, setValues] = React.useState<BreathSettingsInput>(INITIAL_VALUES);
     const [run, setRun] = React.useState<BreathRunInput>(INITIAL_RUN);
-    const [runningPlan, setRunningPlan] = React.useState<BreathStep[] | null>(null);
     const [runningRun, setRunningRun] = React.useState<BreathRun | null>(null);
     const {isRunning, isPaused, tick, isSupported, start, pause, resume, stop} = useBreathCycle();
 
@@ -47,16 +46,12 @@ const Breather: React.FC = () => {
     };
 
     const handleStart = (settings: BreathSettings, nextRun: BreathRun) => {
-        const plan = buildPlan(settings);
-
-        start(plan, nextRun);
-        setRunningPlan(plan);
+        start(buildPlan(settings), nextRun);
         setRunningRun(nextRun);
     };
 
     const handleStop = () => {
         stop();
-        setRunningPlan(null);
         setRunningRun(null);
     };
 
@@ -72,21 +67,13 @@ const Breather: React.FC = () => {
                     onRunChange={handleRunChange}
                     onStart={handleStart}
                     onStop={handleStop}
-                    onPause={pause}
-                    onResume={resume}
                     isRunning={isRunning}
                     isPaused={isPaused}
                     isSoundSupported={isSupported}
                 />
 
                 <Box sx={{mt: '16px'}}>
-                    <BreathStatus
-                        isSoundSupported={isSupported}
-                        tick={tick}
-                        plan={runningPlan}
-                        run={runningRun}
-                        isPaused={isPaused}
-                    />
+                    <BreathStatus isSoundSupported={isSupported} isActive={isRunning || isPaused} />
                 </Box>
             </Box>
 
@@ -96,6 +83,16 @@ const Breather: React.FC = () => {
                 onApply={handleApplyPreset}
                 onApplyScenario={handleApplyScenario}
                 disabled={isRunning || isPaused}
+            />
+
+            {/* Пока прогон идёт, смотреть на форму незачем — счёт показывается поверх неё. */}
+            <BreathRunDialog
+                tick={tick}
+                run={runningRun}
+                isPaused={isPaused}
+                onPause={pause}
+                onResume={resume}
+                onStop={handleStop}
             />
         </Box>
     );

@@ -1,6 +1,9 @@
 /** Фаза дыхательного цикла. */
 export type BreathPhase = 'inhale' | 'hold' | 'exhale';
 
+/** Всё, что умеет звучать: фазы рисунка и щелчок обратного отсчёта. */
+export type BreathSoundName = BreathPhase | 'countdown';
+
 /** Шаг плана: фаза и сколько счётов она держится. */
 export type BreathStep = {
     phase: BreathPhase;
@@ -46,7 +49,7 @@ export type BreathRunInput = Record<BreathRunField, string>;
  * длина текущего отрезка и место в прогоне — номер повторения и подхода.
  */
 export type BreathTick = {
-    phase: BreathPhase | 'rest';
+    phase: BreathPhase | 'rest' | 'countdown';
     count: number;
     total: number;
     repeat: number;
