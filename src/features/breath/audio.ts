@@ -5,10 +5,10 @@ import {
     NOISE_BUFFER_SECONDS,
     NOISE_FADE_SECONDS,
     NOISE_VOLUME,
-    PHASE_SOUNDS,
+    SOUNDS,
     SCHEDULE_AHEAD_SECONDS,
 } from "./const";
-import type {BreathPhase} from "./types";
+import type {BreathSoundName} from "./types";
 
 /**
  * Синтез сигнала через Web Audio — без React, как `api.ts` в остальных срезах.
@@ -26,7 +26,7 @@ export const getAudioContextCtor = (): AudioContextCtor | undefined => {
 };
 
 export type Beeper = {
-    beep: (phase: BreathPhase) => void;
+    beep: (sound: BreathSoundName) => void;
     /** Ровный белый шум на заданное число секунд — отдых между подходами. */
     noise: (seconds: number) => void;
     /** Оборвать шум раньше времени: пауза и остановка посреди отдыха. */
@@ -162,8 +162,8 @@ export const createBeeper = (): Beeper | null => {
     };
 
     return {
-        beep: (phase) => {
-            const sound = PHASE_SOUNDS[phase];
+        beep: (name) => {
+            const sound = SOUNDS[name];
 
             if (sound.kind === 'click') {
                 playClick(sound.hz, sound.volume);

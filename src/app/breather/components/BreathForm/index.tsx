@@ -23,8 +23,6 @@ type Props = {
     onRunChange: (key: BreathRunField, value: string) => void;
     onStart: (settings: BreathSettings, run: BreathRun) => void;
     onStop: () => void;
-    onPause: () => void;
-    onResume: () => void;
     isRunning: boolean;
     isPaused: boolean;
     isSoundSupported: boolean;
@@ -37,8 +35,6 @@ const BreathForm: React.FC<Props> = ({
     onRunChange,
     onStart,
     onStop,
-    onPause,
-    onResume,
     isRunning,
     isPaused,
     isSoundSupported,
@@ -158,15 +154,7 @@ const BreathForm: React.FC<Props> = ({
                 </Box>
 
                 <Box className={styles.Actions}>
-                    <Button
-                        type={'button'}
-                        variant={'outlined'}
-                        size={'small'}
-                        onClick={isPaused ? onResume : onPause}
-                        disabled={!isActive}
-                    >
-                        {isPaused ? 'Продолжить' : 'Пауза'}
-                    </Button>
+                    {/* Пауза живёт в окне прогона: пока оно открыто, формы всё равно не видно. */}
                     <Button
                         type={'submit'}
                         variant={'contained'}

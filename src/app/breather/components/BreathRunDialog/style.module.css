@@ -1,0 +1,33 @@
+.Paper {
+    min-width: 280px;
+}
+
+.Content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 32px 24px 24px;
+    text-align: center;
+}
+
+/* Цифру видно с другого конца комнаты: на неё и смотрят всё занятие. */
+.Digit {
+    font-size: clamp(72px, 18vw, 128px);
+    line-height: 1;
+    font-weight: 300;
+    margin: 0;
+}
+
+.Actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 16px;
+    min-width: 160px;
+}
+
+.Progress {
+    margin-top: 16px;
+}

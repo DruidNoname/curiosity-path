@@ -1,24 +1,19 @@
 'use client';
 
 import React from "react";
-import {Box, Typography} from "@mui/material";
-import {PHASE_LABELS, REST_LABEL} from "@/features/breath/const";
-import {describePlan, describeRun} from "@/features/breath/plan";
-import type {BreathRun, BreathStep, BreathTick} from "@/features/breath/types";
+import {Typography} from "@mui/material";
 
 type Props = {
     isSoundSupported: boolean;
-    /** Текущий счёт; null — цикл не идёт. */
-    tick: BreathTick | null;
-    /** План, с которым цикл запущен, — для строки «Играет: …». */
-    plan: BreathStep[] | null;
-    /** Повторения и подходы, с которыми цикл запущен. */
-    run: BreathRun | null;
-    /** Прогон стоит на паузе: положение сохранено, звука нет. */
-    isPaused: boolean;
+    /** Прогон жив — идёт или стоит на паузе. Тогда счёт показывает окно поверх формы. */
+    isActive: boolean;
 };
 
-const BreathStatus: React.FC<Props> = ({isSoundSupported, tick, plan, run, isPaused}) => {
+/**
+ * Строка под формой — только для состояния покоя: пока прогон идёт, форму всё равно
+ * закрывает окно со счётом, и дублировать его здесь незачем.
+ */
+const BreathStatus: React.FC<Props> = ({isSoundSupported, isActive}) => {
     if (!isSoundSupported) {
         return (
             <Typography variant={'body2'} color={'error'}>
@@ -27,24 +22,13 @@ const BreathStatus: React.FC<Props> = ({isSoundSupported, tick, plan, run, isPau
         );
     }
 
+    if (isActive) return null;
+
     return (
-        <Box>
-            {tick ? (
-                <Typography variant={'body1'} sx={{mb: '4px'}} aria-live={'polite'}>
-                    {tick.phase === 'rest' ? REST_LABEL : PHASE_LABELS[tick.phase]} {tick.count} / {tick.total}
-                    {run && run.repeats > 0
-                        ? ` · повторение ${tick.repeat} / ${run.repeats}${run.sets > 1 ? `, подход ${tick.set} / ${run.sets}` : ''}`
-                        : null}
-                </Typography>
-            ) : null}
-            <Typography variant={'body2'} color={'text.secondary'}>
-                {tick && plan && run
-                    ? isPaused
-                        ? `Пауза: ${describePlan(plan)}; ${describeRun(run)}. «Продолжить» подхватит с того же места.`
-                        : `Играет: сигнал раз в секунду — ${describePlan(plan)}; ${describeRun(run)}. Вкладку лучше не сворачивать — в фоне браузер тормозит таймеры.`
-                    : 'Тишина. Задайте счёт и нажмите «Запустить».'}
-            </Typography>
-        </Box>
+        <Typography variant={'body2'} color={'text.secondary'}>
+            Тишина. Задайте счёт и нажмите «Запустить». Во время занятия вкладку лучше
+            не сворачивать — в фоне браузер тормозит таймеры.
+        </Typography>
     );
 };
 

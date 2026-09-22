@@ -1,4 +1,4 @@
-import type {BreathPhase} from "./types";
+import type {BreathPhase, BreathSoundName} from "./types";
 
 /** Шаг метронома: один счёт — одна секунда. */
 export const TICK_MS = 1000;
@@ -10,15 +10,20 @@ export const TICK_MS = 1000;
  *
  * `hz` у щелчка — центр полосы фильтра, а не высота тона.
  */
-export type PhaseSound =
+type SoundSpec =
     | {kind: 'tone'; hz: number; volume: number}
     | {kind: 'click'; hz: number; volume: number};
 
-export const PHASE_SOUNDS: Record<BreathPhase, PhaseSound> = {
+export const SOUNDS: Record<BreathSoundName, SoundSpec> = {
     inhale: {kind: 'tone', hz: 660, volume: 0.25},
     hold: {kind: 'click', hz: 1400, volume: 0.35},
     exhale: {kind: 'tone', hz: 440, volume: 0.25},
+    countdown: {kind: 'click', hz: 800, volume: 0.3},
 };
+
+/** Отсчёт перед стартом: секунда на щелчок, чтобы успеть приготовиться. */
+export const COUNTDOWN_SECONDS = 5;
+export const COUNTDOWN_LABEL = 'Приготовьтесь';
 
 /**
  * Упреждение планирования. Аудиодвижок считает звук блоками по 128 сэмплов, и событие,
