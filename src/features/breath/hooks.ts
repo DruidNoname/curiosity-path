@@ -5,6 +5,19 @@ import {createBeeper, getAudioContextCtor, type Beeper} from "./audio";
 import {TICK_MS} from "./const";
 import type {BreathRun, BreathStep, BreathTick} from "./types";
 
+/** Где именно стоит прогон. Живёт в рефе, чтобы паузу можно было снять с того же места. */
+type CyclePosition = {
+    stepIndex: number;
+    count: number;
+    repeat: number;
+    set: number;
+    restLeft: number;
+};
+
+type CycleStatus = 'idle' | 'running' | 'paused';
+
+const initialPosition = (): CyclePosition => ({stepIndex: 0, count: 0, repeat: 0, set: 1, restLeft: 0});
+
 /**
  * Дыхательный цикл на счёт: сигнал раз в секунду, каждая фаза плана держится
  * столько счётов, сколько в ней задано, дойдя до конца — план начинается заново.
@@ -16,7 +29,11 @@ import type {BreathRun, BreathStep, BreathTick} from "./types";
 export const useBreathCycle = () => {
     const beeperRef = React.useRef<Beeper | null>(null);
     const timerRef = React.useRef<number | null>(null);
+    const planRef = React.useRef<BreathStep[]>([]);
+    const runRef = React.useRef<BreathRun>({repeats: 0, sets: 1, rest: 0});
+    const positionRef = React.useRef<CyclePosition>(initialPosition());
     const [tick, setTick] = React.useState<BreathTick | null>(null);
+    const [status, setStatus] = React.useState<CycleStatus>('idle');
     // Проверка идёт в эффекте, а не в рендере: на сервере window нет, и разметка
     // «звук не поддерживается» разошлась бы с клиентской при гидрации.
     const [isSupported, setIsSupported] = React.useState(true);
@@ -25,18 +42,97 @@ export const useBreathCycle = () => {
         setIsSupported(getAudioContextCtor() !== undefined);
     }, []);
 
-    const stop = React.useCallback(() => {
+    const clearTimer = React.useCallback(() => {
         if (timerRef.current !== null) {
             window.clearInterval(timerRef.current);
             timerRef.current = null;
         }
-        setTick(null);
     }, []);
+
+    const stop = React.useCallback(() => {
+        clearTimer();
+        beeperRef.current?.stopNoise();
+        positionRef.current = initialPosition();
+        setTick(null);
+        setStatus('idle');
+    }, [clearTimer]);
+
+    const playTick = React.useCallback(() => {
+        const beeper = beeperRef.current;
+        if (!beeper) return;
+
+        const plan = planRef.current;
+        const run = runRef.current;
+        const position = positionRef.current;
+
+        const countRest = () => {
+            setTick({
+                phase: 'rest',
+                count: run.rest - position.restLeft + 1,
+                total: run.rest,
+                repeat: position.repeat,
+                set: position.set,
+            });
+            position.restLeft -= 1;
+        };
+
+        // Отдых между подходами: шум уже запущен одним куском, тики только считают.
+        if (position.restLeft > 0) {
+            countRest();
+            return;
+        }
+
+        // Подход закончился: либо дальше, либо конец прогона.
+        if (run.repeats > 0 && position.repeat >= run.repeats) {
+            if (position.set >= run.sets) {
+                stop();
+                return;
+            }
+
+            position.set += 1;
+            position.repeat = 0;
+
+            if (run.rest > 0) {
+                beeper.noise(run.rest);
+                position.restLeft = run.rest;
+                countRest();
+                return;
+            }
+        }
+
+        const step = plan[position.stepIndex];
+
+        position.count += 1;
+        beeper.beep(step.phase);
+        setTick({
+            phase: step.phase,
+            count: position.count,
+            total: step.count,
+            repeat: position.repeat + 1,
+            set: position.set,
+        });
+
+        if (position.count >= step.count) {
+            position.stepIndex = (position.stepIndex + 1) % plan.length;
+            position.count = 0;
+
+            // Вернулись к первой фазе — значит рисунок пройден целиком.
+            if (position.stepIndex === 0) position.repeat += 1;
+        }
+    }, [stop]);
+
+    /** Первый счёт звучит сразу, дальше — раз в секунду. */
+    const runTimer = React.useCallback(() => {
+        clearTimer();
+        playTick();
+        timerRef.current = window.setInterval(playTick, TICK_MS);
+    }, [clearTimer, playTick]);
 
     const start = React.useCallback((plan: BreathStep[], run: BreathRun) => {
         if (plan.length === 0) return;
 
-        stop();
+        clearTimer();
+        beeperRef.current?.stopNoise();
 
         // Биппер создаётся по клику: браузеры не дают запустить звук без жеста
         // пользователя, а созданный заранее контекст остался бы в suspended.
@@ -49,59 +145,35 @@ export const useBreathCycle = () => {
 
         beeper.resume();
 
-        // Шаг всегда секунда, меняется только тон и то, сколько счётов держится фаза,
-        // поэтому весь прогон — это один setInterval, а всё положение (фаза, повторение,
-        // подход, остаток отдыха) живёт в замыкании.
-        let stepIndex = 0;
-        let count = 0;
-        let repeat = 0;
-        let set = 1;
-        let restLeft = 0;
+        planRef.current = plan;
+        runRef.current = run;
+        positionRef.current = initialPosition();
 
-        const playTick = () => {
-            // Отдых между подходами: шум уже запущен одним куском, тики только считают.
-            if (restLeft > 0) {
-                setTick({phase: 'rest', count: run.rest - restLeft + 1, total: run.rest, repeat, set});
-                restLeft -= 1;
-                return;
-            }
+        setStatus('running');
+        runTimer();
+    }, [clearTimer, runTimer]);
 
-            // Подход закончился: либо дальше, либо конец прогона.
-            if (run.repeats > 0 && repeat >= run.repeats) {
-                if (set >= run.sets) {
-                    stop();
-                    return;
-                }
+    /** Пауза не трогает положение — в отличие от `stop`, продолжить можно с того же места. */
+    const pause = React.useCallback(() => {
+        clearTimer();
+        beeperRef.current?.stopNoise();
+        setStatus('paused');
+    }, [clearTimer]);
 
-                set += 1;
-                repeat = 0;
+    const resume = React.useCallback(() => {
+        const beeper = beeperRef.current;
+        if (!beeper) return;
 
-                if (run.rest > 0) {
-                    beeper.noise(run.rest);
-                    restLeft = run.rest;
-                    playTick();
-                    return;
-                }
-            }
+        beeper.resume();
 
-            const step = plan[stepIndex];
+        // Стояли посреди отдыха — доигрываем шум на оставшиеся секунды.
+        if (positionRef.current.restLeft > 0) {
+            beeper.noise(positionRef.current.restLeft);
+        }
 
-            count += 1;
-            beeper.beep(step.phase);
-            setTick({phase: step.phase, count, total: step.count, repeat: repeat + 1, set});
-
-            if (count >= step.count) {
-                stepIndex = (stepIndex + 1) % plan.length;
-                count = 0;
-
-                // Вернулись к первой фазе — значит рисунок пройден целиком.
-                if (stepIndex === 0) repeat += 1;
-            }
-        };
-
-        playTick();
-        timerRef.current = window.setInterval(playTick, TICK_MS);
-    }, [stop]);
+        setStatus('running');
+        runTimer();
+    }, [runTimer]);
 
     React.useEffect(() => () => {
         if (timerRef.current !== null) {
@@ -112,10 +184,13 @@ export const useBreathCycle = () => {
     }, []);
 
     return {
-        isRunning: tick !== null,
+        isRunning: status === 'running',
+        isPaused: status === 'paused',
         tick,
         isSupported,
         start,
+        pause,
+        resume,
         stop,
     };
 };

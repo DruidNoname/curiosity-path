@@ -40,6 +40,25 @@ export const isValidCount = (value: string, min: number, max: number = MAX_COUNT
     return Number.isInteger(count) && count >= min && count <= max;
 };
 
+export const toRunInput = (run: BreathRun): BreathRunInput => ({
+    repeats: String(run.repeats),
+    sets: String(run.sets),
+    rest: String(run.rest),
+});
+
+/** Человеческое описание прогона — для подписей практик и строки состояния. */
+export const describeRun = (run: BreathRun): string => {
+    if (run.repeats === 0) return 'повторений без счёта';
+
+    const repeats = `повторений ${run.repeats}`;
+
+    if (run.sets <= 1) return repeats;
+
+    return run.rest > 0
+        ? `${repeats}, подходов ${run.sets}, отдых ${run.rest} c`
+        : `${repeats}, подходов ${run.sets}`;
+};
+
 export const parseRun = (values: BreathRunInput): BreathRun => ({
     repeats: parseCount(values.repeats),
     sets: parseCount(values.sets),

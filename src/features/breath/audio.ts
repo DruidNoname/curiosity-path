@@ -29,6 +29,8 @@ export type Beeper = {
     beep: (phase: BreathPhase) => void;
     /** Ровный белый шум на заданное число секунд — отдых между подходами. */
     noise: (seconds: number) => void;
+    /** Оборвать шум раньше времени: пауза и остановка посреди отдыха. */
+    stopNoise: () => void;
     /** Браузер держит контекст в suspended, пока не было жеста пользователя. */
     resume: () => void;
     close: () => void;
@@ -109,8 +111,30 @@ export const createBeeper = (): Beeper | null => {
      * Отдых между подходами: та же секунда шума, пущенная по кругу, с плавными
      * краями — резко включённый шум бьёт по ушам сильнее тона.
      */
+    // Шум живёт дольше одного тика, поэтому его узлы приходится помнить: иначе
+    // паузу посреди отдыха нечем оборвать.
+    let activeNoise: { source: AudioBufferSourceNode; gain: GainNode } | null = null;
+
+    const stopNoise = () => {
+        if (!activeNoise) return;
+
+        const {source, gain} = activeNoise;
+        const now = context.currentTime;
+        const fade = NOISE_FADE_SECONDS / 2;
+
+        activeNoise = null;
+
+        // Обрывать шум «в лоб» нельзя — получится щелчок, поэтому короткое затухание.
+        gain.gain.cancelScheduledValues(now);
+        gain.gain.setValueAtTime(gain.gain.value, now);
+        gain.gain.linearRampToValueAtTime(0, now + fade);
+        source.stop(now + fade);
+    };
+
     const playNoise = (seconds: number) => {
         if (seconds <= 0) return;
+
+        stopNoise();
 
         const now = context.currentTime + SCHEDULE_AHEAD_SECONDS;
         const source = context.createBufferSource();
@@ -130,6 +154,11 @@ export const createBeeper = (): Beeper | null => {
 
         source.start(now);
         source.stop(now + seconds);
+
+        activeNoise = {source, gain};
+        source.onended = () => {
+            if (activeNoise?.source === source) activeNoise = null;
+        };
     };
 
     return {
@@ -144,6 +173,7 @@ export const createBeeper = (): Beeper | null => {
             playTone(sound.hz, sound.volume);
         },
         noise: playNoise,
+        stopNoise,
         resume: () => void context.resume(),
         close: () => void context.close(),
     };

@@ -37,7 +37,7 @@ src/
   app/           роуты App Router; локальные компоненты роута лежат рядом в components/
   modules/       составные блоки предметной области (EntryPreview, PostCalendar)
   components/    переиспользуемые компоненты (Header, Footer, Layouts, ErrorBoundary)
-  ui/            тонкие обёртки над MUI (Link, Buttons, Pagination, Loader, Skeleton, Image, Select, Calendar)
+  ui/            тонкие обёртки над MUI (Link, Buttons, Spoiler, Pagination, Loader, Skeleton, Image, Select, Calendar)
   features/      вертикальные срезы: posts, recipes, tags, breath, query, theme
   config/        urls (единая точка правды по адресам), site, pagination, graphql (Apollo client)
   helpers/       утилиты общего назначения; каждая — папкой: wp-html, wp-text, usePageParam
@@ -257,9 +257,9 @@ features/breath/       домен: ничего про разметку
   audio.ts     createBeeper — синтез тона, без React (аналог api.ts в других срезах)
   hooks.ts     useBreathCycle поверх audio.ts
   plan.ts      buildPlan, describePlan, разбор и валидация счёта; plan.test.ts рядом
-  presets.ts   готовые практики
-  const.ts     TICK_MS, тона фаз, подписи фаз, границы счёта
-  types.ts     BreathPhase, BreathStep, BreathSettings, BreathSettingsInput, BreathTick
+  presets.ts   готовые практики (рисунок) и сценарии (рисунок + повторения с подходами)
+  const.ts     TICK_MS, звуки фаз, подписи фаз, границы счёта, параметры шума
+  types.ts     BreathPhase, BreathStep, BreathSettings, BreathRun, BreathTick и их строковые формы
 
 app/breather/components/
   Breather/       контейнер: значения полей, запуск/остановка, композиция
@@ -281,6 +281,13 @@ app/breather/components/
   повторений означает «пока не остановят», и тогда подходы не считаются — первый
   подход просто не кончается. Между подходами `rest` секунд белого шума: шум пускается
   одним куском на всю паузу (секунда шума по кругу), а тики в это время только считают.
+- **Положение прогона живёт в рефе, а не в замыкании таймера.** Только поэтому работает
+  пауза: `pause` гасит таймер и шум, но не трогает позицию, `resume` заводит таймер снова
+  и доигрывает остаток отдыха. `stop` — единственное, что сбрасывает позицию. Статус
+  прогона тройной (`idle | running | paused`), и форма по нему решает, что писать на
+  кнопках и блокировать ли поля.
+- **Практика подставляет только рисунок, сценарий — ещё и повторения с подходами.**
+  Оба списка в `presets.ts`; сценарии спрятаны в спойлер «Нужно сейчас».
 - **Цикл описан плоским списком фаз** (`buildPlan`), а не парой «вдох/выдох»: паузы
   включаются по отдельности и могут быть разной длины. Таймер просто идёт по списку
   и зацикливается через `% plan.length` — про вдохи он ничего не знает. Новая фаза
@@ -329,7 +336,7 @@ app/breather/components/
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
 `src/helpers/wp-text`, `src/helpers/usePageParam`, `src/config/urls`, `modules/PostCalendar/utils.ts`
-и `features/breath/plan.ts` (97 тестов, 15 сьютов).
+и `features/breath/plan.ts` (100 тестов, 15 сьютов).
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `index.test.ts`.
 
 ## Грабли

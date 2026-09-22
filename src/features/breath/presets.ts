@@ -1,5 +1,5 @@
-import {buildPlan, describePlan} from "./plan";
-import type {BreathSettings} from "./types";
+import {buildPlan, describePlan, describeRun} from "./plan";
+import type {BreathRun, BreathSettings} from "./types";
 
 /**
  * Готовые дыхательные практики: клик по такой подставляет числа в поля, но не запускает
@@ -38,3 +38,44 @@ export const BREATH_PRESETS: BreathPreset[] = [
 ];
 
 export const describePreset = (preset: BreathPreset): string => describePlan(buildPlan(preset.settings));
+
+/**
+ * Сценарий — практика целиком: рисунок плюс повторения с подходами, то есть занятие
+ * с началом и концом. Практики выше задают только рисунок и крутятся, пока не остановят.
+ */
+export type BreathScenario = {
+    name: string;
+    settings: BreathSettings;
+    run: BreathRun;
+};
+
+export const BREATH_SCENARIOS: BreathScenario[] = [
+    {
+        name: 'Упр.1 (с лентой)',
+        settings: {inhale: 3, holdAfterInhale: 1, exhale: 3, holdAfterExhale: 1},
+        run: {repeats: 13, sets: 6, rest: 10},
+    },
+    {
+        name: 'Упр.2 (на когтеточке)',
+        settings: {inhale: 3, holdAfterInhale: 1, exhale: 3, holdAfterExhale: 1},
+        run: {repeats: 11, sets: 6, rest: 5},
+    },
+    {
+        name: 'Упр.3 (сгибание ноги)',
+        settings: {inhale: 3, holdAfterInhale: 2, exhale: 3, holdAfterExhale: 2},
+        run: {repeats: 13, sets: 6, rest: 5},
+    },
+    {
+        name: 'Упр.4 (грушевидная)',
+        settings: {inhale: 7, holdAfterInhale: 3, exhale: 8, holdAfterExhale: 0},
+        run: {repeats: 5, sets: 2, rest: 10},
+    },
+    {
+        name: 'Упр.5 (минуты и разы)',
+        settings: {inhale: 3, holdAfterInhale: 0, exhale: 3, holdAfterExhale: 0},
+        run: {repeats: 10, sets: 2, rest: 10},
+    }
+];
+
+export const describeScenario = (scenario: BreathScenario): string =>
+    `${describePlan(buildPlan(scenario.settings))} · ${describeRun(scenario.run)}`;

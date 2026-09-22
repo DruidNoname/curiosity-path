@@ -55,33 +55,15 @@
     margin-bottom: 8px;
 }
 
-/* Спойлер с подходами: нативные details/summary, только маркер и курсор поправлены. */
 .Spoiler {
     margin-top: 16px;
 }
 
-.SpoilerSummary {
-    cursor: pointer;
-    font-size: 0.75rem;
-    color: var(--color-primary-main);
-    list-style: none;
-}
-
-.SpoilerSummary::-webkit-details-marker {
-    display: none;
-}
-
-.SpoilerSummary::before {
-    content: '+ ';
-}
-
-.Spoiler[open] .SpoilerSummary::before {
-    content: '− ';
-}
-
 .Actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
+    gap: 12px;
 }
 
 /* Подсказки под полями выровнены по тексту поля, а не по краю фильдсета —
