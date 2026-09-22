@@ -3,6 +3,7 @@
 import React from "react";
 import {Box, Button, TextField, Typography} from "@mui/material";
 import styles from './style.module.css';
+import Spoiler from "@/ui/Spoiler";
 import {MIN_HOLD} from "@/features/breath/const";
 import {isValidCount, parseRun, parseSettings} from "@/features/breath/plan";
 import type {
@@ -22,7 +23,10 @@ type Props = {
     onRunChange: (key: BreathRunField, value: string) => void;
     onStart: (settings: BreathSettings, run: BreathRun) => void;
     onStop: () => void;
+    onPause: () => void;
+    onResume: () => void;
     isRunning: boolean;
+    isPaused: boolean;
     isSoundSupported: boolean;
 };
 
@@ -33,9 +37,15 @@ const BreathForm: React.FC<Props> = ({
     onRunChange,
     onStart,
     onStop,
+    onPause,
+    onResume,
     isRunning,
+    isPaused,
     isSoundSupported,
 }) => {
+    // Пока прогон жив — идёт он или стоит на паузе — счёт не трогаем: позиция
+    // уже отсчитана от этих чисел.
+    const isActive = isRunning || isPaused;
     const isValid = FIELDS.every((field) => isValidCount(values[field.key], field.min, field.max))
         && [REPEATS_FIELD, ...SETS_FIELDS].every((field) => isValidCount(run[field.key], field.min, field.max));
 
@@ -45,7 +55,7 @@ const BreathForm: React.FC<Props> = ({
         // Кнопка одна на оба состояния, и ветвление живёт здесь, а не в её `type`:
         // React успевает перерисовать кнопку в submit прямо внутри обработки клика,
         // и браузер тут же сабмитил форму — остановка оборачивалась перезапуском.
-        if (isRunning) {
+        if (isActive) {
             onStop();
             return;
         }
@@ -69,9 +79,9 @@ const BreathForm: React.FC<Props> = ({
                 value={value}
                 onChange={(e) => onFieldChange(e.target.value)}
                 label={field.label}
-                // Пока цикл играет, счёт не меняется: иначе поля расходились бы с тем,
+                // Пока цикл живёт, счёт не меняется: иначе поля расходились бы с тем,
                 // что звучит.
-                disabled={isRunning}
+                disabled={isActive}
                 error={isInvalid}
                 // Подсказка появляется только по ошибке: постоянные пояснения под
                 // каждым полем — лишний шум.
@@ -124,13 +134,8 @@ const BreathForm: React.FC<Props> = ({
                         0 — кол-во повторений не задано
                     </Typography>
 
-                    {/* Нативный спойлер: подходы нужны не всем, а держать ради них
-                        состояние и анимацию незачем. */}
-                    <Box component={'details'} className={styles.Spoiler}>
-                        <Box component={'summary'} className={styles.SpoilerSummary}>
-                            Задать количество подходов
-                        </Box>
-
+                    {/* Подходы нужны не всем — прячем их за спойлер. */}
+                    <Spoiler summary={'Задать количество подходов'} className={styles.Spoiler}>
                         <Box className={styles.Fields} sx={{mt: '16px'}}>
                             {SETS_FIELDS.map((field) => (
                                 <React.Fragment key={field.key}>
@@ -148,18 +153,27 @@ const BreathForm: React.FC<Props> = ({
                         >
                             В паузе между подходами играет белый шум
                         </Typography>
-                    </Box>
+                    </Spoiler>
                 </Box>
                 </Box>
 
                 <Box className={styles.Actions}>
                     <Button
+                        type={'button'}
+                        variant={'outlined'}
+                        size={'small'}
+                        onClick={isPaused ? onResume : onPause}
+                        disabled={!isActive}
+                    >
+                        {isPaused ? 'Продолжить' : 'Пауза'}
+                    </Button>
+                    <Button
                         type={'submit'}
                         variant={'contained'}
                         size={'small'}
-                        disabled={!isRunning && (!isValid || !isSoundSupported)}
+                        disabled={!isActive && (!isValid || !isSoundSupported)}
                     >
-                        {isRunning ? 'Остановить' : 'Запустить'}
+                        {isActive ? 'Остановить' : 'Запустить'}
                     </Button>
                 </Box>
             </Box>

@@ -1,4 +1,4 @@
-import {buildPlan, describePlan, isValidCount, parseSettings} from './plan';
+import {buildPlan, describePlan, describeRun, isValidCount, parseSettings, toRunInput} from './plan';
 
 describe('buildPlan', () => {
     it('без пауз оставляет только вдох и выдох', () => {
@@ -77,5 +77,22 @@ describe('isValidCount с нестандартным максимумом', () =
         expect(isValidCount('90', 0)).toBe(false);
         expect(isValidCount('90', 0, 99)).toBe(true);
         expect(isValidCount('100', 0, 99)).toBe(false);
+    });
+});
+
+describe('toRunInput и describeRun', () => {
+    it('переводит прогон в строки полей', () => {
+        expect(toRunInput({repeats: 13, sets: 6, rest: 10})).toEqual({
+            repeats: '13',
+            sets: '6',
+            rest: '10',
+        });
+    });
+
+    it('описывает прогон словами, опуская незаданное', () => {
+        expect(describeRun({repeats: 0, sets: 1, rest: 0})).toBe('повторений без счёта');
+        expect(describeRun({repeats: 5, sets: 1, rest: 0})).toBe('повторений 5');
+        expect(describeRun({repeats: 11, sets: 6, rest: 0})).toBe('повторений 11, подходов 6');
+        expect(describeRun({repeats: 13, sets: 6, rest: 10})).toBe('повторений 13, подходов 6, отдых 10 c');
     });
 });

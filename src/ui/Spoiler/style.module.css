@@ -1,0 +1,18 @@
+.Summary {
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--color-primary-main);
+    list-style: none;
+}
+
+.Summary::-webkit-details-marker {
+    display: none;
+}
+
+.Summary::before {
+    content: '+ ';
+}
+
+.Spoiler[open] .Summary::before {
+    content: '− ';
+}

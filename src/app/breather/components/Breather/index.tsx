@@ -4,7 +4,7 @@ import React from "react";
 import {Box} from "@mui/material";
 import styles from './style.module.css';
 import {useBreathCycle} from "@/features/breath/hooks";
-import {buildPlan, toSettingsInput} from "@/features/breath/plan";
+import {buildPlan, toRunInput, toSettingsInput} from "@/features/breath/plan";
 import type {
     BreathField,
     BreathRun,
@@ -26,7 +26,7 @@ const Breather: React.FC = () => {
     const [run, setRun] = React.useState<BreathRunInput>(INITIAL_RUN);
     const [runningPlan, setRunningPlan] = React.useState<BreathStep[] | null>(null);
     const [runningRun, setRunningRun] = React.useState<BreathRun | null>(null);
-    const {isRunning, tick, isSupported, start, stop} = useBreathCycle();
+    const {isRunning, isPaused, tick, isSupported, start, pause, resume, stop} = useBreathCycle();
 
     const handleChange = (key: BreathField, value: string) => {
         setValues((prev) => ({...prev, [key]: value}));
@@ -39,6 +39,12 @@ const Breather: React.FC = () => {
     // Практика только подставляет числа: запускать за пользователя рано, вдруг он
     // хочет поправить счёт под себя.
     const handleApplyPreset = (settings: BreathSettings) => setValues(toSettingsInput(settings));
+
+    // Сценарий — это практика целиком, вместе с повторениями и подходами.
+    const handleApplyScenario = (settings: BreathSettings, nextRun: BreathRun) => {
+        setValues(toSettingsInput(settings));
+        setRun(toRunInput(nextRun));
+    };
 
     const handleStart = (settings: BreathSettings, nextRun: BreathRun) => {
         const plan = buildPlan(settings);
@@ -66,7 +72,10 @@ const Breather: React.FC = () => {
                     onRunChange={handleRunChange}
                     onStart={handleStart}
                     onStop={handleStop}
+                    onPause={pause}
+                    onResume={resume}
                     isRunning={isRunning}
+                    isPaused={isPaused}
                     isSoundSupported={isSupported}
                 />
 
@@ -76,11 +85,18 @@ const Breather: React.FC = () => {
                         tick={tick}
                         plan={runningPlan}
                         run={runningRun}
+                        isPaused={isPaused}
                     />
                 </Box>
             </Box>
 
-            <BreathPresets values={values} onApply={handleApplyPreset} disabled={isRunning} />
+            <BreathPresets
+                values={values}
+                run={run}
+                onApply={handleApplyPreset}
+                onApplyScenario={handleApplyScenario}
+                disabled={isRunning || isPaused}
+            />
         </Box>
     );
 };

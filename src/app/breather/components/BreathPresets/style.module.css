@@ -4,3 +4,15 @@
     align-items: stretch;
     gap: 8px;
 }
+
+.Spoiler {
+    margin-top: 8px;
+}
+
+.Scenarios {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 8px;
+}

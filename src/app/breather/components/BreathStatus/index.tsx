@@ -3,7 +3,7 @@
 import React from "react";
 import {Box, Typography} from "@mui/material";
 import {PHASE_LABELS, REST_LABEL} from "@/features/breath/const";
-import {describePlan} from "@/features/breath/plan";
+import {describePlan, describeRun} from "@/features/breath/plan";
 import type {BreathRun, BreathStep, BreathTick} from "@/features/breath/types";
 
 type Props = {
@@ -14,21 +14,11 @@ type Props = {
     plan: BreathStep[] | null;
     /** Повторения и подходы, с которыми цикл запущен. */
     run: BreathRun | null;
+    /** Прогон стоит на паузе: положение сохранено, звука нет. */
+    isPaused: boolean;
 };
 
-const describeRun = (run: BreathRun): string => {
-    if (run.repeats === 0) return 'повторений без счёта';
-
-    const repeats = `повторений ${run.repeats}`;
-
-    if (run.sets <= 1) return repeats;
-
-    return run.rest > 0
-        ? `${repeats}, подходов ${run.sets}, отдых ${run.rest} c`
-        : `${repeats}, подходов ${run.sets}`;
-};
-
-const BreathStatus: React.FC<Props> = ({isSoundSupported, tick, plan, run}) => {
+const BreathStatus: React.FC<Props> = ({isSoundSupported, tick, plan, run, isPaused}) => {
     if (!isSoundSupported) {
         return (
             <Typography variant={'body2'} color={'error'}>
@@ -49,7 +39,9 @@ const BreathStatus: React.FC<Props> = ({isSoundSupported, tick, plan, run}) => {
             ) : null}
             <Typography variant={'body2'} color={'text.secondary'}>
                 {tick && plan && run
-                    ? `Играет: сигнал раз в секунду — ${describePlan(plan)}; ${describeRun(run)}. Вкладку лучше не сворачивать — в фоне браузер тормозит таймеры.`
+                    ? isPaused
+                        ? `Пауза: ${describePlan(plan)}; ${describeRun(run)}. «Продолжить» подхватит с того же места.`
+                        : `Играет: сигнал раз в секунду — ${describePlan(plan)}; ${describeRun(run)}. Вкладку лучше не сворачивать — в фоне браузер тормозит таймеры.`
                     : 'Тишина. Задайте счёт и нажмите «Запустить».'}
             </Typography>
         </Box>
