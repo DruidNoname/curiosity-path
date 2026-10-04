@@ -332,8 +332,8 @@ app/breather/components/
 Цвета описаны в `features/theme/{Light,Dark}Theme/Colors.ts`; `buildCssVars` из
 `features/theme/model/utils.ts` превращает их в CSS-переменные `--color-*` (включая
 `*-rgb` варианты для `rgba()`). Через эти переменные css-модули получают доступ к цветам темы —
-это мост между MUI и CSS Modules. `src/styles/variables.css` намеренно пуст, это точка
-расширения для переменных, не зависящих от схемы.
+это мост между MUI и CSS Modules. `src/styles/variables.css` — переменные, не зависящие от схемы
+(например, `--paragraph-gap`: нижний паддинг `p`, от него считаются соседние отступы).
 
 ## Тесты
 
