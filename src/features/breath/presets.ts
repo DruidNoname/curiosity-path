@@ -53,7 +53,7 @@ export const BREATH_SCENARIOS: BreathScenario[] = [
     {
         name: 'Упр.1 (с лентой)',
         settings: {inhale: 3, holdAfterInhale: 1, exhale: 3, holdAfterExhale: 1},
-        run: {repeats: 13, sets: 6, rest: 10},
+        run: {repeats: 13, sets: 6, rest: 5},
     },
     {
         name: 'Упр.2 (на когтеточке)',
@@ -62,12 +62,12 @@ export const BREATH_SCENARIOS: BreathScenario[] = [
     },
     {
         name: 'Упр.3 (сгибание ноги)',
-        settings: {inhale: 3, holdAfterInhale: 2, exhale: 3, holdAfterExhale: 2},
-        run: {repeats: 13, sets: 6, rest: 5},
+        settings: {inhale: 3, holdAfterInhale: 1, exhale: 3, holdAfterExhale: 1},
+        run: {repeats: 7, sets: 6, rest: 5},
     },
     {
         name: 'Упр.4 (грушевидная)',
-        settings: {inhale: 2, holdAfterInhale: 7, exhale: 3, holdAfterExhale: 8},
+        settings: {inhale: 2, holdAfterInhale: 6, exhale: 3, holdAfterExhale: 7},
         run: {repeats: 5, sets: 2, rest: 5},
     },
     {
