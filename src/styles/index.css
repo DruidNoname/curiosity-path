@@ -18,7 +18,7 @@ h4, h5, h6 {
 }
 
 p {
-  padding-bottom: 16px;
+  padding-bottom: var(--paragraph-gap);
 }
 
 ul, ol {
@@ -132,6 +132,16 @@ blockquote {
   @media (min-width: 768px) {
     max-width: 57%;
   }
+}
+
+/*WP hr*/
+hr {
+  margin: 24px 12px;
+}
+
+/* У абзаца отступ снизу — паддинг, с маржином он не схлопывается: добираем до тех же 24px. */
+p + hr {
+  margin-top: calc(24px - var(--paragraph-gap));
 }
 
 
