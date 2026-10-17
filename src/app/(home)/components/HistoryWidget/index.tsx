@@ -8,12 +8,24 @@ import {Link} from "@/ui/Link";
 import {toPlainText} from "@/helpers/wp-text";
 
 const HistoryWidget: React.FC = ( ) => {
+    // Главная страница статическая: HTML собирается один раз при деплое. Сегодняшняя дата,
+    // посчитанная в рендере, застывала бы на дату сборки (и в часовом поясе сервера) и
+    // расходилась с браузером при гидрации. Поэтому дату узнаём только на клиенте.
+    const [today, setToday] = React.useState<Date | null>(null);
+
+    React.useEffect(() => {
+        // Второй проход рендера намеренный: «сегодня» существует только в браузере.
+        setToday(new Date());
+    }, []);
+
+    // isPending, а не isLoading: пока даты нет, запрос не запущен, и isLoading был бы false —
+    // виджет на мгновение показал бы «ничего не произошло» вместо загрузки.
     const {
         data,
-        isLoading,
+        isPending,
         error,
         isError
-    } = usePostsByToday();
+    } = usePostsByToday(today);
 
     const {
         posts = [],
@@ -27,10 +39,10 @@ const HistoryWidget: React.FC = ( ) => {
                     Окно в историю
                 </Typography>
                 <Typography variant={'body2'}>
-                    Что было в&nbsp;фокусе в&nbsp;этот&nbsp;день, <strong>{new Date().toLocaleDateString('ru-RU', {
+                    Что было в&nbsp;фокусе в&nbsp;этот&nbsp;день{today && <>, <strong>{today.toLocaleDateString('ru-RU', {
                     day: 'numeric',
                     month: 'long'
-                })}</strong>:
+                })}</strong></>}:
                 </Typography>
             </Box>
             <Paper
@@ -42,7 +54,7 @@ const HistoryWidget: React.FC = ( ) => {
                     <Typography variant={'body2'} sx={{ lineHeight: '1.25em', fontSize: '12px'}}>
                         {error?.message}
                     </Typography>
-                    : isLoading
+                    : isPending
                     ?
                     <Loader isDots={true}/>
                     : posts.length > 0

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 import {
     fetchPosts,
     fetchPostsByMonth,
@@ -31,14 +31,18 @@ export const usePostsByMonth = (
     });
 };
 
-export const usePostsByToday = () => {
-    const today = new Date();
-    const currentMonth = today.getMonth() + 1; // 1-12
-    const currentDay = today.getDate(); // 1-31
+// Дату передаёт компонент, а не хук считает сам: «сейчас» в теле хука делает рендер
+// нечистым, и на статической странице сервер с браузером расходятся при гидрации.
+// Пока даты нет (до гидрации), запрос не отправляется.
+export const usePostsByToday = (today: Date | null) => {
+    const currentMonth = today ? today.getMonth() + 1 : null; // 1-12
+    const currentDay = today ? today.getDate() : null; // 1-31
 
     return useQuery<PostsByTodayResponse, Error>({
         queryKey: ['posts-by-today', currentMonth, currentDay],
-        queryFn: () => fetchPostsByToday(currentMonth, currentDay, today),
+        queryFn: today && currentMonth && currentDay
+            ? () => fetchPostsByToday(currentMonth, currentDay, today)
+            : skipToken,
         staleTime: 1000 * 60 * 60 * 12, // 12 часов
         gcTime: 1000 * 60 * 60 * 24,    // 24 часа (вместо cacheTime)
     });
