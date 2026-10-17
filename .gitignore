@@ -65,7 +65,7 @@ credentials.json
 .netlify/
 
 # Локальные настройки инструментов и агентов.
-# CLAUDE.md и .claude/skills/ — общие для команды, они остаются в репозитории.
+# CLAUDE.md, .claude/skills/ и .claude/rules/ — общие для команды, они остаются в репозитории.
 .claude/settings.local.json
 .qwen/
 .cursor/
