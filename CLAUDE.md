@@ -194,9 +194,21 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
-`src/helpers/wp-text`, `src/helpers/usePageParam`, `src/config/urls`, `modules/PostCalendar/utils.ts`
-и `features/breath/plan.ts` (100 тестов, 15 сьютов).
-Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `index.test.ts`.
+`src/helpers/wp-text`, `src/helpers/usePageParam`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
+`features/breath/plan.ts` и `app/about/utils.ts` (103 теста, 16 сьютов).
+Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
+
+Сейчас сьют `usePageParam` не запускается: в `node_modules` нет `@testing-library/dom`
+(peer-зависимость `@testing-library/react`). Остальные 97 тестов проходят; тесты хуков и
+компонентов через Testing Library заработают после переустановки зависимостей.
+
+## Журнал изменений
+
+`CHANGELOG.md` в корне — что менялось в проекте, по датам, от новых к старым.
+**Каждая доработка добавляет туда запись в той же ветке**, под заголовком с датой и с
+категорией: Добавлено, Изменено, Исправлено или Документация. Пишется для человека: что
+изменилось для сайта или проекта, а не какие файлы тронуты. Номер пулл-реквеста
+дописывается, когда он известен.
 
 ## Грабли
 
