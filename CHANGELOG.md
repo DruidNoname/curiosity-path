@@ -19,6 +19,10 @@
   `eslint-plugin-react`, `globals`), прописаны в зависимостях; добавлены недостающие
   peer-зависимости `@testing-library/dom` и `prettier` — снова запускается сьют
   `usePageParam`, проходят все 103 теста.
+- **Изменено:** MUI обновлён с 6 до 7 (`@mui/material`, `@mui/system`) — теперь он
+  совпадает по мажорной версии с уже стоявшими `@mui/icons-material` и
+  `@mui/material-nextjs`. Дальше седьмой версии не поднимали: календари на
+  `@mui/x-date-pickers` 8 работают только с MUI до 7.
 
 ## 2026-10-17
 

@@ -7,7 +7,7 @@
 ## Стек
 
 - Next.js 16 (App Router) + React 19, TypeScript strict
-- MUI 6 (`@mui/material`) + Emotion — основная UI-библиотека
+- MUI 7 (`@mui/material`) + Emotion — основная UI-библиотека
 - CSS Modules для локальных стилей, Tailwind 4 подключён через postcss, но в компонентах не используется
 - TanStack Query 5 — основной дата-слой
 - Apollo Client — GraphQL, ровно одно место: виджет тегов на главной
