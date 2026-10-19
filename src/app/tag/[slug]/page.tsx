@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { useParams } from 'next/navigation';
-import { WP_REST_API_Post } from 'wp-types';
+import { PostWithTags } from "@/features/posts/types";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Box, Divider, Typography } from "@mui/material";
 import FilteredTitle from "@/components/FilteredTitle";
@@ -94,14 +94,14 @@ const TagPageContent: React.FC = () => {
                     </Box>
                 ) : (
                     <>
-                        {posts?.map((post: WP_REST_API_Post) => (
+                        {posts?.map((post: PostWithTags) => (
                             <PostPreview
                             entryId={post.id}
                             entrySlug={`/${post.slug}`}
                             entryTitle={post.title?.rendered || 'Без названия'}
                             entryPreview={post.excerpt?.rendered || ''}
                             entryDate={post.date || ''}
-                            entryTags={post.tags || []}
+                            entryTags={post.postTags}
                             key={`post_${post.id}`}
                             />
                         ))}
