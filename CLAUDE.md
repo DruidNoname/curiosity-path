@@ -12,6 +12,10 @@
 - TanStack Query 5 — основной дата-слой
 - Apollo Client — GraphQL, ровно одно место: виджет тегов на главной
 - Jest + ts-jest + Testing Library
+- Yarn 4 с `nodeLinker: node-modules` (`.yarnrc.yml` в git), версия закреплена полем
+  `packageManager` в `package.json` и ставится через Corepack (`corepack enable`).
+  Всё, что импортирует код или конфиги, объявляется в `package.json` явно, — на чужие
+  транзитивные зависимости, которые случайно оказались в `node_modules`, не полагаться
 - Шрифт: локальный Roboto Mono через `next/font/local` (`src/assets/fonts/robotoMono.ts`)
 
 ## Команды
@@ -197,10 +201,6 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 `src/helpers/wp-text`, `src/helpers/usePageParam`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
 `features/breath/plan.ts` и `app/about/utils.ts` (103 теста, 16 сьютов).
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
-
-Сейчас сьют `usePageParam` не запускается: в `node_modules` нет `@testing-library/dom`
-(peer-зависимость `@testing-library/react`). Остальные 97 тестов проходят; тесты хуков и
-компонентов через Testing Library заработают после переустановки зависимостей.
 
 ## Журнал изменений
 
