@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, BoxProps, styled } from '@mui/material';
 
-type Props = BoxProps<'img'> & {
+// component зафиксирован как img; в MUI 7 BoxProps допускает любой ElementType и конфликтует с Box<'img'>
+type Props = Omit<BoxProps<'img'>, 'component'> & {
     // добавьте свои дополнительные пропсы здесь, если нужно
 };
 

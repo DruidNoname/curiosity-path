@@ -1,8 +1,13 @@
 # Идеальный .gitignore для Next.js
 # Dependencies
 node_modules/
-.yarn/
 .pnp/
+.pnp.*
+# Yarn 4: кеш и состояние установки локальные; .yarnrc.yml, .yarn/patches и .yarn/releases — в git
+.yarn/*
+!.yarn/patches/
+!.yarn/releases/
+!.yarn/plugins/
 
 # Build
 .next/
@@ -78,7 +83,6 @@ credentials.json
 *~
 
 # Optional
-.yarnrc.yml
 .pnpm-debug.log*
 next-env.d.ts
 test-connection.js
