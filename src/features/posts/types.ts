@@ -1,4 +1,4 @@
-import {WP_REST_API_Post} from "wp-types";
+import {WP_REST_API_Post, WP_REST_API_Tag} from "wp-types";
 
 export interface FeaturedImage {
     full: string;
@@ -8,7 +8,14 @@ export interface FeaturedImage {
     alt: string;
     caption: string;
 }
-export interface TransformedPost extends WP_REST_API_Post {
+// Тег записи в том виде, в каком его кладёт в _embedded['wp:term'] запрос с _embed
+export type PostTag = Pick<WP_REST_API_Tag, 'id' | 'name' | 'slug' | 'link'>;
+
+export interface PostWithTags extends WP_REST_API_Post {
+    postTags: PostTag[];
+}
+
+export interface TransformedPost extends PostWithTags {
     featuredImage: FeaturedImage | null;
     featuredImageUrl: string | null;
 }

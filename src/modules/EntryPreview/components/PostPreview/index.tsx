@@ -4,7 +4,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import {Paper, Box, Typography, Link} from "@mui/material";
 import {createExcerpt} from "@/helpers/wp-html";
 import {toPlainText} from "@/helpers/wp-text";
-import {useTagsByIds} from "@/features/tags/hooks";
+import {PostTag} from "@/features/posts/types";
 import {EntryPreviewContent} from "../EntryPreviewContent";
 import {ImageBordered} from "@/components/Images";
 
@@ -14,7 +14,7 @@ type Props = {
     entryTitle: string;
     entryPreview?: string;
     entryDate?: string;
-    entryTags?: number[];
+    entryTags?: PostTag[];
     entryImage?: string | null;
 }
 const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage }) => {
@@ -23,9 +23,6 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
     // createExcerpt запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
     const excerpt = React.useMemo(() => createExcerpt(entryPreview || ''), [entryPreview]);
     const date = entryDate ? new Date(entryDate).toLocaleDateString('ru-RU') : '';
-    const tagIds = entryTags || [];
-
-    const { tags, isLoading } = useTagsByIds(tagIds);
 
     return (
         <ErrorBoundary componentName={'PostPreview'}>
@@ -46,8 +43,7 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
                         <Box>
                             <EntryPreviewContent
                                 excerpt={excerpt || undefined}
-                                tags={tags || undefined}
-                                tagsAreLoading={isLoading}
+                                tags={entryTags}
                             />
                         </Box>
                         <Box sx={{clear: 'both'}}></Box>
@@ -55,8 +51,7 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
                     :
                     <EntryPreviewContent
                         excerpt={excerpt || undefined}
-                        tags={tags || undefined}
-                        tagsAreLoading={isLoading || undefined}
+                        tags={entryTags}
                     />
                 }
             </Paper>

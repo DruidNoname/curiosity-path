@@ -3,7 +3,18 @@ import {urls} from "@/config/urls";
 import {PER_PAGE} from "@/config/pagination";
 import {toPlainText} from "@/helpers/wp-text";
 import {WP_REST_API_Post} from "wp-types";
-import {PostsResponse, PostsByTodayResponse, SongsResponse, TransformedPost} from "./types";
+import {PostsResponse, PostsByTodayResponse, PostTag, PostWithTags, SongsResponse, TransformedPost} from "./types";
+
+// Запрос с _embed уже приносит термины записи в _embedded['wp:term'] — массив по таксономиям
+// (рубрики, теги). Берём теги оттуда, а не отдельным запросом на каждый тег: иначе список
+// из 10 записей тянул ещё по запросу на каждый уникальный тег (N+1).
+const extractTags = (post: any): PostTag[] =>
+    (post._embedded?.['wp:term'] ?? [])
+        .flat()
+        .filter((term: any) => term?.taxonomy === 'post_tag')
+        .map(({id, name, slug, link}: any) => ({id, name, slug, link}));
+
+const withTags = (post: any): PostWithTags => ({...post, postTags: extractTags(post)});
 
 export const fetchPosts = async (page: number = 1, perPage: number = PER_PAGE): Promise<PostsResponse> => {
     const params = new URLSearchParams({
@@ -29,7 +40,7 @@ export const fetchPosts = async (page: number = 1, perPage: number = PER_PAGE): 
         const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
 
         return {
-            ...post,
+            ...withTags(post),
             // Добавляем удобные поля для изображений
             featuredImage: featuredMedia ? {
                 full: featuredMedia.source_url,
@@ -145,7 +156,7 @@ export const fetchPostsBySearch = async (search: string, page: number = 1, perPa
     const posts = await res.json();
 
     return {
-        posts,
+        posts: posts.map(withTags),
         total: parseInt(total, 10),
         totalPages: parseInt(totalPages, 10),
         currentPage: page,
@@ -176,7 +187,7 @@ export const fetchPostsByTag = async (tagSlug: string, page: number = 1, perPage
             throw new Error('Ошибка при загрузке постов');
         }
 
-        const posts = await response.json();
+        const posts: PostWithTags[] = (await response.json()).map(withTags);
         const total = response.headers.get('X-WP-Total');
         const totalPages = response.headers.get('X-WP-TotalPages');
 

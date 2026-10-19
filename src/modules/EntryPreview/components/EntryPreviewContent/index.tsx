@@ -1,19 +1,17 @@
 import {Box, Link, Typography} from "@mui/material";
 import styles from "@/modules/EntryPreview/components/PostPreview/style.module.css";
 import React from "react";
-import {WP_REST_API_Tag} from "wp-types";
-import Skeleton from "@/ui/Skeleton";
+import {PostTag} from "@/features/posts/types";
 
 interface Props {
     title?: string;
     link?: string;
     date?: string;
     excerpt?: string;
-    tags?: WP_REST_API_Tag[];
-    tagsAreLoading?: boolean;
+    tags?: PostTag[];
 }
 
-export const EntryPreviewContent: React.FC<Props> = ({title, link, date, excerpt, tags, tagsAreLoading}) => {
+export const EntryPreviewContent: React.FC<Props> = ({title, link, date, excerpt, tags}) => {
     return(
         <>
             { title &&
@@ -38,10 +36,7 @@ export const EntryPreviewContent: React.FC<Props> = ({title, link, date, excerpt
             {tags && tags.length > 0 && (
                 <Typography variant="body2" component="div">
                     Теги: {
-                    tagsAreLoading ?
-                        <Skeleton width={300}/>
-                        :
-                        tags.reduce((acc: React.ReactNode[], tag: WP_REST_API_Tag, index: number) => {
+                        tags.reduce((acc: React.ReactNode[], tag: PostTag, index: number) => {
                             const tagElement = (
                                 <span key={tag.id}>
                         <Link
