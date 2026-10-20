@@ -28,16 +28,20 @@ export const ProportionByIngredientForm: React.FC<Props> = ({ingredients, setMul
         selected ? selected.amount : ''
     );
 
-    React.useEffect(() => {
-        if (selected) {
-            setInputValue(selected.amount);
-        }
-    }, [selected]);
-
     // Если нет опций, показываем заглушку
     if (!options.length) {
         return <Typography>Нет ингредиентов</Typography>;
     }
+
+    // Количество подставляется прямо в обработчике выбора, а не эффектом по `selected`:
+    // оба обновления попадают в один рендер, без лишнего коммита и кадра,
+    // где в селекте уже новый ингредиент, а в поле — количество старого.
+    const handleSelect = (value: typeof options[0] | null) => {
+        setSelected(value);
+        if (value) {
+            setInputValue(value.amount);
+        }
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
@@ -60,7 +64,7 @@ export const ProportionByIngredientForm: React.FC<Props> = ({ingredients, setMul
                     className={styles.Select}
                     options={options || []}
                     value={selected}
-                    onChange={(value) => setSelected(value)}
+                    onChange={handleSelect}
                 />
                 <Input
                     value={inputValue}

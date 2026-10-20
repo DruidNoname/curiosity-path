@@ -44,10 +44,12 @@ const RecipeInstructions: React.FC<RecipeInstructionsProps> = React.memo(({ reci
                         Изображения:
                     </Typography>
                     <Box sx={{display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'flex-start', mb: 2}}>
-                        {imageUrls.map((imgLink) => (
+                        {/* Ключ — весь адрес: хвосты вида «-300x200.jpg» у картинок WP совпадают.
+                            Индекс добавлен на случай одной картинки в двух шагах; список статичный. */}
+                        {imageUrls.map((imgLink, index) => (
                             <ImageBordered
                                 src={imgLink}
-                                key={imgLink.slice(-8, -1)}
+                                key={`${imgLink}_${index}`}
                                 sx={{ maxWidth: "350px" }}
                             />
                         ))}
