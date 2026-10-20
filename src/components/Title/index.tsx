@@ -2,7 +2,7 @@ import {Box, Button, Typography} from "@mui/material";
 import styles from "./style.module.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
-import {useRouter} from "next/navigation";
+import {useBackNavigation} from "@/helpers/useBackNavigation";
 import Skeleton from "@/ui/Skeleton";
 
 type Props = {
@@ -12,19 +12,7 @@ type Props = {
     isLoading?: boolean;
 }
 const Title: React.FC<Props> = ({title, variant, subtitle, isLoading}) => {
-    const router = useRouter();
-    const [canGoBack, setCanGoBack] = React.useState(false);
-
-    React.useEffect(() => {
-        setCanGoBack(window.history.length > 1 && !!document.referrer);
-    }, []);
-    const handleGoBack = () => {
-        if (canGoBack) {
-            router.back();
-        } else {
-            router.push('/');
-        }
-    };
+    const {canGoBack, goBack} = useBackNavigation();
 
     return (
         <Box className={styles.TitleBlock}>
@@ -44,7 +32,7 @@ const Title: React.FC<Props> = ({title, variant, subtitle, isLoading}) => {
             <Button
                 className={styles.BackButton}
                 startIcon={<ArrowBackIcon/>}
-                onClick={handleGoBack}
+                onClick={goBack}
                 variant="outlined"
             >
                 {canGoBack ? 'Назад' : 'На главную'}

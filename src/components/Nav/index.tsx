@@ -5,7 +5,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 const Menu: React.FC = () => {
 // Внутри компонента Header:
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [isMobile, setIsMobile] = React.useState(false);
     const open = Boolean(anchorEl);
 
     const navigationItems = [
@@ -23,20 +22,11 @@ const Menu: React.FC = () => {
         setAnchorEl(null);
     };
 
-    React.useEffect(() => {
-        const checkIfMobile = () => {
-            setIsMobile(window.innerWidth < 900);
-        };
-
-        checkIfMobile();
-        window.addEventListener('resize', checkIfMobile);
-        return () => window.removeEventListener('resize', checkIfMobile);
-    }, []);
-
-
+    // Какое меню показать, решает CSS по брейкпоинту темы (md): в разметке оба, лишнее скрыто.
+    // Раньше это делал эффект с подпиской на resize — на телефоне сначала мелькало
+    // десктопное меню, а состояние обновлялось на каждый пиксель изменения ширины окна.
     return (
-
-        isMobile ?
+        <>
             <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 2 }}>
                 <IconButton
                     size="large"
@@ -62,7 +52,6 @@ const Menu: React.FC = () => {
                     ))}
                 </MenuLib>
             </Box>
-            :
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2, mr: 3 }}>
                 {navigationItems.map((item) => (
                     <Button
@@ -82,6 +71,7 @@ const Menu: React.FC = () => {
                     </Button>
                 ))}
             </Box>
+        </>
     );
 };
 

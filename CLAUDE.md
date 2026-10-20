@@ -44,7 +44,7 @@ src/
   ui/            тонкие обёртки над MUI (Link, Buttons, Spoiler, Pagination, Loader, Skeleton, Image, Select, Calendar)
   features/      вертикальные срезы: posts, recipes, tags, breath, query, theme
   config/        urls (единая точка правды по адресам), site, pagination, graphql (Apollo client)
-  helpers/       утилиты общего назначения; каждая — папкой: wp-html, wp-text, usePageParam
+  helpers/       утилиты общего назначения; каждая — папкой: wp-html, wp-text, usePageParam, useBackNavigation
   styles/        глобальный css + точка расширения для css-переменных
   assets/        шрифты и изображения
 ```
@@ -198,8 +198,8 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
-`src/helpers/wp-text`, `src/helpers/usePageParam`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
-`features/breath/plan.ts` и `app/about/utils.ts` (103 теста, 16 сьютов).
+`src/helpers/wp-text`, `src/helpers/usePageParam`, `src/helpers/useBackNavigation`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
+`features/breath/plan.ts` и `app/about/utils.ts` (109 тестов, 17 сьютов).
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
 
 ## Журнал изменений

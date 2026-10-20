@@ -3,7 +3,7 @@ import styles from "./style.module.css";
 import Skeleton from "@/ui/Skeleton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
-import {useRouter} from "next/navigation";
+import {useBackNavigation} from "@/helpers/useBackNavigation";
 
 type Props = {
     title: string;
@@ -14,19 +14,7 @@ type Props = {
     variant?: 'h2' |  'h3' |  'h4';
 }
 const SingleEntryTitle: React.FC<Props> = ({title, isLoading, date, tags, variant, subtitle}) => {
-    const router = useRouter();
-    const [canGoBack, setCanGoBack] = React.useState(false);
-
-    React.useEffect(() => {
-        setCanGoBack(window.history.length > 1 && !!document.referrer);
-    }, []);
-    const handleGoBack = () => {
-        if (canGoBack) {
-            router.back();
-        } else {
-            router.push('/');
-        }
-    };
+    const {canGoBack, goBack} = useBackNavigation();
 
     return (
         <Box className={styles.SingleEntryTitleBlock}>
@@ -52,7 +40,7 @@ const SingleEntryTitle: React.FC<Props> = ({title, isLoading, date, tags, varian
             <Button
                 className={styles.BackButton}
                 startIcon={<ArrowBackIcon/>}
-                onClick={handleGoBack}
+                onClick={goBack}
                 variant="outlined"
             >
                 {canGoBack ? 'Назад' : 'На главную'}
