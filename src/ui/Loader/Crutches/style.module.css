@@ -1,0 +1,66 @@
+.Crutches {
+  /* Положение покоя: от него костыли шагают вперёд и назад.
+     Все расстояния — в единицах viewBox: высота лоадера 150px на 48 единиц, так что 1 единица ≈ 3px на экране */
+  --left-angle: -7deg;
+  --right-angle: -13deg;
+  --right-shift: 13px; /* больше — опоры меньше заходят друг на друга */
+  --right-drop: 1.6px;
+
+  /* Шаг: костыль стоит на земле и уходит назад, затем поднимается и выносится вперёд.
+     Костыли идут в противофазе и обгоняют друг друга: наконечники — за счёт наклона,
+     а если размах больше --right-shift, то и верхушки */
+  --step-stride: 14px;   /* размах вперёд-назад */
+  --step-swing-forward: 12deg; /* наклон впереди, против часовой */
+  --step-swing-back: 20deg;    /* наклон сзади, по часовой */
+  --step-lift: 3px;      /* насколько костыль поднимается, пока выносится вперёд */
+  --step-duration: 1.5s; /* полный шаг одного костыля */
+}
+
+.Crutch {
+  transform-box: view-box;
+  transform-origin: 24px 5.5px; /* середина верхней опоры */
+  animation: CrutchWalk var(--step-duration) ease-in-out infinite;
+}
+
+/* Кадры у костылей общие, а положение покоя каждый задаёт своими --base-* */
+.CrutchLeft {
+  --base-x: 0px;
+  --base-y: 0px;
+  --base-angle: var(--left-angle);
+}
+
+.CrutchRight {
+  --base-x: var(--right-shift);
+  --base-y: var(--right-drop);
+  --base-angle: var(--right-angle);
+  /* Отрицательная задержка — сразу в противофазе, без паузы на старте */
+  animation-delay: calc(var(--step-duration) / -2);
+}
+
+@keyframes CrutchWalk {
+  /* Впереди, опирается на землю */
+  0%, 100% {
+    transform:
+      translate(calc(var(--base-x) + var(--step-stride) / 2), var(--base-y))
+      rotate(calc(var(--base-angle) - var(--step-swing-forward)));
+  }
+  /* Опора длиннее переноса: костыль уходит назад, пока на него перенесён вес */
+  60% {
+    transform:
+      translate(calc(var(--base-x) - var(--step-stride) / 2), var(--base-y))
+      rotate(calc(var(--base-angle) + var(--step-swing-back)));
+  }
+  /* Перенос: поднят над землёй и проходит положение покоя */
+  80% {
+    transform:
+      translate(var(--base-x), calc(var(--base-y) - var(--step-lift)))
+      rotate(var(--base-angle));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Crutch {
+    animation: none;
+    transform: translate(var(--base-x), var(--base-y)) rotate(var(--base-angle));
+  }
+}

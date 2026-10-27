@@ -199,7 +199,7 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
 `src/helpers/wp-text`, `src/helpers/usePageParam`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
-`features/breath/plan.ts` и `app/about/utils.ts` (103 теста, 16 сьютов).
+`features/breath/plan.ts`, `app/about/utils.ts` и `ui/Loader/variants.ts` (106 тестов, 17 сьютов).
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
 
 ## Журнал изменений

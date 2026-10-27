@@ -3,6 +3,19 @@
   margin-top: 30px;
 }
 
+/* Высота одна на все варианты — чтобы лоадер не прыгал по вёрстке */
+.Image {
+  --loader-spin-duration: 1s; /* оборот атома и колёс велосипеда */
+  height: 150px;
+  width: auto;
+  pointer-events: none;
+}
+
+.Placeholder {
+  display: inline-block;
+  height: 150px;
+}
+
 .Backdrop {
   z-index: 9999!important;
   color: #fff;
