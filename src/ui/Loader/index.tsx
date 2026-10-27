@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useSyncExternalStore } from 'react';
 import styles from './style.module.css';
 import Backdrop from '@mui/material/Backdrop';
-import Image from 'next/image';
-import loaderImage from '@/assets/images/loader.svg';
 import LinearProgress from '@mui/material/LinearProgress';
 import { OverridableStringUnion } from '@mui/types';
+import { LoaderVariant, pickLoaderVariant } from './variants';
+import Atom from './Atom';
+import Bicycle from './Bicycle';
+import Crutches from './Crutches';
 
 type Props = {
   className?: string;
@@ -17,6 +19,30 @@ type Props = {
   smallSize?: number;
   backdropMode?: boolean;
   color?: OverridableStringUnion<'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'inherit'>;
+};
+
+// Все три — inline-svg: картинка приходит вместе с разметкой, без отдельного запроса.
+// Анимацию каждый задаёт своим css-модулем
+const VARIANTS: Record<LoaderVariant, () => React.ReactNode> = {
+  atom: () => <Atom className={styles.Image}/>,
+  bicycle: () => <Bicycle className={styles.Image}/>,
+  crutch: () => <Crutches className={styles.Image}/>,
+};
+
+const subscribeNever = () => () => {};
+
+const LoaderImage: React.FC = () => {
+  // Math.random() дал бы на сервере и на клиенте разные картинки и ошибку гидратации.
+  // useSyncExternalStore на гидратации отдаёт серверный снимок (false) — рисуем заглушку,
+  // а при клиентском переходе сразу клиентский (true), так что пустого кадра нет
+  const isClient = useSyncExternalStore(subscribeNever, () => true, () => false);
+  const [variant] = useState<LoaderVariant>(() => pickLoaderVariant());
+
+  if (!isClient) {
+    return <span className={styles.Placeholder}/>;
+  }
+
+  return VARIANTS[variant]();
 };
 
 const Loader: React.FC<Props> = ({className, size = 40, display, isLinear, backdropMode, color, margin, style, smallSize, isDots}) => {
@@ -33,11 +59,7 @@ const Loader: React.FC<Props> = ({className, size = 40, display, isLinear, backd
         return (
             <Backdrop open={backdropMode} className={styles.Backdrop}>
               <div className={classes.join(' ')} style={{display, ...style}}>
-                <Image
-                    src={loaderImage}
-                    alt="Loading"
-                    className={'RadialLoader'}
-                />
+                <LoaderImage/>
               </div>
             </Backdrop>
         );
@@ -59,11 +81,7 @@ const Loader: React.FC<Props> = ({className, size = 40, display, isLinear, backd
               margin: smallSize ? margin || '0' : margin,
               ...style
             }}>
-                  <Image
-                      src={loaderImage}
-                      alt="Loading"
-                      className={'RadialLoader'}
-                  />
+              <LoaderImage/>
             </div>
         );
     }

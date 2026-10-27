@@ -1,0 +1,15 @@
+.Atom {
+  animation: AtomSpin var(--loader-spin-duration) linear infinite;
+}
+
+@keyframes AtomSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Atom {
+    animation: none;
+  }
+}

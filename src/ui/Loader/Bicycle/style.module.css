@@ -1,0 +1,24 @@
+.Wheel {
+  transform-box: view-box;
+  animation: WheelSpin var(--loader-spin-duration) linear infinite;
+}
+
+.RearWheel {
+  transform-origin: 198px 720.9px;
+}
+
+.FrontWheel {
+  transform-origin: 824.7px 720.9px;
+}
+
+@keyframes WheelSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Wheel {
+    animation: none;
+  }
+}
