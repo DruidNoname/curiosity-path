@@ -31,7 +31,9 @@ export const IngredientsList: React.FC<Props> = ({ ingredients, isLoading }) => 
             const ingredientText = `${ing.name || ''}${notesPart}${amountUnitPart ? ': ' + amountUnitPart : ''}`;
 
             return (
-                <li key={ing.id || ing.uid}>
+                // Ключ — uid строки рецепта, а не id: id — это термин-ингредиент WPRM,
+                // и одна мука может стоять в рецепте дважды (в опаре и в тесте).
+                <li key={ing.uid}>
                     {ingredientText}
                 </li>
             );
