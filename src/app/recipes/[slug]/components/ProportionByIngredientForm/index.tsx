@@ -12,7 +12,7 @@ type Props = {
 export const ProportionByIngredientForm: React.FC<Props> = ({ingredients, setMultiplier, setOpen}) => {
     const options = React.useMemo(() =>
             ingredients?.map(ing => ({
-                value: ing.id,
+                value: ing.uid,
                 label: ing.name,
                 amount: ing.amount,
                 unit: ing.unit,
