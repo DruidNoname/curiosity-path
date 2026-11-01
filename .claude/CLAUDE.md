@@ -10,7 +10,9 @@
 - MUI 7 (`@mui/material`) + Emotion — основная UI-библиотека
 - CSS Modules для локальных стилей, Tailwind 4 подключён через postcss, но в компонентах не используется
 - TanStack Query 5 — основной дата-слой
-- Apollo Client — GraphQL, ровно одно место: виджет тегов на главной
+- Apollo Client — GraphQL, ровно одно место: виджет тегов на главной. Учебный, держится
+  намеренно; `ApolloProvider` стоит внутри виджета, а не в `ClientLayout`, чтобы Apollo
+  не ехал в бандл остальных страниц
 - Jest + ts-jest + Testing Library
 - Yarn 4 с `nodeLinker: node-modules` (`.yarnrc.yml` в git), версия закреплена полем
   `packageManager` в `package.json` и ставится через Corepack (`corepack enable`).
