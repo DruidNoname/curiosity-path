@@ -6,17 +6,15 @@ import {usePostsByToday} from "@/features/posts/hooks";
 import {WP_REST_API_Post} from "wp-types";
 import {Link} from "@/ui/Link";
 import {toPlainText} from "@/helpers/wp-text";
+import {useIsClient} from "@/helpers/useIsClient";
 
 const HistoryWidget: React.FC = ( ) => {
     // Главная страница статическая: HTML собирается один раз при деплое. Сегодняшняя дата,
     // посчитанная в рендере, застывала бы на дату сборки (и в часовом поясе сервера) и
     // расходилась с браузером при гидрации. Поэтому дату узнаём только на клиенте.
-    const [today, setToday] = React.useState<Date | null>(null);
-
-    React.useEffect(() => {
-        // Второй проход рендера намеренный: «сегодня» существует только в браузере.
-        setToday(new Date());
-    }, []);
+    // Второй проход рендера намеренный: «сегодня» существует только в браузере.
+    const isClient = useIsClient();
+    const today = React.useMemo(() => (isClient ? new Date() : null), [isClient]);
 
     // isPending, а не isLoading: пока даты нет, запрос не запущен, и isLoading был бы false —
     // виджет на мгновение показал бы «ничего не произошло» вместо загрузки.

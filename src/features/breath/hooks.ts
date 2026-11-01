@@ -1,6 +1,7 @@
 'use client';
 
 import React from "react";
+import {useIsClient} from "@/helpers/useIsClient";
 import {createBeeper, getAudioContextCtor, type Beeper} from "./audio";
 import {COUNTDOWN_SECONDS, TICK_MS} from "./const";
 import type {BreathRun, BreathStep, BreathTick} from "./types";
@@ -42,13 +43,10 @@ export const useBreathCycle = () => {
     const positionRef = React.useRef<CyclePosition>(initialPosition());
     const [tick, setTick] = React.useState<BreathTick | null>(null);
     const [status, setStatus] = React.useState<CycleStatus>('idle');
-    // Проверка идёт в эффекте, а не в рендере: на сервере window нет, и разметка
-    // «звук не поддерживается» разошлась бы с клиентской при гидрации.
-    const [isSupported, setIsSupported] = React.useState(true);
-
-    React.useEffect(() => {
-        setIsSupported(getAudioContextCtor() !== undefined);
-    }, []);
+    // Проверка только после гидрации: на сервере window нет, и разметка
+    // «звук не поддерживается» разошлась бы с клиентской. До неё считаем, что звук есть.
+    const isClient = useIsClient();
+    const isSupported = !isClient || getAudioContextCtor() !== undefined;
 
     const clearTimer = React.useCallback(() => {
         if (timerRef.current !== null) {

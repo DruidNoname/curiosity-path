@@ -30,9 +30,11 @@ npm run lint           # eslint (flat-конфиг)
 npx tsc --noEmit       # типы
 ```
 
-Конфиг линтера один — `eslint.config.js` (flat). `next/core-web-vitals` подключён через
-`FlatCompat`, потому что `eslint-config-next@15.x` ещё не отдаёт flat-конфиг; при обновлении
-пакета до 16.x слой совместимости можно убрать.
+Конфиг линтера один — `eslint.config.mjs` (flat), `next/core-web-vitals` импортируется
+из `eslint-config-next` напрямую. Расширение `.mjs` — потому что `package.json` без
+`"type": "module"`. `eslint-config-next` тянет свои `typescript-eslint` и
+`eslint-plugin-react-hooks`: версии в нашем `package.json` держать не ниже его, иначе
+в `node_modules` окажутся две копии плагина и eslint упадёт с `Cannot redefine plugin`.
 
 ## Структура
 
@@ -44,7 +46,7 @@ src/
   ui/            тонкие обёртки над MUI (Link, Buttons, Spoiler, Pagination, Loader, Skeleton, Image, Select, Calendar)
   features/      вертикальные срезы: posts, recipes, tags, breath, query, theme
   config/        urls (единая точка правды по адресам), site, pagination, graphql (Apollo client)
-  helpers/       утилиты общего назначения; каждая — папкой: wp-html, wp-text, usePageParam
+  helpers/       утилиты общего назначения; каждая — папкой: wp-html, wp-text, usePageParam, useIsClient
   styles/        глобальный css + точка расширения для css-переменных
   assets/        шрифты и изображения
 ```
@@ -198,8 +200,8 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
-`src/helpers/wp-text`, `src/helpers/usePageParam`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
-`features/breath/plan.ts`, `app/about/utils.ts` и `ui/Loader/variants.ts` (106 тестов, 17 сьютов).
+`src/helpers/wp-text`, `src/helpers/usePageParam`, `src/helpers/useIsClient`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
+`features/breath/plan.ts`, `app/about/utils.ts` и `ui/Loader/variants.ts` (108 тестов, 18 сьютов).
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
 
 ## Журнал изменений
@@ -224,6 +226,12 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
   разрядку и полужирный эмоушен-классом, а эмоушен вставляет свои стили в `<head>`
   после CSS-модулей — при равной специфичности побеждает он. Правится через `sx`
   (кладётся поверх темы) или `&&` внутри `styled` (см. `ui/Buttons/TextButton`).
+- **То, что есть только в браузере, — через `useIsClient`.** `window`, сегодняшняя дата,
+  выбранная тема: прочитанные прямо в рендере, они разводят серверный HTML с клиентским
+  при гидрации. `useState` + `setState` в `useEffect` линтер запрещает
+  (`react-hooks/set-state-in-effect`); `useIsClient` из `@/helpers/useIsClient` даёт
+  `false` до гидрации и `true` после. Если значение нужно только в обработчике, читать
+  его там, без хука.
 - **У кнопки-тумблера нельзя переключать `type`.** React успевает перерисовать кнопку
   внутри обработки клика, и браузер выполняет действие по умолчанию уже для нового
   типа: `button` → `submit` превращал «Остановить» в перезапуск. Тип оставляют

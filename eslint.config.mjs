@@ -6,16 +6,11 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import prettierPlugin from 'eslint-plugin-prettier';
 import pluginQuery from '@tanstack/eslint-plugin-query';
-import { FlatCompat } from '@eslint/eslintrc';
-
-// eslint-config-next 15.x ещё не отдаёт flat-конфиг, поэтому подтягиваем его через
-// слой совместимости. При обновлении пакета до 16.x это можно заменить прямым импортом.
-const compat = new FlatCompat({ baseDirectory: import.meta.dirname });
-
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
 
 export default tseslint.config(
     { ignores: ['dist', 'build', 'node_modules', '.next', 'coverage', 'next-env.d.ts'] },
-    ...compat.extends('next/core-web-vitals'),
+    ...nextCoreWebVitals,
     {
         extends: [js.configs.recommended, ...tseslint.configs.recommended],
         files: ['**/*.{ts,tsx}'],

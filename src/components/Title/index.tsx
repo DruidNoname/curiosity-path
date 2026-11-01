@@ -3,6 +3,7 @@ import styles from "./style.module.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
 import {useRouter} from "next/navigation";
+import {useIsClient} from "@/helpers/useIsClient";
 import Skeleton from "@/ui/Skeleton";
 
 type Props = {
@@ -13,11 +14,10 @@ type Props = {
 }
 const Title: React.FC<Props> = ({title, variant, subtitle, isLoading}) => {
     const router = useRouter();
-    const [canGoBack, setCanGoBack] = React.useState(false);
-
-    React.useEffect(() => {
-        setCanGoBack(window.history.length > 1 && !!document.referrer);
-    }, []);
+    // История браузера есть только на клиенте; до гидрации кнопка ведёт на главную,
+    // как и в серверной разметке.
+    const isClient = useIsClient();
+    const canGoBack = isClient && window.history.length > 1 && !!document.referrer;
     const handleGoBack = () => {
         if (canGoBack) {
             router.back();
