@@ -7,6 +7,8 @@
 ## Стек
 
 - Next.js 16 (App Router) + React 19, TypeScript strict
+- Node 24: `engines.node` в `package.json` — `24.x`. Vercel берёт версию оттуда, поверх
+  настроек проекта; `@types/node` держать на той же мажорной версии
 - MUI 9 (`@mui/material`) + Emotion — основная UI-библиотека; календари — `@mui/x-date-pickers` 9
 - CSS Modules для локальных стилей, Tailwind 4 подключён через postcss, но в компонентах не используется
 - TanStack Query 5 — основной дата-слой
