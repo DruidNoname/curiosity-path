@@ -37,25 +37,6 @@
 - **`engines.node` требует `^22.20.0`**, а разработка уже идёт на Node 24. Выбрать одну
   версию и выставить её же на Vercel.
 
-## Предупреждения линтера
-
-`yarn lint` проходит без ошибок, но с 20 предупреждениями. К ним привыкли, и новое
-среди них легко не заметить.
-
-- **Неиспользуемые импорты и аргументы (7):** `CourseCard` (`Link`),
-  `recipes/keywords/[keyword]/page.tsx` (`useRecipes`), `recipes/page.tsx`
-  (`useKeywords`), `MainNAsideLayout` (`PropsWithChildren`), `IngredientsList`
-  (`isLoading`), `ui/Loader` (`size` — проп принимается, но не применяется),
-  `ui/Select` (`state`). Удалить или, для аргументов, переименовать в `_name`; у `Loader`
-  стоит сначала разобраться, должен ли `size` работать.
-- **Картинки без `alt` (2):** `ImageBordered` и `ImageSigned`. Прокинуть `alt` пропом;
-  для декоративных — пустая строка.
-- **`react-refresh/only-export-components` (11)** в `page.tsx`/`layout.tsx`
-  (`generateMetadata`, `metadata`), `ui/Link`, `features/query`, `features/theme`.
-  В роутах App Router это ложные срабатывания: Next сам требует экспортировать оттуда
-  метаданные. Отключить правило для `src/app/**/{page,layout}.tsx`, а в остальных файлах
-  вынести некомпонентные экспорты в отдельный модуль.
-
 ## Осознанные решения
 
 Не долг, а выбор, — менять не планируется. Записано, чтобы не исправляли по ошибке.

@@ -74,7 +74,7 @@ const Recipe: React.FC<Props> = ({ slug }) =>  {
                         <>
                             <RecipeIntro imageUrl={recipe?.image_url || ''} imageTitle={recipe?.name || 'Изображение блюда'} recipePreview={recipe?.summary || ''} />
                             {isMobile && <>
-                                <IngredientsList ingredients={ ingredientsWithFixedUnits } isLoading={isLoading}/>
+                                <IngredientsList ingredients={ ingredientsWithFixedUnits }/>
                                 <Accordion sx={{mb: 2}}>
                                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                         <Typography variant="h5" sx={{ paddingBottom: 0 }}>
@@ -98,7 +98,7 @@ const Recipe: React.FC<Props> = ({ slug }) =>  {
                         <>
                             {!isMobile &&
                                 <>
-                                    <IngredientsList ingredients={ ingredientsWithFixedUnits } isLoading={isLoading}/>
+                                    <IngredientsList ingredients={ ingredientsWithFixedUnits }/>
                                     <RecipeCalculator
                                         ingredients={ingredientsWithFixedUnits}
                                         setMultiplier={handleMultiplierChange}

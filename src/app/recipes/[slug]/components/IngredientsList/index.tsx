@@ -7,10 +7,9 @@ import {convertFractions, processNumber} from "@/features/recipes/utils";
 
 type Props = {
     ingredients: Ingredient[];
-    isLoading: boolean;
 };
 
-export const IngredientsList: React.FC<Props> = ({ ingredients, isLoading }) => {
+export const IngredientsList: React.FC<Props> = ({ ingredients }) => {
     const searchParams = useSearchParams();
 
     const multiplier = React.useMemo(() => {

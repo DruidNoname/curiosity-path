@@ -1,12 +1,16 @@
 'use client';
 
-import React, {useEffect, useState} from "react";
+import React from "react";
 import styles from './style.module.css';
 import { differenceInYears } from 'date-fns';
 import {Box, Divider, Link} from "@mui/material";
 import {ImageBordered} from "@/components/Images";
 import Title from "@/components/Title";
 import {yearsWord} from "./utils";
+import {useIsClient} from "@/helpers/useIsClient";
+import urls from "@/config/urls";
+
+const PORTRAIT_URL = `${urls.wp}/wp-content/uploads/2026/02/photo_2026-02-26_23-04-36.jpg`;
 
 const BIRTH_DATE = new Date('1987-02-20');
 const WORK_START_DATE = new Date('2019-02-13');
@@ -15,18 +19,17 @@ const About: React.FC = () => {
     // Страница статическая: HTML собирается один раз при деплое. Посчитанные в рендере возраст
     // и стаж застывали бы на дату сборки и расходились с пересчётом в браузере — рассинхрон
     // гидрации после каждого дня рождения. Поэтому считаем только на клиенте, после гидрации.
-    const [years, setYears] = useState<{ age: number; experience: number } | null>(null);
-
-    useEffect(() => {
+    // Второй проход рендера намеренный: значение зависит от «сейчас» в браузере и на сервере
+    // существовать не может. Лишний рендер один, при монтировании.
+    const isClient = useIsClient();
+    const years = React.useMemo(() => {
+        if (!isClient) return null;
         const now = new Date();
-        // Второй проход рендера намеренный: значение зависит от «сейчас» в браузере и на сервере
-        // существовать не может. Лишний рендер один, при монтировании.
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setYears({
+        return {
             age: differenceInYears(now, BIRTH_DATE),
             experience: differenceInYears(now, WORK_START_DATE),
-        });
-    }, []);
+        };
+    }, [isClient]);
 
     return(
         <Box sx={{px: '24px'}}>
@@ -36,7 +39,7 @@ const About: React.FC = () => {
             </Box>
             <Divider sx={{ marginTop: '16px', marginBottom: '24px',  }} />
             <Box>
-                <ImageBordered src={'https://suffer.curiosity-path.ru/wp-content/uploads/2026/02/photo_2026-02-26_23-04-36.jpg'} title={'Фото автора'} classNameWrapper={styles.MyPortret}/>
+                <ImageBordered src={PORTRAIT_URL} alt={'Фото автора'} title={'Фото автора'} classNameWrapper={styles.MyPortret}/>
                 <p><i>Привет, меня зовут Оля, {years && <>мне {years.age} {yearsWord(years.age)},{' '}</>}я&nbsp;веб-разработчик{years && <> с&nbsp;{years.experience}-летним стажем</>}. Заархивированная тётенька на&nbsp;фоне моря&nbsp;&mdash; это&nbsp;я. Говорят, что тётеньками в&nbsp;купальниках хорошо рекламируется что угодно, даже блог. Вот и&nbsp;попробуем.</i></p>
                 <p>Этот проект продуман и&nbsp;разработан лично мной на&nbsp;<b>React&nbsp;19</b> и&nbsp;<b>Next.js&nbsp;16</b> на&nbsp;<b>TypeScript</b>. Интерфейс&nbsp;&mdash; на&nbsp;<b>MUI</b>, данные ходят через <b>TanStack Query</b> из&nbsp;REST API WordPress (и&nbsp;чуть-чуть через GraphQL), прибывшие тексты проходят через собственную санитизацию. Тестирование в основном на&nbsp;<b>Jest</b>. Из интересных ходов&nbsp;&mdash; звук в&nbsp;<Link href={'/breather'}>«Бризере»</Link> синтезируется прямо в&nbsp;браузере через <b>Web Audio API</b>. Клиентская часть лежит на&nbsp;next-овской&nbsp;же облачной платформе <b>Vercel</b>. Серверная&nbsp;&mdash; собрана из&nbsp;дипсика и&nbsp;палок на&nbsp;headless-WordPress. А сейчас у меня в консоли IDE живёт и властвует Claude Code.</p>
                 <p>Кроме <b>постов блога</b> в пространстве живёт <b>горсть инструментов разной степени нужности</b> и&nbsp;упоротости: <Link href={'/recipes'}>справочник рецептов</Link> с&nbsp;расчётом граммовки ингредиентов, <Link href={'/breather'}>«Бризер»</Link>&nbsp;&mdash; дыхательный метроном (созданный, вообще-то, для упражнений ЛФК) и&nbsp;<Link href={'/capoeira-songs'}>песенник капоэйры</Link>. На&nbsp;<Link href={'/test-subject'}>странице dev-экспериментов</Link> можно посмотреть, над чем я&nbsp;работаю в&nbsp;данный момент. Или не&nbsp;работаю, если выдохлась.</p>

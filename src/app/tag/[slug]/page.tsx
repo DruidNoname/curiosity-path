@@ -90,7 +90,7 @@ const TagPageContent: React.FC = () => {
                 </Box>
                 {(isLoading || isPostsLoading) && page > 1 ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-                        <Loader size={40} />
+                        <Loader />
                     </Box>
                 ) : (
                     <>

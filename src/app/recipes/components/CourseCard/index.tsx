@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styles from './style.module.css';
-import { Card, Link } from '@mui/material';
+import { Card } from '@mui/material';
 import {Course} from "@/features/recipes/types"; // предполагается использование Material-UI
 
 type Props = {

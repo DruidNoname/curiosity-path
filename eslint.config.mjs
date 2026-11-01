@@ -29,7 +29,16 @@ export default tseslint.config(
             ...reactHooks.configs.recommended.rules,
             'react-refresh/only-export-components': [
                 'warn',
-                { allowConstantExport: true },
+                {
+                    allowConstantExport: true,
+                    // Экспорты, которых Next сам требует от page.tsx и layout.tsx.
+                    allowExportNames: [
+                        'metadata', 'generateMetadata', 'viewport', 'generateViewport',
+                        'generateStaticParams', 'dynamic', 'dynamicParams', 'revalidate',
+                    ],
+                    // styled(Comp)(...) из MUI возвращает компонент (см. ui/Link).
+                    extraHOCs: ['styled'],
+                },
             ],
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/ban-ts-comment": "off",
