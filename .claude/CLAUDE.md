@@ -21,13 +21,14 @@
 ## Команды
 
 ```bash
-npm run dev            # дев-сервер
-npm run build          # прод-сборка
-npm test               # jest
-npm run test:watch
-npm run test:coverage
-npm run lint           # eslint (flat-конфиг)
-npx tsc --noEmit       # типы
+yarn install           # зависимости (Yarn 4; сначала один раз `corepack enable`)
+yarn dev               # дев-сервер
+yarn build             # прод-сборка
+yarn test              # jest
+yarn test:watch
+yarn test:coverage
+yarn lint              # eslint (flat-конфиг)
+yarn tsc --noEmit      # типы
 ```
 
 Конфиг линтера один — `eslint.config.mjs` (flat), `next/core-web-vitals` импортируется
