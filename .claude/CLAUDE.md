@@ -126,7 +126,9 @@ features/<name>/
 
 - Один компонент = папка `Name/index.tsx` + при необходимости `style.module.css`.
 - Каждая страница и каждый крупный модуль обёрнуты в `<ErrorBoundary componentName="..." />` —
-  имя нужно для диагностики, указывать всегда.
+  имя нужно для диагностики, указывать всегда. Запасной экран — `ErrorBoundary/Fallback`
+  на цветах темы; «Попробовать снова» сбрасывает границу без перезагрузки страницы.
+  Свой экран можно передать пропом `fallback`.
 - Импорты MUI — только верхнего уровня (`@mui/material`, `@mui/material/Button`).
   Глубокие импорты `@mui/*/*/*` запрещены правилом eslint `no-restricted-imports`.
 - **Ссылки — обычный `<Link>` из `@mui/material`.** В теме (`BaseTheme/dsBaseTheme.ts`)
@@ -205,8 +207,8 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
 `src/helpers/wp-text`, `src/helpers/usePageParam`, `src/helpers/useIsClient`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
-`features/posts/api.ts` (пока только `fetchPostsByTag`), `features/breath/plan.ts`, `app/about/utils.ts`
-и `ui/Loader/variants.ts` (111 тестов, 19 сьютов).
+`features/posts/api.ts` (пока только `fetchPostsByTag`), `features/breath/plan.ts`, `app/about/utils.ts`,
+`ui/Loader/variants.ts` и `components/ErrorBoundary` (115 тестов, 20 сьютов).
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
 
 ## Журнал изменений
