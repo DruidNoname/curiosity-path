@@ -1,71 +1,48 @@
-// PostDay/SimpleErrorBoundary.tsx
 'use client';
 
 import React, { Component, ErrorInfo } from 'react';
+import ErrorFallback from './Fallback';
 
 interface Props {
     children: React.ReactNode;
+    /** Имя для диагностики: попадает в консоль вместе с ошибкой. Указывать всегда. */
     componentName: string;
+    /** Свой запасной экран вместо стандартного. */
     fallback?: React.ReactNode;
 }
 
 interface State {
-    hasError: boolean;
+    error: Error | null;
 }
 
+/**
+ * Граница ошибок: упавший рендер внутри неё заменяется запасным экраном, а не роняет
+ * всё приложение. Ловит только ошибки рендера; ошибки запросов React Query страницы
+ * показывают сами.
+ */
 export default class ErrorBoundary extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = { hasError: false };
-    }
+    state: State = { error: null };
 
-    static getDerivedStateFromError() {
-        return { hasError: true };
+    static getDerivedStateFromError(error: Error): State {
+        return { error };
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        // Логируем ошибку с именем компонента
         console.error(
             `🔥 Error in component: ${this.props.componentName}\n`,
             `Error: ${error.message}\n`,
             `Component Stack: ${errorInfo.componentStack}\n`,
             `Error Stack: ${error.stack}`
         );
-
-        // Можно также отправить в сервис мониторинга
-        // this.sendErrorToMonitoring(error, errorInfo)
     }
 
+    // Сброс вместо перезагрузки: содержимое отрисуется заново, а кеш запросов, тема и
+    // остальная страница останутся как были.
+    private reset = () => this.setState({ error: null });
+
     render() {
-        if (this.state.hasError) {
-            return (
-                <div style={{
-                    padding: '40px',
-                    textAlign: 'center',
-                    minHeight: '300px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    <h2 style={{ color: '#d32f2f' }}>Ошибка!</h2>
-                    <p>Что-то пошло не так. Пожалуйста, обновите страницу.</p>
-                    <button
-                        onClick={() => window.location.reload()}
-                        style={{
-                            marginTop: '20px',
-                            padding: '10px 20px',
-                            backgroundColor: '#1976d2',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        Обновить страницу
-                    </button>
-                </div>
-            );
+        if (this.state.error) {
+            return this.props.fallback ?? <ErrorFallback error={this.state.error} onRetry={this.reset}/>;
         }
 
         return this.props.children;

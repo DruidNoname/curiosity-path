@@ -50,7 +50,7 @@ export const usePostsByToday = (today: Date | null) => {
 
 
 export const usePost = (slug: string, options = {}) => {
-    return useQuery<TransformedPost>({
+    return useQuery<TransformedPost | null>({
         queryKey: ['post', slug],
         queryFn: () => fetchPost(slug),
         enabled: !!slug, // Запрос выполняется только если slug существует
@@ -60,11 +60,11 @@ export const usePost = (slug: string, options = {}) => {
 };
 
 
-export const usePostsByTag = (tagSlug: string, page = 1, perPage = PER_PAGE) => {
-    return useQuery({
-        queryKey: ['posts', 'tag', tagSlug, page, perPage],
-        queryFn: () => fetchPostsByTag(tagSlug, page, perPage),
-        enabled: !!tagSlug,
+// id тега берётся из useTag: пока тег не загружен (или не найден), запрос не идёт.
+export const usePostsByTag = (tagId: number | undefined, page = 1, perPage = PER_PAGE) => {
+    return useQuery<PostsResponse>({
+        queryKey: ['posts', 'tag', tagId, page, perPage],
+        queryFn: tagId ? () => fetchPostsByTag(tagId, page, perPage) : skipToken,
         staleTime: 5 * 60 * 1000,
     });
 };

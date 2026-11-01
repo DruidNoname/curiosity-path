@@ -49,6 +49,9 @@ const RecipeInstructions: React.FC<RecipeInstructionsProps> = React.memo(({ reci
                         {imageUrls.map((imgLink, index) => (
                             <ImageBordered
                                 src={imgLink}
+                                // Подписей к картинкам шагов WP Recipe Maker не отдаёт, а шаги
+                                // описаны текстом выше; выдумывать «Фото 1» — шум для скринридера.
+                                alt=""
                                 key={`${imgLink}_${index}`}
                                 sx={{ maxWidth: "350px" }}
                             />

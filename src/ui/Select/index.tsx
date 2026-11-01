@@ -100,7 +100,7 @@ const Select: React.FC<PropsSelect> = (props) => {
             transition: 'transform 0.2s',
             transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : 'none'
         }),
-        clearIndicator: (base, state) => ({
+        clearIndicator: (base) => ({
             ...base,
             color: theme.palette.primary.light,
             '&:hover': {

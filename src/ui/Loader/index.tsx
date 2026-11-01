@@ -11,7 +11,6 @@ import Crutches from './Crutches';
 type Props = {
   className?: string;
   style?: React.CSSProperties;
-  size?: number | string;
   display?: 'inline';
   margin?: string;
   isLinear?: boolean;
@@ -45,7 +44,7 @@ const LoaderImage: React.FC = () => {
   return VARIANTS[variant]();
 };
 
-const Loader: React.FC<Props> = ({className, size = 40, display, isLinear, backdropMode, color, margin, style, smallSize, isDots}) => {
+const Loader: React.FC<Props> = ({className, display, isLinear, backdropMode, color, margin, style, smallSize, isDots}) => {
 
   const classes = [
     styles.Loader,

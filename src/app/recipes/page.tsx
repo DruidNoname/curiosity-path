@@ -2,7 +2,7 @@
 
 import React from "react";
 import {Box, Typography} from "@mui/material";
-import {useCourses, useKeywords} from "@/features/recipes/hooks";
+import {useCourses} from "@/features/recipes/hooks";
 import Loader from "@/ui/Loader";
 import {Stack} from "@mui/system";
 import Title from "../../components/Title";

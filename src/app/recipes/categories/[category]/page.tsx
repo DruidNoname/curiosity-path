@@ -1,7 +1,9 @@
 'use client';
 
-import React from "react";
-import {Box, Pagination} from "@mui/material";
+import React, {Suspense} from "react";
+import {Box} from "@mui/material";
+import Pagination from "@/ui/Pagination";
+import {usePageParam} from "@/helpers/usePageParam";
 import {useCourses, useRecipes} from "@/features/recipes/hooks";
 import {PER_PAGE} from "@/config/pagination";
 import {RecipeListItem} from "@/features/recipes/types";
@@ -9,11 +11,11 @@ import Loader from "@/ui/Loader";
 import { RecipePreview } from "@/modules/EntryPreview";
 import MainNAsideLayout from "@/components/Layouts/MainNAsideLayout";
 import Courses from "@/app/recipes/components/Courses";
-import {useParams} from "next/navigation";
+import {notFound, useParams} from "next/navigation";
 import Title from "@/components/Title";
 
-const RecipesCat: React.FC = () => {
-    const [page, setPage] = React.useState(1);
+const RecipesCatContent: React.FC = () => {
+    const { page, setPage } = usePageParam();
     const params = useParams();
     const slug = params?.category as string;
 
@@ -24,6 +26,10 @@ const RecipesCat: React.FC = () => {
 
     const course = courses?.find(c => c.slug === slug);
     const courseId = course?.id || undefined;
+
+    // Адрес из чужих рук может вести на несуществующий раздел. Страница клиентская, так что
+    // статус ответа останется 200, но показываем общую «не найдено», а не пустой список.
+    if (courses && !course) notFound();
 
     const {
         data,
@@ -62,11 +68,8 @@ const RecipesCat: React.FC = () => {
                             <Pagination
                                 sx={{ mt: 3, mb: 4 }}
                                 count={totalPages}
-                                page={page}
-                                onChange={(_e, newPage) => {
-                                    setPage(newPage);
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }}
+                                page={Math.min(page, totalPages)}
+                                onChange={(_e, newPage) => setPage(newPage)}
                                 disabled={isLoading}
                             />
                         }
@@ -80,5 +83,12 @@ const RecipesCat: React.FC = () => {
         </Box>
     );
 };
+
+// usePageParam читает useSearchParams, а без Suspense вокруг него Next не соберёт страницу.
+const RecipesCat: React.FC = () => (
+    <Suspense fallback={<Loader/>}>
+        <RecipesCatContent/>
+    </Suspense>
+);
 
 export default RecipesCat;

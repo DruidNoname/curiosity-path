@@ -1,6 +1,6 @@
-import {COURSES_URL, KEYWORDS_URL, RECIPES_URL, STALE_1H, STALE_5M} from "@/features/recipes/const";
+import {COURSES_URL, KEYWORDS_URL, STALE_1H, STALE_5M} from "@/features/recipes/const";
 import {PER_PAGE} from "@/config/pagination";
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 import {
     Course,
     Keyword,
@@ -9,17 +9,10 @@ import {
     UseCoursesParams,
     UseKeywordsParams
 } from "@/features/recipes/types";
-import {urls} from "@/config/urls";
-import {fetchRecipeBySlug} from "./api";
+import {fetchKeywordId, fetchRecipeBySlug, fetchRecipes, fetchTaxonomy, TaxonomyParams} from "./api";
 
-
-type TaxonomyParams = {
-    orderby?: string;
-    order?: string;
-    perPage?: number;
-    hideEmpty?: boolean;
-};
-
+// Фабрика для однотипных списков терминов: useCourses и useKeywords отличаются только
+// адресом и ключом кеша. Сам запрос — в api.ts.
 const useTaxonomy = <T>(url: string, cacheKey: string, {
     orderby = 'count',
     order = 'desc',
@@ -28,36 +21,17 @@ const useTaxonomy = <T>(url: string, cacheKey: string, {
 }: TaxonomyParams) =>
     useQuery<T[]>({
         queryKey: [cacheKey, { orderby, order, perPage, hideEmpty }],
-        queryFn: async () => {
-            const params = new URLSearchParams({
-                per_page: String(perPage),
-                orderby,
-                order,
-                ...(hideEmpty && { hide_empty: 'true' }),
-            });
-            const res = await fetch(`${url}?${params}`);
-            if (!res.ok) {
-                const error = await res.json().catch(() => ({}));
-                throw new Error(error.message || `Ошибка при получении ${cacheKey}`);
-            }
-            return res.json();
-        },
+        queryFn: () => fetchTaxonomy<T>(url, cacheKey, { orderby, order, perPage, hideEmpty }),
         staleTime: STALE_5M,
     });
 
-const useTagId = (tagSlug?: string) => {
-    return useQuery({
-        queryKey: ['tag-id', tagSlug],
-        queryFn: async () => {
-            if (!tagSlug) return null;
-            const res = await fetch(`${urls.api}/wprm_keyword?slug=${tagSlug}`);
-            const tags = await res.json();
-            return tags.length > 0 ? tags[0].id : null;
-        },
-        enabled: !!tagSlug,
+/** id ключевого слова рецептов по slug; null — такого ключевого слова нет. */
+export const useKeywordId = (slug?: string) =>
+    useQuery<number | null>({
+        queryKey: ['keyword-id', slug],
+        queryFn: slug ? () => fetchKeywordId(slug) : skipToken,
         staleTime: STALE_1H,
     });
-};
 
 export const useRecipes = (
     page = 1,
@@ -68,32 +42,7 @@ export const useRecipes = (
 ) => {
     return useQuery<RecipesResponse>({
         queryKey: ['recipes', page, perPage, courseID, tagId],
-        queryFn: async () => {
-            let url = `${RECIPES_URL}?page=${page}&per_page=${perPage}`;
-
-            if (courseID) {
-                url += `&wprm_course=${courseID}`;
-            }
-
-            if (tagId) {
-                url += `&wprm_keyword=${tagId}`;
-            }
-
-            const res = await fetch(url);
-            if (!res.ok) throw new Error('Ошибка при получении рецептов');
-
-            const total = res.headers.get('X-WP-Total') || '0';
-            const totalPages = res.headers.get('X-WP-TotalPages') || '1';
-            const recipes = await res.json();
-
-            return {
-                recipes,
-                total: parseInt(total, 10),
-                totalPages: parseInt(totalPages, 10),
-                currentPage: page,
-                perPage: perPage
-            };
-        },
+        queryFn: () => fetchRecipes({ page, perPage, courseId: courseID, keywordId: tagId }),
         staleTime: STALE_5M,
         enabled: enabled ?? true,
     });
@@ -104,7 +53,7 @@ export const useRecipesByTagSlug = (
     perPage = PER_PAGE,
     tagSlug?: string
 ) => {
-    const { data: tagId } = useTagId(tagSlug);
+    const { data: tagId } = useKeywordId(tagSlug);
 
     return useRecipes(page, perPage, undefined, !!tagSlug && !!tagId, tagId || undefined);
 };
@@ -116,7 +65,7 @@ export const useKeywords = (params: UseKeywordsParams = {}) =>
     useTaxonomy<Keyword>(KEYWORDS_URL, 'keywords', params);
 
 export const useRecipeBySlug = (slug: string) =>
-    useQuery<RecipeListItem>({
+    useQuery<RecipeListItem | null>({
         queryKey: ['recipe', slug],
         queryFn: () => fetchRecipeBySlug(slug),
         enabled: !!slug,

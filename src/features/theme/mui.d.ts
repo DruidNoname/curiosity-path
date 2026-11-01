@@ -1,8 +1,11 @@
-import React from "react";
 import '@mui/material/styles';
 import '@mui/material/Paper';
 import '@mui/material/Card';
 import '@mui/material/Link';
+// Ключи пикеров в теме (MuiPickerDay, MuiDateCalendar…) типизирует сам MUI X. Раньше они
+// были описаны здесь вручную и устарели: в MUI X 9 MuiPickersDay стал MuiPickerDay, а
+// ручной тип продолжал пропускать старое имя, и стиль молча перестал бы применяться.
+import '@mui/x-date-pickers/themeAugmentation';
 
 
 declare module '@mui/material/styles' {
@@ -17,64 +20,7 @@ declare module '@mui/material/styles' {
             customColor?: string;
         };
     }
-
-    interface Components {
-        MuiDateCalendar?: {
-            styleOverrides?: {
-                root?: React.CSSProperties;
-            };
-        };
-        MuiDayCalendar?: {
-            styleOverrides?: {
-                root?: React.CSSProperties;
-                weekDayLabel?: React.CSSProperties;
-                weekContainer?: React.CSSProperties;
-            };
-        };
-        MuiPickersDay?: {
-            styleOverrides?: {
-                root?: React.CSSProperties;
-                selected?: React.CSSProperties;
-                disabled?: React.CSSProperties;
-            };
-        };
-        MuiPickersCalendarHeader?: {
-            styleOverrides?: {
-                root?: React.CSSProperties;
-                label?: React.CSSProperties;
-                switchViewButton?: React.CSSProperties;
-            };
-        };
-
-        MuiPickersFadeTransitionGroup?: {
-            styleOverrides?: {
-                root?: {
-                    '&.MuiDateCalendar-viewTransitionContainer'?: CSSObject;
-                } | CSSObject;
-            };
-        };
-
-        MuiMonthCalendar?: {
-            styleOverrides?: {
-                root?: React.CSSProperties;
-            };
-        };
-
-        MuiYearCalendar?: {
-            styleOverrides?: {
-                root?: React.CSSProperties;
-            };
-        };
-    }
 }
-// Добавляем компоненты MUI X, которые хотим стилизовать
-// MuiDateCalendar: 'root';
-// MuiDatePicker: 'root';
-// MuiPickersDay: 'root' | 'selected' | 'disabled';
-// MuiPickersCalendarHeader: 'root' | 'label' | 'switchViewButton';
-// MuiDayCalendar: 'root' | 'weekContainer' | 'weekDayLabel';
-// MuiMonthCalendar: 'root';
-// MuiYearCalendar: 'root';
 
 declare module '@mui/material/Paper' {
     interface PaperPropsVariantOverrides {

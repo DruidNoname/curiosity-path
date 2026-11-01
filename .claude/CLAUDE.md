@@ -7,10 +7,14 @@
 ## Стек
 
 - Next.js 16 (App Router) + React 19, TypeScript strict
-- MUI 7 (`@mui/material`) + Emotion — основная UI-библиотека
+- Node 24: `engines.node` в `package.json` — `24.x`. Vercel берёт версию оттуда, поверх
+  настроек проекта; `@types/node` держать на той же мажорной версии
+- MUI 9 (`@mui/material`) + Emotion — основная UI-библиотека; календари — `@mui/x-date-pickers` 9
 - CSS Modules для локальных стилей, Tailwind 4 подключён через postcss, но в компонентах не используется
 - TanStack Query 5 — основной дата-слой
-- Apollo Client — GraphQL, ровно одно место: виджет тегов на главной
+- Apollo Client — GraphQL, ровно одно место: виджет тегов на главной. Учебный, держится
+  намеренно; `ApolloProvider` стоит внутри виджета, а не в `ClientLayout`, чтобы Apollo
+  не ехал в бандл остальных страниц
 - Jest + ts-jest + Testing Library
 - Yarn 4 с `nodeLinker: node-modules` (`.yarnrc.yml` в git), версия закреплена полем
   `packageManager` в `package.json` и ставится через Corepack (`corepack enable`).
@@ -21,18 +25,21 @@
 ## Команды
 
 ```bash
-npm run dev            # дев-сервер
-npm run build          # прод-сборка
-npm test               # jest
-npm run test:watch
-npm run test:coverage
-npm run lint           # eslint (flat-конфиг)
-npx tsc --noEmit       # типы
+yarn install           # зависимости (Yarn 4; сначала один раз `corepack enable`)
+yarn dev               # дев-сервер
+yarn build             # прод-сборка
+yarn test              # jest
+yarn test:watch
+yarn test:coverage
+yarn lint              # eslint (flat-конфиг)
+yarn tsc --noEmit      # типы
 ```
 
-Конфиг линтера один — `eslint.config.js` (flat). `next/core-web-vitals` подключён через
-`FlatCompat`, потому что `eslint-config-next@15.x` ещё не отдаёт flat-конфиг; при обновлении
-пакета до 16.x слой совместимости можно убрать.
+Конфиг линтера один — `eslint.config.mjs` (flat), `next/core-web-vitals` импортируется
+из `eslint-config-next` напрямую. Расширение `.mjs` — потому что `package.json` без
+`"type": "module"`. `eslint-config-next` тянет свои `typescript-eslint` и
+`eslint-plugin-react-hooks`: версии в нашем `package.json` держать не ниже его, иначе
+в `node_modules` окажутся две копии плагина и eslint упадёт с `Cannot redefine plugin`.
 
 ## Структура
 
@@ -44,7 +51,7 @@ src/
   ui/            тонкие обёртки над MUI (Link, Buttons, Spoiler, Pagination, Loader, Skeleton, Image, Select, Calendar)
   features/      вертикальные срезы: posts, recipes, tags, breath, query, theme
   config/        urls (единая точка правды по адресам), site, pagination, graphql (Apollo client)
-  helpers/       утилиты общего назначения; каждая — папкой: wp-html, wp-text, usePageParam
+  helpers/       утилиты общего назначения; каждая — папкой: wp-html, wp-text, usePageParam, useIsClient
   styles/        глобальный css + точка расширения для css-переменных
   assets/        шрифты и изображения
 ```
@@ -69,7 +76,7 @@ features/<name>/
 Правила:
 
 - **Компоненты никогда не фетчат напрямую** — только через хук из `features/*/hooks.ts`.
-- **Ключ запроса** — `[entity, ...params]`: `['posts', page, perPage]`, `['posts', 'tag', slug, page, perPage]`, `['recipe', slug]`.
+- **Ключ запроса** — `[entity, ...params]`: `['posts', page, perPage]`, `['posts', 'tag', tagId, page, perPage]`, `['recipe', slug]`.
 - **Контракт ответа списка** — единый во всех api-функциях:
   ```ts
   { posts, total, totalPages, currentPage, perPage }
@@ -121,7 +128,12 @@ features/<name>/
 
 - Один компонент = папка `Name/index.tsx` + при необходимости `style.module.css`.
 - Каждая страница и каждый крупный модуль обёрнуты в `<ErrorBoundary componentName="..." />` —
-  имя нужно для диагностики, указывать всегда.
+  имя нужно для диагностики, указывать всегда. Запасной экран — `ErrorBoundary/Fallback`
+  на цветах темы; «Попробовать снова» сбрасывает границу без перезагрузки страницы.
+  Свой экран можно передать пропом `fallback`.
+- **Кнопка, отрисованная не как `<button>`** (`Button`, `IconButton`, `MenuItem`, день
+  календаря с `component={Link}` или `'a'`), получает `nativeButton={false}` — иначе
+  MUI 9 ругается в консоли (см. `Nav`, `PostCalendar/DayWithLink`).
 - Импорты MUI — только верхнего уровня (`@mui/material`, `@mui/material/Button`).
   Глубокие импорты `@mui/*/*/*` запрещены правилом eslint `no-restricted-imports`.
 - **Ссылки — обычный `<Link>` из `@mui/material`.** В теме (`BaseTheme/dsBaseTheme.ts`)
@@ -151,14 +163,15 @@ const { data } = usePosts(page, PER_PAGE);
 - **Мусор в параметре — это первая страница.** По ссылке из чужих рук приходит что
   угодно; `?page=abc`, `?page=0`, `?page=-3` не должны ничего ронять.
 - **Компонент с `usePageParam` обязан быть под `<Suspense>`.** Этого требует
-  `useSearchParams`: без него статическая страница не собирается. Поэтому у `/` и
-  `/tag/[slug]` страница разделена на `…Content` и тонкую обёртку с Suspense.
+  `useSearchParams`: без него статическая страница не собирается. Поэтому у `/`,
+  `/tag/[slug]` и списков рецептов страница разделена на `…Content` и тонкую обёртку
+  с Suspense.
 - `Math.min(page, totalPages)` в `page` — чтобы MUI не ругался, когда в адресе номер
   больше, чем есть страниц.
 
-Так сделаны `/`, `/search` и `/tag/[slug]`. Списки рецептов
-(`/recipes/categories/[category]`, `/recipes/keywords/[keyword]`) пока на локальном
-`useState` — при правках их стоит перевести на тот же хук.
+Так сделаны все списки: `/`, `/search`, `/tag/[slug]`, `/recipes/categories/[category]`
+и `/recipes/keywords/[keyword]`. Компонент пагинации — обёртка `@/ui/Pagination`, не
+`Pagination` из MUI напрямую.
 
 ## Работа с HTML из WordPress
 
@@ -198,13 +211,14 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
-`src/helpers/wp-text`, `src/helpers/usePageParam`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
-`features/breath/plan.ts`, `app/about/utils.ts` и `ui/Loader/variants.ts` (106 тестов, 17 сьютов).
+`src/helpers/wp-text`, `src/helpers/usePageParam`, `src/helpers/useIsClient`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
+`features/posts/api.ts` (пока только `fetchPostsByTag`), `features/recipes/api.ts`, `features/breath/plan.ts`,
+`app/about/utils.ts`, `ui/Loader/variants.ts` и `components/ErrorBoundary` (125 тестов, 21 сьют).
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
 
 ## Журнал изменений
 
-`CHANGELOG.md` в корне — что менялось в проекте, по датам, от новых к старым.
+`.claude/CHANGELOG.md` — что менялось в проекте, по датам, от новых к старым.
 **Каждая доработка добавляет туда запись в той же ветке**, под заголовком с датой и с
 категорией: Добавлено, Изменено, Исправлено или Документация. Пишется для человека: что
 изменилось для сайта или проекта, а не какие файлы тронуты. Номер пулл-реквеста
@@ -224,6 +238,12 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
   разрядку и полужирный эмоушен-классом, а эмоушен вставляет свои стили в `<head>`
   после CSS-модулей — при равной специфичности побеждает он. Правится через `sx`
   (кладётся поверх темы) или `&&` внутри `styled` (см. `ui/Buttons/TextButton`).
+- **То, что есть только в браузере, — через `useIsClient`.** `window`, сегодняшняя дата,
+  выбранная тема: прочитанные прямо в рендере, они разводят серверный HTML с клиентским
+  при гидрации. `useState` + `setState` в `useEffect` линтер запрещает
+  (`react-hooks/set-state-in-effect`); `useIsClient` из `@/helpers/useIsClient` даёт
+  `false` до гидрации и `true` после. Если значение нужно только в обработчике, читать
+  его там, без хука.
 - **У кнопки-тумблера нельзя переключать `type`.** React успевает перерисовать кнопку
   внутри обработки клика, и браузер выполняет действие по умолчанию уже для нового
   типа: `button` → `submit` превращал «Остановить» в перезапуск. Тип оставляют
@@ -233,7 +253,7 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 
 ## Известные долги
 
-Ведутся в `TECH_DEBT.md` в корне: что сделано не так, чем это мешает и как отдать долг,
+Ведутся в `.claude/TECH_DEBT.md`: что сделано не так, чем это мешает и как отдать долг,
 плюс осознанные решения, которые чинить не надо (например, клиентская отрисовка
 контента). Перед правками в данных, роутах, зависимостях или конфиге линтера —
 заглянуть туда. Закрыл пункт — удали его оттуда и запиши в `CHANGELOG.md`; нашёл новый

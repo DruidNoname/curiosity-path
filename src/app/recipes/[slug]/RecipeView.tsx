@@ -13,7 +13,7 @@ import {UNIT_MAP} from "@/features/recipes/const";
 import MainNAsideLayout from "@/components/Layouts/MainNAsideLayout";
 import RecipeCalculator from "@/app/recipes/[slug]/components/RecipeCalculator";
 import RecipeInstructions from "@/app/recipes/[slug]/components/RecipeInstructions";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {notFound, usePathname, useRouter, useSearchParams} from "next/navigation";
 import RecipeIntro from "@/app/recipes/[slug]/components/RecipeIntro";
 import RecipeTips from "@/app/recipes/[slug]/components/RecipeTips";
 import {useTheme} from "@mui/material/styles";
@@ -63,6 +63,9 @@ const Recipe: React.FC<Props> = ({ slug }) =>  {
     );
 
     if (isLoading) return <Loader />;
+    // Обычно до сюда не доходит: несуществующую запись отсекает серверный page.tsx.
+    // Но если она пропала, пока страница была открыта, — та же 404, а не падение.
+    if (data === null) notFound();
 
     return(
         <ErrorBoundary componentName={'Recipe'}>
@@ -74,7 +77,7 @@ const Recipe: React.FC<Props> = ({ slug }) =>  {
                         <>
                             <RecipeIntro imageUrl={recipe?.image_url || ''} imageTitle={recipe?.name || 'Изображение блюда'} recipePreview={recipe?.summary || ''} />
                             {isMobile && <>
-                                <IngredientsList ingredients={ ingredientsWithFixedUnits } isLoading={isLoading}/>
+                                <IngredientsList ingredients={ ingredientsWithFixedUnits }/>
                                 <Accordion sx={{mb: 2}}>
                                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                         <Typography variant="h5" sx={{ paddingBottom: 0 }}>
@@ -98,7 +101,7 @@ const Recipe: React.FC<Props> = ({ slug }) =>  {
                         <>
                             {!isMobile &&
                                 <>
-                                    <IngredientsList ingredients={ ingredientsWithFixedUnits } isLoading={isLoading}/>
+                                    <IngredientsList ingredients={ ingredientsWithFixedUnits }/>
                                     <RecipeCalculator
                                         ingredients={ingredientsWithFixedUnits}
                                         setMultiplier={handleMultiplierChange}

@@ -6,7 +6,7 @@ import { colors as lightColors } from './LightTheme/Colors';
 import { buildCssVars, type ThemeColorTokens } from './model/utils';
 
 /**
- * Единая тема на нативной системе цветовых схем MUI v6 (`colorSchemes` + CSS-переменные).
+ * Единая тема на нативной системе цветовых схем MUI (с v6; `colorSchemes` + CSS-переменные).
  *
  * Зачем так:
  *  - Раньше было два отдельных объекта темы, а активный выбирался React-стейтом, который

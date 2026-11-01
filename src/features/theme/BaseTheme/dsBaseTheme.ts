@@ -93,7 +93,7 @@ export const baseThemeOptions: ThemeOptions = {
                         backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.3)',
                         borderRadius: '4px',
                         '&:hover': {
-                            backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.5)',
+                                backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.5)',
                         },
                     },
                 },
@@ -168,7 +168,7 @@ export const baseThemeOptions: ThemeOptions = {
                         border: `1px solid rgba(var(--color-primary-main-rgb), 0.3)`,
                         color: 'var(--color-primary-light)',
                         '&:hover': {
-                            backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.1)',
+                                backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.1)',
                             border: `1px solid rgba(var(--color-primary-main-rgb), 0.5)`,
                         },
                     },
@@ -180,7 +180,7 @@ export const baseThemeOptions: ThemeOptions = {
                         border: `1px solid rgba(var(--color-secondary-main-rgb), 0.3)`,
                         color: 'var(--color-secondary-light)',
                         '&:hover': {
-                            backgroundColor: 'rgba(var(--color-secondary-main-rgb), 0.1)',
+                                backgroundColor: 'rgba(var(--color-secondary-main-rgb), 0.1)',
                             border: `1px solid rgba(var(--color-secondary-main-rgb), 0.5)`,
                         },
                     },
@@ -190,7 +190,7 @@ export const baseThemeOptions: ThemeOptions = {
                     style: {
                         color: 'var(--color-primary-main)',
                         '&:hover': {
-                            backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.08)',
+                                backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.08)',
                         },
                     },
                 },
@@ -252,13 +252,13 @@ export const baseThemeOptions: ThemeOptions = {
                             background: `linear-gradient(90deg, transparent, var(--color-primary-main), transparent)`,
                         },
                         '& .MuiTypography-root': {
-                            color: 'var(--color-text-primary)',
+                                color: 'var(--color-text-primary)',
                         },
                         '& .MuiTypography-h5': {
-                            color: 'var(--color-primary-light)',
+                                color: 'var(--color-primary-light)',
                         },
                         '& .MuiTypography-body2': {
-                            color: 'var(--color-text-secondary)',
+                                color: 'var(--color-text-secondary)',
                         },
                     },
 
@@ -355,13 +355,13 @@ export const baseThemeOptions: ThemeOptions = {
                             background: `linear-gradient(90deg, transparent, var(--color-primary-main), transparent)`,
                         },
                         '& .MuiTypography-root': {
-                            color: 'var(--color-text-primary)',
+                                color: 'var(--color-text-primary)',
                         },
                         '& .MuiTypography-h5': {
-                            color: 'var(--color-primary-light)',
+                                color: 'var(--color-primary-light)',
                         },
                         '& .MuiTypography-body2': {
-                            color: 'var(--color-text-secondary)',
+                                color: 'var(--color-text-secondary)',
                         },
                     },
 
@@ -449,31 +449,47 @@ export const baseThemeOptions: ThemeOptions = {
         },
         MuiAlert: {
             styleOverrides: {
+                // В MUI 9 ключей вида standardInfo нет: сочетания severity и variant
+                // описываются через variants.
                 root: {
                     borderRadius: 4,
                     fontWeight: 500,
                     backdropFilter: 'blur(10px)',
                     border: '1px solid transparent',
-                },
-                standardInfo: {
-                    backgroundColor: 'rgba(var(--color-info-main-rgb), 0.15)',
-                    borderColor: 'rgba(var(--color-primary-main-rgb), 0.3)',
-                    color: 'var(--color-primary-light)',
-                },
-                standardSuccess: {
-                    backgroundColor: 'rgba(var(--color-success-main-rgb), 0.15)',
-                    borderColor: 'rgba(var(--color-success-light-rgb), 0.3)',
-                    color: 'var(--color-success-light)',
-                },
-                standardWarning: {
-                    backgroundColor: 'rgba(var(--color-warning-main-rgb), 0.15)',
-                    borderColor: 'rgba(var(--color-warning-light-rgb), 0.3)',
-                    color: 'var(--color-warning-light)',
-                },
-                standardError: {
-                    backgroundColor: 'rgba(var(--color-error-main-rgb), 0.15)',
-                    borderColor: 'rgba(var(--color-error-light-rgb), 0.3)',
-                    color: 'var(--color-error-light)',
+                    variants: [
+                        {
+                            props: { variant: 'standard', severity: 'info' },
+                            style: {
+                                backgroundColor: 'rgba(var(--color-info-main-rgb), 0.15)',
+                                borderColor: 'rgba(var(--color-primary-main-rgb), 0.3)',
+                                color: 'var(--color-primary-light)',
+                            },
+                        },
+                        {
+                            props: { variant: 'standard', severity: 'success' },
+                            style: {
+                                backgroundColor: 'rgba(var(--color-success-main-rgb), 0.15)',
+                                borderColor: 'rgba(var(--color-success-light-rgb), 0.3)',
+                                color: 'var(--color-success-light)',
+                            },
+                        },
+                        {
+                            props: { variant: 'standard', severity: 'warning' },
+                            style: {
+                                backgroundColor: 'rgba(var(--color-warning-main-rgb), 0.15)',
+                                borderColor: 'rgba(var(--color-warning-light-rgb), 0.3)',
+                                color: 'var(--color-warning-light)',
+                            },
+                        },
+                        {
+                            props: { variant: 'standard', severity: 'error' },
+                            style: {
+                                backgroundColor: 'rgba(var(--color-error-main-rgb), 0.15)',
+                                borderColor: 'rgba(var(--color-error-light-rgb), 0.3)',
+                                color: 'var(--color-error-light)',
+                            },
+                        },
+                    ],
                 },
             },
         },
@@ -722,7 +738,7 @@ export const baseThemeOptions: ThemeOptions = {
                 }
             }
         },
-        MuiPickersDay: {
+        MuiPickerDay: {
             styleOverrides: {
                 root: {
                     width: '32px',

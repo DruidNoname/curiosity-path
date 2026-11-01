@@ -45,8 +45,7 @@ const BreathRunDialog: React.FC<Props> = ({tick, run, isPaused, onPause, onResum
             // Esc и клик по фону не бросают прогон, а ставят его на паузу: потерять
             // сосчитанное случайным нажатием обиднее, чем лишний раз нажать «Продолжить».
             onClose={onPause}
-            // В MUI 6.1 у Dialog в slotProps ещё нет paper — только root и backdrop.
-            PaperProps={{className: styles.Paper}}
+            slotProps={{paper: {className: styles.Paper}}}
         >
             {tick ? (
                 <Box className={styles.Content}>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Suspense } from "react";
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { PostWithTags } from "@/features/posts/types";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Box, Divider, Typography } from "@mui/material";
@@ -33,13 +33,18 @@ const TagPageContent: React.FC = () => {
         data: postsData,
         isLoading: isPostsLoading,
         isError: isPostsError,
-    } = usePostsByTag(slug, page, PER_PAGE);
+        error: postsError,
+    } = usePostsByTag(tagData?.id, page, PER_PAGE);
 
     const {
         posts = [],
         total = 0,
         totalPages = 1
     } = postsData || {};
+
+    // Адрес из чужих рук может вести на несуществующий тег. Страница клиентская, так что
+    // статус ответа останется 200, но показываем общую «не найдено», а не пустой список.
+    if (tagData === null) notFound();
 
     if (isLoading && page === 1) {
         return (
@@ -90,7 +95,7 @@ const TagPageContent: React.FC = () => {
                 </Box>
                 {(isLoading || isPostsLoading) && page > 1 ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-                        <Loader size={40} />
+                        <Loader />
                     </Box>
                 ) : (
                     <>
@@ -133,7 +138,7 @@ const TagPageContent: React.FC = () => {
                         </Typography>
                         <Divider sx={{ mx: 4, my: 2 }} />
                         <Typography variant="body2" component="p">
-                            Ошибка: {error?.message}
+                            Ошибка: {postsError?.message}
                         </Typography>
                     </>
                 )}

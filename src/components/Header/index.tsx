@@ -13,6 +13,7 @@ import { useColorScheme } from '@mui/material/styles';
 import { Brightness4, Brightness7 } from '@mui/icons-material';
 import Menu from '../Nav';
 import {TextSimilarLink} from '@/ui/Link';
+import {useIsClient} from '@/helpers/useIsClient';
 
 type Props = {
     title: string
@@ -24,8 +25,7 @@ const Header: React.FC<Props> = ({ title }) => {
     // До монтирования cхема ещё неизвестна на клиенте — рендерим детерминированный
     // вариант, чтобы не вызвать рассинхронизацию гидрации (саму тему задаёт
     // InitColorSchemeScript до отрисовки, так что визуальной вспышки нет).
-    const [mounted, setMounted] = React.useState(false);
-    React.useEffect(() => setMounted(true), []);
+    const mounted = useIsClient();
 
     const resolvedMode = mode === 'system' ? systemMode : mode;
     const isDark = mounted && resolvedMode === 'dark';

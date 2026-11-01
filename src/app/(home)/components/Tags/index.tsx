@@ -2,12 +2,13 @@
 
 import React from 'react';
 import {Box, Link, Typography} from "@mui/material";
-import { useQuery } from '@apollo/client';
+import { ApolloProvider, useQuery } from '@apollo/client';
+import { client } from '@/config/graphql/graphql-client';
 import Skeleton from "@/ui/Skeleton";
 import {GET_ALL_TAGS} from "@/features/tags/queries";
 import {GraphQLTagsResponse} from "@/app/(home)/components/Tags/types";
 
-const Tags: React.FC = () => {
+const TagsList: React.FC = () => {
 
     const { data, loading, error} = useQuery<GraphQLTagsResponse>(GET_ALL_TAGS, {
         variables: { first: 100 },
@@ -48,5 +49,14 @@ const Tags: React.FC = () => {
         </Box>
     );
 };
+
+// Apollo в проекте учебный и живёт ровно в этом виджете, поэтому провайдер здесь, а не
+// в ClientLayout: иначе клиент GraphQL ехал бы в бандл каждой страницы. Если GraphQL
+// понадобится где-то ещё — поднимать провайдер до общего предка этих мест, не выше.
+const Tags: React.FC = () => (
+    <ApolloProvider client={client}>
+        <TagsList/>
+    </ApolloProvider>
+);
 
 export default Tags;
