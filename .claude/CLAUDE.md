@@ -156,14 +156,15 @@ const { data } = usePosts(page, PER_PAGE);
 - **Мусор в параметре — это первая страница.** По ссылке из чужих рук приходит что
   угодно; `?page=abc`, `?page=0`, `?page=-3` не должны ничего ронять.
 - **Компонент с `usePageParam` обязан быть под `<Suspense>`.** Этого требует
-  `useSearchParams`: без него статическая страница не собирается. Поэтому у `/` и
-  `/tag/[slug]` страница разделена на `…Content` и тонкую обёртку с Suspense.
+  `useSearchParams`: без него статическая страница не собирается. Поэтому у `/`,
+  `/tag/[slug]` и списков рецептов страница разделена на `…Content` и тонкую обёртку
+  с Suspense.
 - `Math.min(page, totalPages)` в `page` — чтобы MUI не ругался, когда в адресе номер
   больше, чем есть страниц.
 
-Так сделаны `/`, `/search` и `/tag/[slug]`. Списки рецептов
-(`/recipes/categories/[category]`, `/recipes/keywords/[keyword]`) пока на локальном
-`useState` — при правках их стоит перевести на тот же хук.
+Так сделаны все списки: `/`, `/search`, `/tag/[slug]`, `/recipes/categories/[category]`
+и `/recipes/keywords/[keyword]`. Компонент пагинации — обёртка `@/ui/Pagination`, не
+`Pagination` из MUI напрямую.
 
 ## Работа с HTML из WordPress
 
