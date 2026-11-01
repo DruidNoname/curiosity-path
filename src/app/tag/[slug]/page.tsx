@@ -33,7 +33,8 @@ const TagPageContent: React.FC = () => {
         data: postsData,
         isLoading: isPostsLoading,
         isError: isPostsError,
-    } = usePostsByTag(slug, page, PER_PAGE);
+        error: postsError,
+    } = usePostsByTag(tagData?.id, page, PER_PAGE);
 
     const {
         posts = [],
@@ -133,7 +134,7 @@ const TagPageContent: React.FC = () => {
                         </Typography>
                         <Divider sx={{ mx: 4, my: 2 }} />
                         <Typography variant="body2" component="p">
-                            Ошибка: {error?.message}
+                            Ошибка: {postsError?.message}
                         </Typography>
                     </>
                 )}

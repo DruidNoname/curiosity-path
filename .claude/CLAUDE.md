@@ -72,7 +72,7 @@ features/<name>/
 Правила:
 
 - **Компоненты никогда не фетчат напрямую** — только через хук из `features/*/hooks.ts`.
-- **Ключ запроса** — `[entity, ...params]`: `['posts', page, perPage]`, `['posts', 'tag', slug, page, perPage]`, `['recipe', slug]`.
+- **Ключ запроса** — `[entity, ...params]`: `['posts', page, perPage]`, `['posts', 'tag', tagId, page, perPage]`, `['recipe', slug]`.
 - **Контракт ответа списка** — единый во всех api-функциях:
   ```ts
   { posts, total, totalPages, currentPage, perPage }
@@ -202,7 +202,8 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
 `src/helpers/wp-text`, `src/helpers/usePageParam`, `src/helpers/useIsClient`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
-`features/breath/plan.ts`, `app/about/utils.ts` и `ui/Loader/variants.ts` (108 тестов, 18 сьютов).
+`features/posts/api.ts` (пока только `fetchPostsByTag`), `features/breath/plan.ts`, `app/about/utils.ts`
+и `ui/Loader/variants.ts` (111 тестов, 19 сьютов).
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
 
 ## Журнал изменений

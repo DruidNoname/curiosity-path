@@ -1,5 +1,4 @@
 import {ADDON_POSTS_URL, CAPOEIRA_CATEGORY_ID, POSTS_URL} from "./const";
-import {urls} from "@/config/urls";
 import {PER_PAGE} from "@/config/pagination";
 import {toPlainText} from "@/helpers/wp-text";
 import {WP_REST_API_Post} from "wp-types";
@@ -164,43 +163,30 @@ export const fetchPostsBySearch = async (search: string, page: number = 1, perPa
     };
 };
 
-export const fetchPostsByTag = async (tagSlug: string, page: number = 1, perPage: number = PER_PAGE) => {
-    try {
-        // Сначала получаем ID тега по slug
-        const tagResponse = await fetch(
-            `${urls.api}/tags?slug=${tagSlug}`
-        );
-        const tags = await tagResponse.json();
+// Принимает id, а не slug: страница тега и так загружает тег через useTag, и раньше
+// эта функция повторяла тот же запрос /tags?slug=… — да ещё на каждой странице пагинации.
+export const fetchPostsByTag = async (tagId: number, page: number = 1, perPage: number = PER_PAGE): Promise<PostsResponse> => {
+    const params = new URLSearchParams({
+        tags: tagId.toString(),
+        page: page.toString(),
+        per_page: perPage.toString(),
+        status: 'publish',
+    });
 
-        if (!tags.length) {
-            throw new Error('Тег не найден');
-        }
+    const res = await fetch(`${POSTS_URL}?${params.toString()}&_embed`);
+    if (!res.ok) throw new Error('Ошибка при загрузке постов');
 
-        const tagId = tags[0].id;
+    const total = res.headers.get('X-WP-Total') || '0';
+    const totalPages = res.headers.get('X-WP-TotalPages') || '1';
+    const posts = await res.json();
 
-        // Получаем посты по ID тега
-        const response = await fetch(
-            `${urls.api}/posts?tags=${tagId}&page=${page}&per_page=${perPage}&_embed`
-        );
-
-        if (!response.ok) {
-            throw new Error('Ошибка при загрузке постов');
-        }
-
-        const posts: PostWithTags[] = (await response.json()).map(withTags);
-        const total = response.headers.get('X-WP-Total');
-        const totalPages = response.headers.get('X-WP-TotalPages');
-
-        return {
-            posts,
-            total: total ? parseInt(total) : 0,
-            totalPages: totalPages ? parseInt(totalPages) : 1,
-            tag: tags[0]
-        };
-    } catch (error) {
-        console.error('Error fetching posts by tag:', error);
-        throw error;
-    }
+    return {
+        posts: posts.map(withTags),
+        total: parseInt(total, 10),
+        totalPages: parseInt(totalPages, 10),
+        currentPage: page,
+        perPage: perPage
+    };
 };
 
 export const fetchCapoeiraSongs = async (page: number = 1, perPage: number = PER_PAGE): Promise<SongsResponse> => {
