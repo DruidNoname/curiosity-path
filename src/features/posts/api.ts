@@ -126,11 +126,14 @@ export const fetchPostsByToday = async (
     };
 };
 
-export const fetchPost = async (slug: string): Promise<TransformedPost> => {
-    const res = await fetch(`${POSTS_URL}?slug=${slug}&_embed`);
+// null — записи с таким slug нет (страница отдаёт 404); исключение — WordPress не ответил.
+// Различать их важно: опечатка в адресе — это «не найдено», а не «ошибка».
+export const fetchPost = async (slug: string): Promise<TransformedPost | null> => {
+    const res = await fetch(`${POSTS_URL}?slug=${encodeURIComponent(slug)}&_embed`);
     if (!res.ok) throw new Error('Ошибка при получении поста');
     const posts = await res.json();
-    const post = posts[0] || null;
+    const post = posts[0];
+    if (!post) return null;
     const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
     return {
         ...post,

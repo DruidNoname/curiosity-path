@@ -45,7 +45,8 @@ const useTaxonomy = <T>(url: string, cacheKey: string, {
         staleTime: STALE_5M,
     });
 
-const useTagId = (tagSlug?: string) => {
+/** id ключевого слова рецептов по slug; null — такого ключевого слова нет. */
+export const useKeywordId = (tagSlug?: string) => {
     return useQuery({
         queryKey: ['tag-id', tagSlug],
         queryFn: async () => {
@@ -104,7 +105,7 @@ export const useRecipesByTagSlug = (
     perPage = PER_PAGE,
     tagSlug?: string
 ) => {
-    const { data: tagId } = useTagId(tagSlug);
+    const { data: tagId } = useKeywordId(tagSlug);
 
     return useRecipes(page, perPage, undefined, !!tagSlug && !!tagId, tagId || undefined);
 };
@@ -116,7 +117,7 @@ export const useKeywords = (params: UseKeywordsParams = {}) =>
     useTaxonomy<Keyword>(KEYWORDS_URL, 'keywords', params);
 
 export const useRecipeBySlug = (slug: string) =>
-    useQuery<RecipeListItem>({
+    useQuery<RecipeListItem | null>({
         queryKey: ['recipe', slug],
         queryFn: () => fetchRecipeBySlug(slug),
         enabled: !!slug,

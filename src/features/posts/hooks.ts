@@ -50,7 +50,7 @@ export const usePostsByToday = (today: Date | null) => {
 
 
 export const usePost = (slug: string, options = {}) => {
-    return useQuery<TransformedPost>({
+    return useQuery<TransformedPost | null>({
         queryKey: ['post', slug],
         queryFn: () => fetchPost(slug),
         enabled: !!slug, // Запрос выполняется только если slug существует

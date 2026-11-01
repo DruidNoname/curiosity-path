@@ -11,7 +11,7 @@ import Loader from "@/ui/Loader";
 import { RecipePreview } from "@/modules/EntryPreview";
 import MainNAsideLayout from "@/components/Layouts/MainNAsideLayout";
 import Courses from "@/app/recipes/components/Courses";
-import {useParams} from "next/navigation";
+import {notFound, useParams} from "next/navigation";
 import Title from "@/components/Title";
 
 const RecipesCatContent: React.FC = () => {
@@ -26,6 +26,10 @@ const RecipesCatContent: React.FC = () => {
 
     const course = courses?.find(c => c.slug === slug);
     const courseId = course?.id || undefined;
+
+    // Адрес из чужих рук может вести на несуществующий раздел. Страница клиентская, так что
+    // статус ответа останется 200, но показываем общую «не найдено», а не пустой список.
+    if (courses && !course) notFound();
 
     const {
         data,

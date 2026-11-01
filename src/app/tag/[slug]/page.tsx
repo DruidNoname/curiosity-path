@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Suspense } from "react";
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { PostWithTags } from "@/features/posts/types";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Box, Divider, Typography } from "@mui/material";
@@ -41,6 +41,10 @@ const TagPageContent: React.FC = () => {
         total = 0,
         totalPages = 1
     } = postsData || {};
+
+    // Адрес из чужих рук может вести на несуществующий тег. Страница клиентская, так что
+    // статус ответа останется 200, но показываем общую «не найдено», а не пустой список.
+    if (tagData === null) notFound();
 
     if (isLoading && page === 1) {
         return (

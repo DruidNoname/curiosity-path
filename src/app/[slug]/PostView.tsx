@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { notFound } from 'next/navigation';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Box, Container, Divider, Typography} from "@mui/material";
 import { usePost } from "@/features/posts/hooks";
@@ -26,6 +27,9 @@ const Post: React.FC<PostProps> = ({ slug }) => {
     const featuredImage = post?.featuredImageUrl;
 
     if (isError) return <div>Ошибка: {error.message}</div>;
+    // Обычно до сюда не доходит: несуществующую запись отсекает серверный page.tsx.
+    // Но если она пропала, пока страница была открыта, — та же 404, а не падение.
+    if (post === null) notFound();
 
     return (
         <ErrorBoundary componentName={'Post'}>
