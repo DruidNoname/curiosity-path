@@ -19,8 +19,6 @@ export default function NotFound() {
                 </Typography>
                 <Typography variant="body1">
                     <Link href="/">На главную</Link>
-                    {' · '}
-                    <Link href="/search">Поиск по журналу</Link>
                 </Typography>
             </Box>
         </ErrorBoundary>
