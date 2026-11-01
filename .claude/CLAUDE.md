@@ -7,7 +7,7 @@
 ## Стек
 
 - Next.js 16 (App Router) + React 19, TypeScript strict
-- MUI 7 (`@mui/material`) + Emotion — основная UI-библиотека
+- MUI 9 (`@mui/material`) + Emotion — основная UI-библиотека; календари — `@mui/x-date-pickers` 9
 - CSS Modules для локальных стилей, Tailwind 4 подключён через postcss, но в компонентах не используется
 - TanStack Query 5 — основной дата-слой
 - Apollo Client — GraphQL, ровно одно место: виджет тегов на главной. Учебный, держится
@@ -129,6 +129,9 @@ features/<name>/
   имя нужно для диагностики, указывать всегда. Запасной экран — `ErrorBoundary/Fallback`
   на цветах темы; «Попробовать снова» сбрасывает границу без перезагрузки страницы.
   Свой экран можно передать пропом `fallback`.
+- **Кнопка, отрисованная не как `<button>`** (`Button`, `IconButton`, `MenuItem`, день
+  календаря с `component={Link}` или `'a'`), получает `nativeButton={false}` — иначе
+  MUI 9 ругается в консоли (см. `Nav`, `PostCalendar/DayWithLink`).
 - Импорты MUI — только верхнего уровня (`@mui/material`, `@mui/material/Button`).
   Глубокие импорты `@mui/*/*/*` запрещены правилом eslint `no-restricted-imports`.
 - **Ссылки — обычный `<Link>` из `@mui/material`.** В теме (`BaseTheme/dsBaseTheme.ts`)

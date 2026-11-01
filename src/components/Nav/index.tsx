@@ -54,6 +54,8 @@ const Menu: React.FC = () => {
                         <MenuItem
                             key={item.path}
                             component={Link}
+                            // Под пунктом — ссылка, а не <button>: MUI 9 требует сказать это явно.
+                            nativeButton={false}
                             href={item.path}
                             onClick={handleClose}
                         >
@@ -68,6 +70,7 @@ const Menu: React.FC = () => {
                     <Button
                         key={item.path}
                         component={Link}
+                        nativeButton={false}
                         href={item.path}
                         color="inherit"
                         sx={{
