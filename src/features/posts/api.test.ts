@@ -1,4 +1,4 @@
-import { fetchPostsByTag } from './api';
+import { buildSrcSet, fetchPostsByTag } from './api';
 
 const mockResponse = (body: unknown, headers: Record<string, string> = {}) => ({
     ok: true,
@@ -43,5 +43,39 @@ describe('fetchPostsByTag', () => {
     it('бросает ошибку, если WordPress ответил не 2xx', async () => {
         fetchMock.mockResolvedValue({ ok: false });
         await expect(fetchPostsByTag(42)).rejects.toThrow('Ошибка при загрузке постов');
+    });
+});
+
+describe('buildSrcSet', () => {
+    const size = (name: string, width: number) => ({ source_url: `https://wp.test/${name}.jpg`, width });
+
+    it('собирает medium, medium_large и large по возрастанию ширины, без thumbnail', () => {
+        const media = { media_details: { sizes: {
+            large: size('large', 1024),
+            thumbnail: size('thumb', 150),
+            medium: size('medium', 300),
+            medium_large: size('ml', 768),
+        } } };
+
+        expect(buildSrcSet(media)).toBe(
+            'https://wp.test/medium.jpg 300w, https://wp.test/ml.jpg 768w, https://wp.test/large.jpg 1024w',
+        );
+    });
+
+    it('схлопывает размеры одинаковой ширины', () => {
+        const media = { media_details: { sizes: { medium: size('a', 300), medium_large: size('b', 300) } } };
+
+        expect(buildSrcSet(media)).toBe('https://wp.test/a.jpg 300w');
+    });
+
+    it('берёт оригинал, если промежуточных размеров нет', () => {
+        const media = { source_url: 'https://wp.test/full.jpg', media_details: { width: 640, sizes: {} } };
+
+        expect(buildSrcSet(media)).toBe('https://wp.test/full.jpg 640w');
+    });
+
+    it('без данных о размерах возвращает пустую строку', () => {
+        expect(buildSrcSet({})).toBe('');
+        expect(buildSrcSet(undefined)).toBe('');
     });
 });

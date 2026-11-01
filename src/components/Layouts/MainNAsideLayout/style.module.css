@@ -19,6 +19,9 @@
 .asideContent {
     width: 100%;
     min-width: auto;
+    /* Ниже 600px колонка встаёт под основной контент, а у последней карточки нет нижнего
+       отступа — без своего зазора блок прилипает к ней. В две колонки отступ даёт gap. */
+    margin-top: 16px;
     padding: 24px;
     background-color: var(--mui-palette-background-paper);
     border-left: 1px solid var(--mui-palette-divider);
@@ -32,6 +35,7 @@
     .asideContent {
         width: 40%;
         min-width: 300px;
+        margin-top: 0;
     }
 }
 

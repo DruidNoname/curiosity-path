@@ -44,10 +44,12 @@ const SingleEntryTitle: React.FC<Props> = ({title, isLoading, date, tags, varian
                     className={styles.SingleEntrySubtitle}> { subtitle } </Typography> : null }
                 {date ? <Typography
                     variant="body1"
-                    component="div"> { `Запись от ${date}` } </Typography> : null }
+                    component="div"
+                    className={styles.Meta}> { `Запись от ${date}` } </Typography> : null }
                 {tags ? <Typography
                     variant="body1"
-                    component="div"> { `Теги: ${tags}` } </Typography> : null }
+                    component="div"
+                    className={styles.Meta}> { `Теги: ${tags}` } </Typography> : null }
             </Box>
             <Button
                 className={styles.BackButton}

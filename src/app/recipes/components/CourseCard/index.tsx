@@ -26,6 +26,9 @@ export const CourseCard: React.FC<Props> = ({ cat }) => {
                 },
                 textDecoration: 'none',
                 padding: 3,
+                // Справа в карточке — иконка категории (::after в style.module.css, right: 24px).
+                // Отступ считаем от неё, чтобы длинное название на узком экране не заезжало под картинку.
+                pr: 'calc(24px + var(--icon-height) + 16px)',
                 display: 'flex',
                 alignItems: 'center'
             }}

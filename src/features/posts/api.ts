@@ -2,7 +2,7 @@ import {ADDON_POSTS_URL, CAPOEIRA_CATEGORY_ID, POSTS_URL} from "./const";
 import {PER_PAGE} from "@/config/pagination";
 import {toPlainText} from "@/helpers/wp-text";
 import {WP_REST_API_Post} from "wp-types";
-import {PostsResponse, PostsByTodayResponse, PostTag, PostWithTags, SongsResponse, TransformedPost} from "./types";
+import {FeaturedImage, PostsResponse, PostsByTodayResponse, PostTag, PostWithTags, SongsResponse, TransformedPost} from "./types";
 
 // Запрос с _embed уже приносит термины записи в _embedded['wp:term'] — массив по таксономиям
 // (рубрики, теги). Берём теги оттуда, а не отдельным запросом на каждый тег: иначе список
@@ -14,6 +14,38 @@ const extractTags = (post: any): PostTag[] =>
         .map(({id, name, slug, link}: any) => ({id, name, slug, link}));
 
 const withTags = (post: any): PostWithTags => ({...post, postTags: extractTags(post)});
+
+// Размеры, из которых собирается srcSet превью. thumbnail (150×150) квадратный и обрезанный —
+// в превью не годится; full может весить мегабайты, он идёт в набор, только если других нет.
+const SRCSET_SIZES = ['medium', 'medium_large', 'large'] as const;
+
+type MediaSize = { source_url?: string; width?: number };
+
+// srcSet в формате `url 300w, url 768w`: браузер сам берёт размер под ширину экрана и плотность
+// пикселей. Раньше превью всегда получало medium (300px, у вертикальных снимков — 169px
+// по ширине), и на телефоне во всю ширину экрана картинка расплывалась.
+export const buildSrcSet = (media: any): string => {
+    const sizes: Record<string, MediaSize> = media?.media_details?.sizes ?? {};
+    const candidates: MediaSize[] = SRCSET_SIZES.map(name => sizes[name]).filter(Boolean);
+    if (candidates.length === 0) {
+        candidates.push({ source_url: media?.source_url, width: media?.media_details?.width });
+    }
+    const byWidth = new Map<number, string>();
+    for (const { source_url, width } of candidates) {
+        if (source_url && width && !byWidth.has(width)) byWidth.set(width, source_url);
+    }
+    return [...byWidth].sort(([a], [b]) => a - b).map(([w, url]) => `${url} ${w}w`).join(', ');
+};
+
+const toFeaturedImage = (media: any, renderedTitle: string): FeaturedImage => ({
+    full: media.source_url,
+    thumbnail: media.media_details?.sizes?.thumbnail?.source_url,
+    medium: media.media_details?.sizes?.medium?.source_url,
+    large: media.media_details?.sizes?.large?.source_url,
+    srcSet: buildSrcSet(media),
+    alt: media.alt_text || toPlainText(renderedTitle),
+    caption: media.caption?.rendered || '',
+});
 
 export const fetchPosts = async (page: number = 1, perPage: number = PER_PAGE): Promise<PostsResponse> => {
     const params = new URLSearchParams({
@@ -41,14 +73,7 @@ export const fetchPosts = async (page: number = 1, perPage: number = PER_PAGE): 
         return {
             ...withTags(post),
             // Добавляем удобные поля для изображений
-            featuredImage: featuredMedia ? {
-                full: featuredMedia.source_url,
-                thumbnail: featuredMedia.media_details?.sizes?.thumbnail?.source_url,
-                medium: featuredMedia.media_details?.sizes?.medium?.source_url,
-                large: featuredMedia.media_details?.sizes?.large?.source_url,
-                alt: featuredMedia.alt_text || toPlainText(post.title.rendered),
-                caption: featuredMedia.caption?.rendered || '',
-            } : null,
+            featuredImage: featuredMedia ? toFeaturedImage(featuredMedia, post.title.rendered) : null,
             // Или просто URL если нужно только это
             featuredImageUrl: featuredMedia?.source_url || null,
         };
@@ -210,14 +235,7 @@ export const fetchCapoeiraSongs = async (page: number = 1, perPage: number = PER
 
         return {
             ...song,
-            featuredImage: featuredMedia ? {
-                full: featuredMedia.source_url,
-                thumbnail: featuredMedia.media_details?.sizes?.thumbnail?.source_url,
-                medium: featuredMedia.media_details?.sizes?.medium?.source_url,
-                large: featuredMedia.media_details?.sizes?.large?.source_url,
-                alt: featuredMedia.alt_text || toPlainText(song.title.rendered),
-                caption: featuredMedia.caption?.rendered || '',
-            } : null,
+            featuredImage: featuredMedia ? toFeaturedImage(featuredMedia, song.title.rendered) : null,
             featuredImageUrl: featuredMedia?.source_url || null,
         };
     });

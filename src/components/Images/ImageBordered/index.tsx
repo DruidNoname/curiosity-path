@@ -9,11 +9,11 @@ type Props = BoxProps<'img'> & {
     alt: string;
 };
 export const ImageBordered: React.FC<Props> = (props) => {
-    const { classNameWrapper, alt, ...imageProps } = props;
+    const { classNameWrapper, className, alt, ...imageProps } = props;
 
     return (
         <Box className={[styles.ImageWrapper, classNameWrapper].join(' ')}>
-            <Image className={styles.Image} alt={alt} {...imageProps}/>
+            <Image className={[styles.Image, className].filter(Boolean).join(' ')} alt={alt} {...imageProps}/>
         </Box>
     );
 };

@@ -16,8 +16,10 @@ type Props = {
     entryDate?: string;
     entryTags?: PostTag[];
     entryImage?: string | null;
+    /** srcSet картинки (см. buildSrcSet в features/posts/api): без него на телефоне мыло. */
+    entryImageSrcSet?: string;
 }
-const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage }) => {
+const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage, entryImageSrcSet }) => {
     // Заголовок идёт в текстовый узел и в alt — нужен простой текст, не разметка.
     const title = React.useMemo(() => toPlainText(entryTitle) || 'Без названия', [entryTitle]);
     // createExcerpt запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
@@ -27,8 +29,8 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
     return (
         <ErrorBoundary componentName={'PostPreview'}>
             <Paper key={entryId} className={styles.PostPreview}>
-                <Box sx={{ mb: 1 }}>
-                    <Typography variant="h5" component="h5" sx={{ mb: 1 }}>
+                <Box className={styles.Heading}>
+                    <Typography variant="h5" component="h5" className={styles.Title}>
                         <Link href={entrySlug}>
                             { title }
                         </Link>
@@ -39,7 +41,15 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
                 </Box>
                 { entryImage ?
                     <>
-                        <ImageBordered src={ entryImage } alt={ title } classNameWrapper={styles.ImageBox}/>
+                        <ImageBordered
+                            src={ entryImage }
+                            srcSet={ entryImageSrcSet || undefined }
+                            // Ширина рамки превью: на телефоне — во всю колонку, с 600px — 210px.
+                            sizes="(min-width: 600px) 210px, 100vw"
+                            alt={ title }
+                            classNameWrapper={styles.ImageBox}
+                            className={styles.Image}
+                        />
                         <Box>
                             <EntryPreviewContent
                                 excerpt={excerpt || undefined}

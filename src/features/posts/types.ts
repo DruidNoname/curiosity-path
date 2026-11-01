@@ -5,6 +5,8 @@ export interface FeaturedImage {
     thumbnail: string;
     medium: string;
     large: string;
+    /** `url 300w, url 768w, …` — для <img srcSet>; пустая строка, если размеров нет. */
+    srcSet: string;
     alt: string;
     caption: string;
 }
