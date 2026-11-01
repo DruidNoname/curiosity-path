@@ -16,8 +16,11 @@ const Footer: React.FC<Props> = ({ copyright }) => {
             component="footer"
             variant={'contrast'}
             square
+            // square снимает только класс скругления, а радиус Paper задан в теме напрямую.
+            // Подвал прилегает к нижнему краю — скругляем только верх.
             sx={{
                 py: 2,
+                borderRadius: '8px 8px 0 0',
             }}
         >
             <Container maxWidth="lg">

@@ -22,6 +22,7 @@ const InfoWidget: React.FC<Props> = ( { count, isLoading, isError, error }) => {
                     <Typography
                         variant="h4"
                         component="h1"
+                        className={styles.Title}
                         sx={{mb: 2}}
                     >
                         Журнал открытой миру
@@ -29,6 +30,7 @@ const InfoWidget: React.FC<Props> = ( { count, isLoading, isError, error }) => {
                     <Typography
                         variant="h5"
                         component="h2"
+                        className={styles.Subtitle}
                         sx={{mb: 5}}
                     >
                         Путевые заметки мирохода Curiosity

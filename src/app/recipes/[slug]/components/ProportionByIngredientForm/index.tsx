@@ -58,7 +58,10 @@ export const ProportionByIngredientForm: React.FC<Props> = ({ingredients, setMul
 
     return(
         <Box className={styles.Changer}>
-            <Box sx={{display: { md: 'flex' }, justifyContent: 'space-between', gap: '16px',  width: '100%', mb: 2, alignItems: 'center'}}>
+            {/* Ингредиент и его количество — одна строка на любой ширине: селект забирает всё
+                место, поле с количеством фиксированной ширины. Раньше флекс включался только
+                с md, и ниже 900px граммы уезжали под селект. */}
+            <Box sx={{display: 'flex', justifyContent: 'space-between', gap: '16px',  width: '100%', mb: 2, alignItems: 'center'}}>
 
                 <Select
                     className={styles.Select}

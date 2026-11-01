@@ -22,40 +22,43 @@ const Select: React.FC<PropsSelect> = (props) => {
 
     const instanceId = props.instanceId || `select-${generatedId}`;
 
+    // Цвета — только CSS-переменными (--color-*, см. features/theme). theme.palette при
+    // cssVariables хранит значения схемы по умолчанию (тёмной) и не переключается вместе
+    // со схемой: в светлой теме значение рисовалось почти белым по белому.
     const customStyles: StylesConfig<OptionType, false> = {
         control: (base, state) => ({
             ...base,
             minHeight: '40px',
             borderRadius: theme.shape.borderRadius,
-            backgroundColor: 'var(--color-background-paper-rgb)',
+            backgroundColor: 'rgba(var(--color-background-paper-rgb), 0.5)',
             backdropFilter: 'blur(10px)',
             borderColor: state.isFocused
-                ? theme.palette.primary.main
+                ? 'var(--color-primary-main)'
                 : 'rgba(var(--color-primary-main-rgb), 0.2)',
             boxShadow: state.isFocused
-                ? `0 0 0 2px ${theme.palette.primary.main}20`
+                ? '0 0 0 2px rgba(var(--color-primary-main-rgb), 0.125)'
                 : 'none',
             '&:hover': {
-                borderColor: theme.palette.primary.main
+                borderColor: 'var(--color-primary-main)'
             },
             transition: 'all 0.2s ease'
         }),
         option: (base, state) => ({
             ...base,
             backgroundColor: state.isSelected
-                ? `${theme.palette.primary.main}20`
+                ? 'rgba(var(--color-primary-main-rgb), 0.125)'
                 : state.isFocused
-                    ? `${theme.palette.primary.main}30`
+                    ? 'rgba(var(--color-primary-main-rgb), 0.19)'
                     : 'transparent',
             color: state.isSelected
-                ? theme.palette.primary.main
-                : theme.palette.text.primary,
+                ? 'var(--color-primary-main)'
+                : 'var(--color-text-primary)',
             backdropFilter: state.isFocused ? 'blur(4px)' : 'none',
             '&:hover': {
-                backgroundColor: `${theme.palette.primary.main}30`
+                backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.19)'
             },
             '&:active': {
-                backgroundColor: `${theme.palette.primary.main}40`
+                backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.25)'
             },
             cursor: 'pointer'
         }),
@@ -66,7 +69,7 @@ const Select: React.FC<PropsSelect> = (props) => {
             backdropFilter: 'blur(30px)',
             borderRadius: theme.shape.borderRadius,
             boxShadow: theme.shadows[1],
-            border: `1px solid ${theme.palette.primary.main}20`,
+            border: '1px solid rgba(var(--color-primary-main-rgb), 0.125)',
             zIndex: 1400 // Увеличиваем z-index для портала
         }),
         menuList: (base) => ({
@@ -75,15 +78,15 @@ const Select: React.FC<PropsSelect> = (props) => {
         }),
         singleValue: (base) => ({
             ...base,
-            color: theme.palette.text.primary
+            color: 'var(--color-text-primary)'
         }),
         placeholder: (base) => ({
             ...base,
-            color: theme.palette.text.secondary
+            color: 'var(--color-text-secondary)'
         }),
         input: (base) => ({
             ...base,
-            color: theme.palette.text.primary
+            color: 'var(--color-text-primary)'
         }),
         indicatorSeparator: (base) => ({
             ...base,
@@ -92,19 +95,19 @@ const Select: React.FC<PropsSelect> = (props) => {
         dropdownIndicator: (base, state) => ({
             ...base,
             color: state.isFocused
-                ? theme.palette.primary.main
-                : theme.palette.primary.light,
+                ? 'var(--color-primary-main)'
+                : 'var(--color-primary-light)',
             '&:hover': {
-                color: theme.palette.primary.main
+                color: 'var(--color-primary-main)'
             },
             transition: 'transform 0.2s',
             transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : 'none'
         }),
         clearIndicator: (base) => ({
             ...base,
-            color: theme.palette.primary.light,
+            color: 'var(--color-primary-light)',
             '&:hover': {
-                color: theme.palette.error.main
+                color: 'var(--color-error-main)'
             }
         })
     };

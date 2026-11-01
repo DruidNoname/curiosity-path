@@ -21,6 +21,10 @@
     }
 
     .BackButton {
+        /* Фон outlined-кнопки из темы (полупрозрачный paper) в светлой схеме читается
+           плашкой; кнопка стоит на фоне страницы. Hover из темы остаётся. */
+        background-color: transparent;
+
         @media (max-width: 649px) {
             border: none;
             padding-left: 0;

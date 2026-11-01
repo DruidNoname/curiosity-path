@@ -75,7 +75,8 @@ const Loader: React.FC<Props> = ({className, display, isLinear, backdropMode, co
 
       default:
         return (
-            <div className={classes.join(' ')} style={{
+            // Маленький и строчный лоадеры стоят в тексте; по центру окна — только лоадер страницы.
+            <div className={[...classes, !smallSize && display !== 'inline' ? styles.Centered : ''].join(' ')} style={{
               display,
               margin: smallSize ? margin || '0' : margin,
               ...style

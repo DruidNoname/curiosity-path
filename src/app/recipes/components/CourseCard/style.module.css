@@ -49,4 +49,14 @@
     &.course-34:after {
         background-image: url(@/assets/images/recipes-icons/salad.svg);
     }
+
+    /* Закуска и Тесто/хлеб — из того же набора, что десерт, салат и рагу
+       (Emoji One Monotone, CC BY 4.0): https://api.iconify.design/emojione-monotone/<имя>.svg */
+    &.course-30:after {
+        background-image: url(@/assets/images/recipes-icons/snack.svg); /* cheese-wedge */
+    }
+
+    &.course-256:after {
+        background-image: url(@/assets/images/recipes-icons/bread.svg); /* bread */
+    }
 }

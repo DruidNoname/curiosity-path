@@ -46,6 +46,10 @@ export const baseThemeOptions: ThemeOptions = {
             fontSize: 'clamp(0.9375rem, 2vw, 1rem)',
             lineHeight: 1.6,
             color: 'var(--color-text-primary)',
+            // CssBaseline переносит body1 на <body>, так что это касается и HTML из WP.
+            '@media (max-width: 599.95px)': {
+                lineHeight: 1.3,
+            },
         },
         body2: {
             fontSize: '0.875rem',

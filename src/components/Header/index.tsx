@@ -34,7 +34,9 @@ const Header: React.FC<Props> = ({ title }) => {
 
     return (
         <ErrorBoundary componentName={'Header'}>
-            <AppBar position="static">
+            {/* AppBar — это Paper, а теме Paper задан радиус со всех сторон; шапка прилегает
+                к верхнему краю окна, поэтому скругляем только низ. */}
+            <AppBar position="static" sx={{ borderRadius: '0 0 8px 8px' }}>
                 <Container maxWidth="lg">
                     <Toolbar>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

@@ -56,6 +56,7 @@ const MainPageContent: React.FC = () => {
                                         entryDate={post.date || ''}
                                         entryTags={post.postTags}
                                         entryImage={post.featuredImage ? post.featuredImage?.medium : undefined}
+                                        entryImageSrcSet={post.featuredImage?.srcSet}
                                         key={`post_${post.id}`}
                                     />
                                 ))

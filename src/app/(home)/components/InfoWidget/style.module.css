@@ -1,6 +1,6 @@
 .InfoWidget {
-    padding: 30px 50px;
-    margin-bottom: 40px;
+    padding: 20px 16px 4px;
+    margin-bottom: 24px;
     text-align: right;
     display: flex;
     flex-direction: column;
@@ -8,7 +8,28 @@
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-    min-height: 315px;
+
+    /* Высоту под картинку марсохода баннер держит, только когда она показывается (::after,
+       с 768px). На телефоне картинки нет, и баннер по высоте текста. */
+    @media (min-width: 768px) {
+        padding: 30px 50px;
+        margin-bottom: 40px;
+        min-height: 315px;
+    }
+}
+
+/* Нижние отступы заголовков задаёт MUI (sx и глобальный padding-bottom у h1/h2) —
+   перебиваем повышенной специфичностью, только на телефоне. */
+@media (max-width: 767px) {
+    .InfoWidget .Title,
+    .InfoWidget .Subtitle {
+        padding-bottom: 0;
+        margin-bottom: 12px;
+    }
+
+    .InfoWidget .Subtitle {
+        margin-bottom: 16px;
+    }
 }
 
 .InfoWidget::before {
