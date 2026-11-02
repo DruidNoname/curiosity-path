@@ -95,7 +95,8 @@ const TagPageContent: React.FC = () => {
                 </Box>
                 {(isLoading || isPostsLoading) && page > 1 ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-                        <Loader />
+                        {/* Над списком — шапка тега. */}
+                        <Loader inFlow />
                     </Box>
                 ) : (
                     <>

@@ -15,11 +15,9 @@ const Recipes: React.FC = () => {
     const { data, isLoading } = useCourses({hideEmpty: false});
     const categories = data || [];
 
-    if (isLoading) return <Loader/>;
-
     return(
         <Box sx={{px: '24px'}}>
-            <Title title={'Книга рецептов'} isLoading={isLoading}/>
+            <Title title={'Книга рецептов'}/>
             <Box sx={{ mb: {xs: '32px', md: '48px'}, display: {md: 'flex'}}}>
                 <Box sx={{textAlign: 'center', minWidth: 210}}>
                     <Image src={foodSvg} alt={'food'} width={150}/>
@@ -40,6 +38,9 @@ const Recipes: React.FC = () => {
                 variant="h4"
                 component="h2"
                 sx={{pb: '36px'}}> Категории: </Typography>
+            {/* Заголовок и вступление — статика, показываем сразу; ждут только категории.
+                Лоадер — на их месте, а не по центру окна поверх текста. */}
+            { isLoading ? <Loader inFlow/> :
             <Stack
                 direction="row"        // Элементы в ряд
                 useFlexGap             // Обязательно! Позволяет Stack'у правильно обрабатывать gap при переносе
@@ -57,6 +58,7 @@ const Recipes: React.FC = () => {
                     );
                 })}
             </Stack>
+            }
         </Box>
     );
 };
