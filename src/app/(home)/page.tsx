@@ -40,7 +40,8 @@ const MainPageContent: React.FC = () => {
 
                 { isLoading ?
 
-                    <Loader />
+                    // Над лентой баннер: по центру окна лоадер наезжал бы на него.
+                    <Loader inFlow />
 
                     :
 

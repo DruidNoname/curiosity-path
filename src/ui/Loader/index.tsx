@@ -17,6 +17,11 @@ type Props = {
   isDots?: boolean;
   smallSize?: number;
   backdropMode?: boolean;
+  /**
+   * Лоадер стоит там, где его вызвали, а не по центру окна. Для страниц со своим блоком
+   * над контентом (баннер на главной): по центру окна лоадер наезжал бы на него.
+   */
+  inFlow?: boolean;
   color?: OverridableStringUnion<'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'inherit'>;
 };
 
@@ -44,7 +49,7 @@ const LoaderImage: React.FC = () => {
   return VARIANTS[variant]();
 };
 
-const Loader: React.FC<Props> = ({className, display, isLinear, backdropMode, color, margin, style, smallSize, isDots}) => {
+const Loader: React.FC<Props> = ({className, display, isLinear, backdropMode, color, margin, style, smallSize, isDots, inFlow}) => {
 
   const classes = [
     styles.Loader,
@@ -75,8 +80,9 @@ const Loader: React.FC<Props> = ({className, display, isLinear, backdropMode, co
 
       default:
         return (
-            // Маленький и строчный лоадеры стоят в тексте; по центру окна — только лоадер страницы.
-            <div className={[...classes, !smallSize && display !== 'inline' ? styles.Centered : ''].join(' ')} style={{
+            // Маленький и строчный лоадеры стоят в тексте; по центру окна — только лоадер
+            // страницы, и то если страница не попросила оставить его на месте (inFlow).
+            <div className={[...classes, !smallSize && display !== 'inline' && !inFlow ? styles.Centered : ''].join(' ')} style={{
               display,
               margin: smallSize ? margin || '0' : margin,
               ...style

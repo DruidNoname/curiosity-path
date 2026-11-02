@@ -32,6 +32,10 @@ const navButtonSx = (active: boolean): SxProps<Theme> => [
         backgroundColor: active ? 'rgba(var(--color-primary-main-rgb), 0.15)' : 'transparent',
         '&:hover': {
             transform: 'none',
+            // Под кнопкой — MuiLink, а тема на :hover даёт ссылкам border-bottom в 1px:
+            // пункт становился на пиксель выше, флекс-ряд растягивал по нему соседей,
+            // и вся навигация дёргалась. Активный пункт отмечен inset-тенью, не рамкой.
+            border: 'none',
             backgroundColor: 'rgba(var(--color-primary-main-rgb), 0.1)',
         },
     },

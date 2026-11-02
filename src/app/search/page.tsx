@@ -54,7 +54,8 @@ const SearchResults: React.FC = () => {
                     </Box>
                 ) : isLoading ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-                        <Loader />
+                        {/* Над результатами — заголовок поиска и счётчик. */}
+                        <Loader inFlow />
                     </Box>
                 ) : isError && posts.length === 0 ? (
                     <Box sx={{ py: 4, textAlign: 'center' }}>

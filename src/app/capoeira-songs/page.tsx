@@ -65,7 +65,8 @@ const CapoeiraSongs: React.FC = () => {
                 </Box>
             </Box>
             { isLoading ?
-                <Loader /> :
+                // Над списком — заголовок и вступление: по центру окна лоадер наезжал бы на них.
+                <Loader inFlow /> :
                 <Box>
                     {
                         preparedSongs.map(({ song, title, excerpt, content }) => {

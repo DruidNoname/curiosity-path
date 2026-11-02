@@ -26,7 +26,9 @@ const Courses: React.FC = () => {
         </React.Fragment>
     ));
 
-    if (isLoading) return <Loader/>;
+    // Список категорий стоит в боковой колонке рядом с уже показанными рецептами —
+    // лоадер на своём месте, а не по центру окна поверх них.
+    if (isLoading) return <Loader inFlow/>;
 
     return (
         <Box sx={{ mb: 4 }}>
