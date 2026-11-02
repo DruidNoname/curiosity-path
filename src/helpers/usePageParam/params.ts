@@ -11,15 +11,17 @@ export const PAGE_PARAM = 'page';
 /**
  * Разбирает значение параметра в номер страницы.
  *
- * Всё, что не целое число больше нуля (мусор, ноль, минус, дробь, пустая строка,
- * отсутствие параметра), считается первой страницей — по ссылке из чужих рук может
- * прийти что угодно, и падать из-за этого страница не должна.
+ * Принимается только каноничная запись: десятичные цифры без ведущего нуля (`3`, `147`).
+ * Всё остальное — мусор, ноль, минус, дробь, пустая строка, отсутствие параметра,
+ * а также формы, которые понял бы `Number` (`1e2`, `0x10`, `+3`, `3.0`, ` 3 `), —
+ * считается первой страницей: по ссылке из чужих рук может прийти что угодно, и
+ * падать из-за этого страница не должна. Строгая проверка вместо `Number` — чтобы
+ * одной странице соответствовал ровно один адрес.
  */
 export const parsePage = (raw: string | null | undefined): number => {
-    if (!raw) return 1;
+    if (!raw || !/^[1-9]\d*$/.test(raw)) return 1;
 
-    const parsed = Number(raw);
-    return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
+    return Number(raw);
 };
 
 /**
@@ -30,8 +32,7 @@ export const parsePage = (raw: string | null | undefined): number => {
  */
 export const buildPageHref = (
     pathname: string,
-    // подходит и URLSearchParams, и ReadonlyURLSearchParams из next/navigation
-    searchParams: { toString(): string },
+    searchParams: URLSearchParams,
     page: number,
 ): string => {
     const params = new URLSearchParams(searchParams.toString());
