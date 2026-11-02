@@ -25,6 +25,15 @@ describe('parsePage', () => {
         expect(parsePage('-3')).toBe(1);
         expect(parsePage('1.5')).toBe(1);
     });
+
+    it('принимает только запись из цифр — то, что понял бы Number, отбрасывается', () => {
+        expect(parsePage('1e2')).toBe(1);
+        expect(parsePage('0x10')).toBe(1);
+        expect(parsePage('+3')).toBe(1);
+        expect(parsePage('3.0')).toBe(1);
+        expect(parsePage(' 3 ')).toBe(1);
+        expect(parsePage('03')).toBe(1);
+    });
 });
 
 describe('buildPageHref', () => {
@@ -50,5 +59,15 @@ describe('buildPageHref', () => {
     it('убирая страницу, не теряет остальные параметры', () => {
         expect(buildPageHref('/search', new URLSearchParams('q=лес&page=4'), 1))
             .toBe('/search?q=%D0%BB%D0%B5%D1%81');
+    });
+});
+
+describe('buildPageHref и parsePage', () => {
+    it('номер переживает дорогу туда и обратно', () => {
+        for (const n of [1, 2, 3, 147]) {
+            const href = buildPageHref('/', new URLSearchParams(), n);
+            const raw = new URL(href, 'http://localhost').searchParams.get(PAGE_PARAM);
+            expect(parsePage(raw)).toBe(n);
+        }
     });
 });
