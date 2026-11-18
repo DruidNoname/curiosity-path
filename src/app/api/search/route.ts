@@ -6,6 +6,16 @@ import {PER_PAGE} from '@/config/pagination';
 const MAX_PER_PAGE = 50;
 
 /**
+ * Регион функции на Vercel — Франкфурт, поближе к WP на Мастерхосте. Из региона
+ * по умолчанию (США) скачивание всего блога для индекса рвалось: `Connect Timeout`
+ * и `read ETIMEDOUT` посреди ответа. Остальные функции сайта не трогаем.
+ */
+export const preferredRegion = 'fra1';
+
+/** Сборка индекса — около 10 секунд при хорошей связи; запас на медленный канал. */
+export const maxDuration = 60;
+
+/**
  * Поиск по словоформам: `/api/search?q=лес&page=2&per_page=5`.
  * Ответ — общий контракт списка `{ posts, total, totalPages, currentPage, perPage }`.
  */
