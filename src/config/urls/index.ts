@@ -50,6 +50,11 @@ export const urls = {
     addonApi: WP_ADDON_API,
     /** Эндпоинт WPGraphQL. */
     graphql: WP_GRAPHQL,
+    /**
+     * Свой поиск — route handler этого же сайта. Путь относительный: запрос уходит
+     * туда, откуда открыта страница, и на preview-деплое не улетит на прод.
+     */
+    searchApi: '/api/search',
 } as const;
 
 export default urls;

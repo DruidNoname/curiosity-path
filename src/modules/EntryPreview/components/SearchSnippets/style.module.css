@@ -1,0 +1,8 @@
+.Snippets {
+    padding-bottom: var(--paragraph-gap);
+}
+
+.Separator,
+.Rest {
+    opacity: 0.6;
+}

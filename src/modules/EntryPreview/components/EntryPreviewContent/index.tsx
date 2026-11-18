@@ -8,10 +8,12 @@ interface Props {
     link?: string;
     date?: string;
     excerpt?: string;
+    /** Готовое содержимое вместо анонса (например, фрагменты поиска). */
+    body?: React.ReactNode;
     tags?: PostTag[];
 }
 
-export const EntryPreviewContent: React.FC<Props> = ({title, link, date, excerpt, tags}) => {
+export const EntryPreviewContent: React.FC<Props> = ({title, link, date, excerpt, body, tags}) => {
     return(
         <>
             { title &&
@@ -33,6 +35,7 @@ export const EntryPreviewContent: React.FC<Props> = ({title, link, date, excerpt
                     dangerouslySetInnerHTML={{ __html: excerpt }}
                 />
             }
+            { body }
             {tags && tags.length > 0 && (
                 <Typography variant="body2" component="div">
                     Теги: {

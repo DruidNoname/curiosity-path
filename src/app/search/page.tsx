@@ -14,24 +14,24 @@ import Pagination from "@/ui/Pagination";
 import { PER_PAGE } from "@/config/pagination";
 import { PostPreview } from "@/modules/EntryPreview/components/PostPreview";
 import { usePageParam } from "@/helpers/usePageParam";
+import { useSearch } from "@/features/search/hooks";
 
 const SearchResults: React.FC = () => {
     const searchParams = useSearchParams();
     const query = (searchParams.get('q') || '').trim();
 
+    // Прототип: по умолчанию — свой поиск по словоформам, `&engine=wp` — поиск WP,
+    // чтобы сравнить выдачу на одном и том же запросе.
+    const useWp = searchParams.get('engine') === 'wp';
+
     const { page, setPage } = usePageParam();
 
-    const {
-        data,
-        isLoading,
-        isError,
-        error,
-    } = usePostsBySearch(query, page, PER_PAGE);
+    const own = useSearch(query, page, PER_PAGE, !useWp);
+    const wp = usePostsBySearch(useWp ? query : '', page, PER_PAGE);
+    const { data, isLoading, isError, error } = useWp ? wp : own;
 
-    const {
-        posts = [],
-        totalPages = 1,
-    } = data || {};
+    const totalPages = data?.totalPages ?? 1;
+    const hasPosts = Boolean(data?.posts.length);
 
     return (
         <ErrorBoundary componentName={'SearchPage'}>
@@ -57,7 +57,7 @@ const SearchResults: React.FC = () => {
                         {/* Над результатами — заголовок поиска и счётчик. */}
                         <Loader inFlow />
                     </Box>
-                ) : isError && posts.length === 0 ? (
+                ) : isError && !hasPosts ? (
                     <Box sx={{ py: 4, textAlign: 'center' }}>
                         <Typography variant="h5" color="error" gutterBottom>
                             Ошибка поиска
@@ -66,7 +66,7 @@ const SearchResults: React.FC = () => {
                             {error?.message || 'Не удалось загрузить результаты'}
                         </Typography>
                     </Box>
-                ) : posts.length === 0 ? (
+                ) : !hasPosts ? (
                     <Box sx={{ textAlign: 'center', py: 8 }}>
                         <SearchIcon sx={{ fontSize: 60, color: 'action.disabled', mb: 2 }} />
                         <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -75,17 +75,33 @@ const SearchResults: React.FC = () => {
                     </Box>
                 ) : (
                     <>
-                        {posts.map((post: PostWithTags) => (
-                            <PostPreview
-                                entryId={post.id}
-                                entrySlug={`/${post.slug}`}
-                                entryTitle={post.title?.rendered || 'Без названия'}
-                                entryPreview={post.excerpt?.rendered || ''}
-                                entryDate={post.date || ''}
-                                entryTags={post.postTags}
-                                key={`post_${post.id}`}
-                            />
-                        ))}
+                        {useWp
+                            ? wp.data?.posts.map((post: PostWithTags) => (
+                                <PostPreview
+                                    entryId={post.id}
+                                    entrySlug={`/${post.slug}`}
+                                    entryTitle={post.title?.rendered || 'Без названия'}
+                                    entryPreview={post.excerpt?.rendered || ''}
+                                    entryContent={post.content?.rendered || ''}
+                                    searchQuery={query}
+                                    entryDate={post.date || ''}
+                                    entryTags={post.postTags}
+                                    key={`post_${post.id}`}
+                                />
+                            ))
+                            : own.data?.posts.map((hit) => (
+                                <PostPreview
+                                    entryId={hit.id}
+                                    entrySlug={`/${hit.slug}`}
+                                    entryTitle={hit.title || 'Без названия'}
+                                    entryPreview={hit.excerpt}
+                                    searchTitleParts={hit.titleParts}
+                                    searchSnippets={hit.snippets}
+                                    entryDate={hit.date}
+                                    entryTags={hit.postTags}
+                                    key={`post_${hit.id}`}
+                                />
+                            ))}
                         {totalPages > 1 && (
                             <Pagination
                                 sx={{ mt: 3, mb: 4 }}

@@ -1,0 +1,8 @@
+/* Полупрозрачный акцент темы: читается и в светлой, и в тёмной схеме,
+   цвет текста остаётся родительским. */
+.Mark {
+    background-color: rgba(var(--color-secondary-main-rgb), 0.3);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+}

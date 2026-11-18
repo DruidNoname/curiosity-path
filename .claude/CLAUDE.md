@@ -48,10 +48,10 @@ src/
   app/           роуты App Router; локальные компоненты роута лежат рядом в components/
   modules/       составные блоки предметной области (EntryPreview, PostCalendar)
   components/    переиспользуемые компоненты (Header, Footer, Layouts, ErrorBoundary)
-  ui/            тонкие обёртки над MUI (Link, Buttons, Spoiler, Pagination, Loader, Skeleton, Image, Select, Calendar)
-  features/      вертикальные срезы: posts, recipes, tags, breath, query, theme
+  ui/            тонкие обёртки над MUI (Link, Buttons, Spoiler, Highlight, Pagination, Loader, Skeleton, Image, Select, Calendar)
+  features/      вертикальные срезы: posts, recipes, tags, search, breath, query, theme
   config/        urls (единая точка правды по адресам), site, pagination, graphql (Apollo client)
-  helpers/       утилиты общего назначения; каждая — папкой: wp-html, wp-text, usePageParam, useIsClient
+  helpers/       утилиты общего назначения; каждая — папкой: wp-html, wp-text, search-snippets, usePageParam, useIsClient
   styles/        глобальный css + точка расширения для css-переменных
   assets/        шрифты и изображения
 ```
@@ -211,9 +211,9 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
-`src/helpers/wp-text`, `src/helpers/usePageParam`, `src/helpers/useIsClient`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
-`features/posts/api.ts` (`fetchPostsByTag` и `buildSrcSet`), `features/recipes/api.ts`, `features/breath/plan.ts`,
-`app/about/utils.ts`, `ui/Loader/variants.ts` и `components/ErrorBoundary` (129 тестов, 21 сьют).
+`src/helpers/wp-text`, `src/helpers/search-snippets`, `src/helpers/usePageParam`, `src/helpers/useIsClient`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
+`features/posts/api.ts` (`fetchPostsByTag` и `buildSrcSet`), `features/recipes/api.ts`, `features/search/stem.ts`, `features/breath/plan.ts`,
+`app/about/utils.ts`, `ui/Loader/variants.ts` и `components/ErrorBoundary` (160 тестов, 24 сьюта).
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
 
 ## Журнал изменений

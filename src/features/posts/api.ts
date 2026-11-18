@@ -7,7 +7,7 @@ import {FeaturedImage, PostsResponse, PostsByTodayResponse, PostTag, PostWithTag
 // Запрос с _embed уже приносит термины записи в _embedded['wp:term'] — массив по таксономиям
 // (рубрики, теги). Берём теги оттуда, а не отдельным запросом на каждый тег: иначе список
 // из 10 записей тянул ещё по запросу на каждый уникальный тег (N+1).
-const extractTags = (post: any): PostTag[] =>
+export const extractTags = (post: any): PostTag[] =>
     (post._embedded?.['wp:term'] ?? [])
         .flat()
         .filter((term: any) => term?.taxonomy === 'post_tag')
