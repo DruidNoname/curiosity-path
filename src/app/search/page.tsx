@@ -20,9 +20,9 @@ const SearchResults: React.FC = () => {
     const searchParams = useSearchParams();
     const query = (searchParams.get('q') || '').trim();
 
-    // По умолчанию — поиск WP. Поиск по словоформам (`&engine=own`) — плагин Curiosity
-    // Search: по умолчанию его включаем, когда плагин установлен и проиндексировал блог.
-    const useWp = searchParams.get('engine') !== 'own';
+    // По умолчанию — поиск по словоформам (плагин Curiosity Search). Встроенный поиск WP
+    // оставлен по `&engine=wp`: сравнить выдачу или откатиться, если плагин сломается.
+    const useWp = searchParams.get('engine') === 'wp';
 
     const { page, setPage } = usePageParam();
 
