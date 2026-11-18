@@ -3,6 +3,7 @@
 import {Box, Button, TextField, Typography} from "@mui/material";
 import {useRouter} from "next/navigation";
 import React from "react";
+import {buildSearchHref} from "@/features/search/href";
 
 const SearchWidget: React.FC = () => {
     const router = useRouter();
@@ -10,12 +11,8 @@ const SearchWidget: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const value = query.trim();
-        if (!value) return;
-        // Пробелы в query-параметре передаём как «+» (как+найти+спокойствие),
-        // остальное кодируем стандартно. На странице get('q') декодирует «+» обратно в пробелы.
-        const q = encodeURIComponent(value).replace(/%20/g, '+');
-        router.push(`/search?q=${q}`);
+        const href = buildSearchHref(query);
+        if (href) router.push(href);
     };
 
     return (

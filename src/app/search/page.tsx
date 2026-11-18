@@ -15,6 +15,7 @@ import { PER_PAGE } from "@/config/pagination";
 import { PostPreview } from "@/modules/EntryPreview/components/PostPreview";
 import { usePageParam } from "@/helpers/usePageParam";
 import { useSearch } from "@/features/search/hooks";
+import SearchForm from "./components/SearchForm";
 
 const SearchResults: React.FC = () => {
     const searchParams = useSearchParams();
@@ -22,7 +23,8 @@ const SearchResults: React.FC = () => {
 
     // По умолчанию — поиск по словоформам (плагин Curiosity Search). Встроенный поиск WP
     // оставлен по `&engine=wp`: сравнить выдачу или откатиться, если плагин сломается.
-    const useWp = searchParams.get('engine') === 'wp';
+    const engine = searchParams.get('engine');
+    const useWp = engine === 'wp';
 
     const { page, setPage } = usePageParam();
 
@@ -37,11 +39,16 @@ const SearchResults: React.FC = () => {
         <ErrorBoundary componentName={'SearchPage'}>
             <Box sx={{ mb: 4 }}>
                 <Box sx={{ mb: 4, pb: 2, borderBottom: 1, borderColor: 'divider' }}>
-                    <FilteredTitle
-                        icon={<SearchIcon />}
-                        label="Поиск"
-                        title={query || 'Введите запрос'}
-                    />
+                    {/* На десктопе поле поиска — вровень с заголовком, у правого края;
+                        на узком экране переносится под заголовок. */}
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', columnGap: 2 }}>
+                        <FilteredTitle
+                            icon={<SearchIcon />}
+                            label="Поиск"
+                            title={query || 'Введите запрос'}
+                        />
+                        <SearchForm key={query} hasQuery={Boolean(query)} engine={engine} />
+                    </Box>
                     <ResultsCount key={query} label="Найдено" count={data?.total} />
                 </Box>
 
@@ -49,7 +56,7 @@ const SearchResults: React.FC = () => {
                     <Box sx={{ textAlign: 'center', py: 8 }}>
                         <SearchIcon sx={{ fontSize: 60, color: 'action.disabled', mb: 2 }} />
                         <Typography variant="h6" color="text.secondary" gutterBottom>
-                            Введите запрос, чтобы найти посты
+                            Введите запрос в поле выше, чтобы найти посты
                         </Typography>
                     </Box>
                 ) : isLoading ? (

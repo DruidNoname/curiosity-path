@@ -215,10 +215,10 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 
 `jest.config.js`, окружение jsdom, алиас `@/` настроен, фиктивные env-переменные —
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
-`src/helpers/wp-text`, `src/helpers/search-snippets`, `src/helpers/usePageParam`, `src/helpers/useIsClient`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
+`src/helpers/wp-text`, `src/helpers/search-snippets`, `src/helpers/usePageParam`, `src/helpers/useIsClient`, `src/config/urls`, `features/search/href.ts`, `modules/PostCalendar/utils.ts`,
 `features/posts/api.ts` (`fetchPostsByTag` и `buildSrcSet`), `features/recipes/api.ts`, `features/breath/plan.ts`,
 `app/about/utils.ts`, `ui/Loader/variants.ts`, `components/ErrorBoundary` и
-`modules/EntryPreview/components/PostPreview` (159 тестов, 24 сьюта). Стили `*.module.css`
+`modules/EntryPreview/components/PostPreview` (165 тестов, 25 сьютов). Стили `*.module.css`
 в тестах заменяет заглушка `jest.style-stub.js`.
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
 
