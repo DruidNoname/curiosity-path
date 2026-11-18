@@ -95,8 +95,8 @@ const SearchResults: React.FC = () => {
                                     entrySlug={`/${post.slug}`}
                                     entryTitle={post.title.rendered || 'Без названия'}
                                     entryPreview={post.excerpt.rendered}
-                                    entryContent={post.content.rendered}
                                     searchWords={post.matchedWords}
+                                    searchSnippets={{snippets: post.snippets ?? [], rest: post.snippetsRest ?? 0}}
                                     entryDate={post.date}
                                     entryTags={post.postTags}
                                     key={`post_${post.id}`}

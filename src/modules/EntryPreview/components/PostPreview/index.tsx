@@ -8,7 +8,7 @@ import {PostTag} from "@/features/posts/types";
 import {EntryPreviewContent} from "../EntryPreviewContent";
 import {ImageBordered} from "@/components/Images";
 import Highlight from "@/ui/Highlight";
-import {createSubstringMatcher, createWordsMatcher, getSearchSnippets, highlightText} from "@/helpers/search-snippets";
+import {createSubstringMatcher, createWordsMatcher, getSearchSnippets, highlightText, SnippetsResult} from "@/helpers/search-snippets";
 import {SearchSnippets} from "../SearchSnippets";
 
 type Props = {
@@ -33,8 +33,13 @@ type Props = {
     searchWords?: string[];
     /** Полный HTML записи (`content.rendered`) — из него режутся фрагменты для поиска. */
     entryContent?: string;
+    /**
+     * Готовые фрагменты от плагина поиска: клиент их не считает, только выводит.
+     * Пустой список — анонс. Если передан, `entryContent` и поиск по тексту не нужны.
+     */
+    searchSnippets?: SnippetsResult;
 }
-const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage, entryImageSrcSet, searchQuery, searchWords, entryContent }) => {
+const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage, entryImageSrcSet, searchQuery, searchWords, entryContent, searchSnippets }) => {
     // Заголовок идёт в текстовый узел и в alt — нужен простой текст, не разметка.
     const title = React.useMemo(() => toPlainText(entryTitle) || 'Без названия', [entryTitle]);
     // createExcerpt запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
@@ -47,11 +52,12 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
         [searchWords, searchQuery],
     );
     const snippets = React.useMemo(() => {
+        if (searchSnippets) return searchSnippets.snippets.length ? searchSnippets : null;
         if (!matcher) return null;
         const fromContent = getSearchSnippets(entryContent, matcher);
         const found = fromContent.snippets.length ? fromContent : getSearchSnippets(entryPreview, matcher);
         return found.snippets.length ? found : null;
-    }, [matcher, entryContent, entryPreview]);
+    }, [matcher, entryContent, entryPreview, searchSnippets]);
     const titleParts = React.useMemo(
         () => (matcher ? highlightText(title, matcher) : null),
         [matcher, title],

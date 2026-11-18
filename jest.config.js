@@ -5,6 +5,8 @@ module.exports = {
   setupFiles: ['<rootDir>/jest.setup.env.js'],
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
   moduleNameMapper: {
+    // CSS-модули Jest не разбирает — для проверки текста стили не нужны.
+    '\\.module\\.css$': '<rootDir>/jest.style-stub.js',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   testMatch: ['**/__tests__/**/*.test.ts', '**/__tests__/**/*.test.tsx', '**/*.test.ts', '**/*.test.tsx'],

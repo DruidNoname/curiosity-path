@@ -1,4 +1,5 @@
 import type {PostTag} from '@/features/posts/types';
+import type {Snippet} from '@/helpers/search-snippets';
 
 /**
  * Запись в выдаче плагина поиска — в форме стандартного REST WP (`title.rendered`…),
@@ -11,7 +12,10 @@ export interface SearchPost {
     link: string;
     title: {rendered: string};
     excerpt: {rendered: string};
-    content: {rendered: string};
+    /** Готовые фрагменты записи с найденными словами — их режет плагин, полный текст не приходит. */
+    snippets: Snippet[];
+    /** Сколько ещё совпадений не поместилось во фрагменты («и ещё N мест»). */
+    snippetsRest: number;
     postTags: PostTag[];
     /** Словоформы, по которым запись нашлась («лесу», «лесом») — их и подсвечиваем. */
     matchedWords: string[];
