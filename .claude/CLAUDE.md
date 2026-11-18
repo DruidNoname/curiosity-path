@@ -56,9 +56,9 @@ src/
   assets/        шрифты и изображения
 ```
 
-Рядом с `src/` лежит `wordpress/plugins/` — свои плагины бэкенда (PHP, отдельный
-Composer, свои тесты); как собирать и ставить на хостинг — `wordpress/README.md`.
-Эндпоинты `custom/v1/*` живут там.
+Свои плагины WordPress (эндпоинты `custom/v1/*`: поиск, записи по дню) — в отдельном
+репозитории `curiosity-path-wp`, локально `~/PhpstormProjects/curiosity-path-wp`. Меняешь
+ответ эндпоинта — поправь типы в `src/features/*/types.ts` здесь.
 
 Направление зависимостей — сверху вниз: `app` → `modules` → `components` → `ui`.
 `ui` не знает ни о чём выше себя. `features/*` могут импортироваться с любого уровня.
@@ -217,7 +217,7 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
 `src/helpers/wp-text`, `src/helpers/search-snippets`, `src/helpers/usePageParam`, `src/helpers/useIsClient`, `src/config/urls`, `modules/PostCalendar/utils.ts`,
 `features/posts/api.ts` (`fetchPostsByTag` и `buildSrcSet`), `features/recipes/api.ts`, `features/breath/plan.ts`,
-`app/about/utils.ts`, `ui/Loader/variants.ts` и `components/ErrorBoundary` (157 тестов, 23 сьюта); плагин `curiosity-search` — своим PHPUnit (`composer test`).
+`app/about/utils.ts`, `ui/Loader/variants.ts` и `components/ErrorBoundary` (157 тестов, 23 сьюта).
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
 
 ## Журнал изменений
