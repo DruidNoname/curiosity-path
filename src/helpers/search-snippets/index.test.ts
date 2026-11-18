@@ -1,5 +1,6 @@
 import {
     createSubstringMatcher,
+    createWordsMatcher,
     getSearchSnippets as getSnippets,
     getSearchTerms,
     highlightText as highlight,
@@ -111,5 +112,22 @@ describe('highlightText', () => {
 
     it('без слов запроса отдаёт строку целиком', () => {
         expect(highlightText('Лес', '')).toEqual([{text: 'Лес', match: false}]);
+    });
+});
+
+describe('createWordsMatcher', () => {
+    const marked = (text: string, words: string[]) =>
+        (createWordsMatcher(words)?.(text) ?? []).map(([start, end]) => text.slice(start, end));
+
+    it('находит слова из списка целиком, без регистра и с ё = е', () => {
+        expect(marked('По Лесу, лёсу и всплескам — в лесу.', ['лесу', 'лесу'])).toEqual(['Лесу', 'лёсу', 'лесу']);
+    });
+
+    it('часть слова не совпадение', () => {
+        expect(marked('всплески и прелесть', ['лес'])).toEqual([]);
+    });
+
+    it('пустой список — нечего искать', () => {
+        expect(createWordsMatcher([])).toBeNull();
     });
 });

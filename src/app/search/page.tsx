@@ -20,9 +20,8 @@ const SearchResults: React.FC = () => {
     const searchParams = useSearchParams();
     const query = (searchParams.get('q') || '').trim();
 
-    // По умолчанию — поиск WP. Свой поиск по словоформам (`&engine=own`) — прототип:
-    // на Vercel он не может скачать записи с хостинга WP (таймауты), включать его
-    // по умолчанию можно только после того, как это решено.
+    // По умолчанию — поиск WP. Поиск по словоформам (`&engine=own`) — плагин Curiosity
+    // Search: по умолчанию его включаем, когда плагин установлен и проиндексировал блог.
     const useWp = searchParams.get('engine') !== 'own';
 
     const { page, setPage } = usePageParam();
@@ -90,17 +89,17 @@ const SearchResults: React.FC = () => {
                                     key={`post_${post.id}`}
                                 />
                             ))
-                            : own.data?.posts.map((hit) => (
+                            : own.data?.posts.map((post) => (
                                 <PostPreview
-                                    entryId={hit.id}
-                                    entrySlug={`/${hit.slug}`}
-                                    entryTitle={hit.title || 'Без названия'}
-                                    entryPreview={hit.excerpt}
-                                    searchTitleParts={hit.titleParts}
-                                    searchSnippets={hit.snippets}
-                                    entryDate={hit.date}
-                                    entryTags={hit.postTags}
-                                    key={`post_${hit.id}`}
+                                    entryId={post.id}
+                                    entrySlug={`/${post.slug}`}
+                                    entryTitle={post.title.rendered || 'Без названия'}
+                                    entryPreview={post.excerpt.rendered}
+                                    entryContent={post.content.rendered}
+                                    searchWords={post.matchedWords}
+                                    entryDate={post.date}
+                                    entryTags={post.postTags}
+                                    key={`post_${post.id}`}
                                 />
                             ))}
                         {totalPages > 1 && (

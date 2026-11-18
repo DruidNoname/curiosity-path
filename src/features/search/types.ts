@@ -1,25 +1,25 @@
 import type {PostTag} from '@/features/posts/types';
-import type {Snippet, SnippetsResult} from '@/helpers/search-snippets';
 
-/** Запись в выдаче поиска: всё, что нужно превью, плюс готовая подсветка. */
-export interface SearchHit {
+/**
+ * Запись в выдаче плагина поиска — в форме стандартного REST WP (`title.rendered`…),
+ * чтобы превью принимало её так же, как запись из `/wp/v2/posts`.
+ */
+export interface SearchPost {
     id: number;
     slug: string;
     date: string;
-    /** Заголовок простым текстом. */
-    title: string;
-    /** Заголовок, порезанный на совпадения. */
-    titleParts: Snippet;
-    /** HTML анонса — запасной вариант, если фрагментов с совпадениями нет. */
-    excerpt: string;
+    link: string;
+    title: {rendered: string};
+    excerpt: {rendered: string};
+    content: {rendered: string};
     postTags: PostTag[];
-    /** `null` — совпадение только в заголовке или невидимой части записи. */
-    snippets: SnippetsResult | null;
+    /** Словоформы, по которым запись нашлась («лесу», «лесом») — их и подсвечиваем. */
+    matchedWords: string[];
 }
 
 /** Контракт списка — тот же, что у всех api-функций. */
 export interface SearchResponse {
-    posts: SearchHit[];
+    posts: SearchPost[];
     total: number;
     totalPages: number;
     currentPage: number;

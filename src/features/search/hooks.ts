@@ -4,7 +4,7 @@ import {fetchSearch} from './api';
 import {SEARCH_STALE_TIME} from './const';
 import type {SearchResponse} from './types';
 
-/** Поиск по словоформам через свой индекс. Пустой запрос не отправляется. */
+/** Поиск по словоформам через плагин WP. Пустой запрос не отправляется. */
 export const useSearch = (query: string, page = 1, perPage = PER_PAGE, enabled = true) =>
     useQuery<SearchResponse>({
         queryKey: ['search', query, page, perPage],
