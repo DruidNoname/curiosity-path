@@ -35,17 +35,27 @@ composer build     # build/curiosity-search.zip для установки
 
 ### Установка и обновление
 
-1. `composer build` → `build/curiosity-search.zip`.
-2. Админка WP → «Плагины» → «Добавить новый» → «Загрузить плагин» → архив →
-   «Установить» (при обновлении — «Заменить установленный») → «Активировать».
-   Таблица индекса создаётся при активации.
-3. Первый раз, а также после изменения правил стемминга — полная переиндексация
-   по SSH из папки WP (WP-CLI запускать под PHP 8.3, иначе плагин не загрузится):
+`plugin install` и `plugin activate` через WP-CLI на хостинге падают с
+`mmap() failed: Cannot allocate memory` — консольному PHP не хватает памяти процесса.
+Поэтому файлы заливаются по SSH, а всё остальное — из админки.
+
+1. Собрать: `composer build` → `build/curiosity-search.zip`.
+2. На своём компьютере залить архив:
+   ```bash
+   scp wordpress/plugins/curiosity-search/build/curiosity-search.zip u547315@u547315.ssh.masterhost.ru:~/
+   ```
+3. На сервере распаковать поверх (для первой установки и для обновления одинаково):
    ```bash
    cd ~/suffer.curiosity-path.ru/www
-   php8.3 ~/bin/wp curiosity-search reindex
-   php8.3 ~/bin/wp curiosity-search search "по лесу"   # проверить выдачу
+   unzip -o ~/curiosity-search.zip -d wp-content/plugins/ && rm ~/curiosity-search.zip
    ```
-   Пока идёт переиндексация, поиск находит не всё: таблица заполняется заново.
-4. Проверка эндпоинта:
+4. Первый раз — админка WP → «Плагины» → Curiosity Search → «Активировать»
+   (создаётся таблица индекса).
+5. Первый раз, а также после изменения правил стемминга — «Инструменты → Поиск по
+   словоформам» → «Переиндексировать всё». Страница индексирует записи порциями
+   по 25 и показывает прогресс; поиск во время переиндексации продолжает работать.
+6. Проверка эндпоинта:
    `https://suffer.curiosity-path.ru/wp-json/custom/v1/search?q=лес`
+
+Команды WP-CLI (`wp curiosity-search reindex`, `wp curiosity-search search "…"`) в
+плагине есть — пригодятся на хостинге без этого ограничения.

@@ -106,38 +106,79 @@ final class Index
     }
 
     /**
-     * Полная переиндексация, порциями — чтобы не держать в памяти весь блог.
+     * Порция полной переиндексации: опубликованные записи по возрастанию ID, с `$offset`.
+     *
+     * Порциями — чтобы каждый запрос был коротким: на общем хостинге и время, и память
+     * процесса ограничены. Индекс заранее не очищается — поиск работает и во время
+     * переиндексации; записи, которых больше нет среди опубликованных, вычищаются
+     * после последней порции.
+     *
+     * @return array{indexed: int, total: int, next: int|null} `next` — откуда продолжать, `null` — всё
+     */
+    public function reindexBatch(int $offset, int $limit): array
+    {
+        $ids = get_posts([
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'posts_per_page' => $limit,
+            'offset' => $offset,
+            'fields' => 'ids',
+            'orderby' => 'ID',
+            'order' => 'ASC',
+            'suppress_filters' => true,
+        ]);
+
+        foreach ($ids ? get_posts(['post__in' => $ids, 'posts_per_page' => -1, 'orderby' => 'post__in']) : [] as $post) {
+            $this->indexPost($post);
+        }
+
+        $total = (int) wp_count_posts('post')->publish;
+        $next = $offset + count($ids);
+        $finished = count($ids) < $limit || $next >= $total;
+        if ($finished) {
+            $this->removeStale();
+        }
+
+        return ['indexed' => count($ids), 'total' => $total, 'next' => $finished ? null : $next];
+    }
+
+    /**
+     * Полная переиндексация подряд, порциями.
      *
      * @param callable(int $done, int $total): void|null $progress
      * @return int сколько записей проиндексировано
      */
     public function reindexAll(int $batchSize = 50, ?callable $progress = null): int
     {
-        global $wpdb;
-        $wpdb->query('TRUNCATE TABLE ' . self::table());
-
-        $ids = get_posts([
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'posts_per_page' => -1,
-            'fields' => 'ids',
-            'orderby' => 'ID',
-            'order' => 'ASC',
-        ]);
-
-        $done = 0;
-        foreach (array_chunk($ids, $batchSize) as $chunk) {
-            foreach (get_posts(['post__in' => $chunk, 'posts_per_page' => -1, 'orderby' => 'post__in']) as $post) {
-                $this->indexPost($post);
-                $done++;
-            }
+        $offset = 0;
+        do {
+            $batch = $this->reindexBatch($offset, $batchSize);
+            $offset += $batch['indexed'];
             if ($progress) {
-                $progress($done, count($ids));
+                $progress($offset, $batch['total']);
             }
             // кеш WP_Post растёт с каждой порцией — на тысяче записей это заметно
             wp_cache_flush_runtime();
-        }
+        } while ($batch['next'] !== null);
 
-        return $done;
+        return $offset;
+    }
+
+    /** Убирает из индекса записи, которых больше нет среди опубликованных. */
+    private function removeStale(): void
+    {
+        global $wpdb;
+        $table = self::table();
+        $wpdb->query("DELETE i FROM {$table} i
+            LEFT JOIN {$wpdb->posts} p ON p.ID = i.post_id
+                AND p.post_type = 'post' AND p.post_status = 'publish'
+            WHERE p.ID IS NULL");
+    }
+
+    /** Сколько записей сейчас в индексе — для страницы в админке. */
+    public static function indexedCount(): int
+    {
+        global $wpdb;
+        return (int) $wpdb->get_var('SELECT COUNT(DISTINCT post_id) FROM ' . self::table());
     }
 }

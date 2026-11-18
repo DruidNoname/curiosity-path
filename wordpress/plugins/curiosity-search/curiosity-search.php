@@ -23,6 +23,7 @@ if (!file_exists($curiosity_search_autoload)) {
 }
 require_once $curiosity_search_autoload;
 
+use CuriositySearch\Admin;
 use CuriositySearch\Cli;
 use CuriositySearch\Index;
 use CuriositySearch\Rest;
@@ -53,6 +54,10 @@ add_action('rest_api_init', static function () {
     $s = curiosity_search_services();
     (new Rest($s['stemmer'], $s['search']))->register();
 });
+
+// Страница в админке и её эндпоинт переиндексации. Регистрируются всегда: эндпоинт
+// вызывается REST-запросом, а не из админки, и admin_menu там не срабатывает.
+(new Admin(curiosity_search_services()['index']))->register();
 
 // Индекс держится в актуальном виде сам: при сохранении запись переиндексируется
 // (неопубликованная — убирается), при удалении — убирается.
