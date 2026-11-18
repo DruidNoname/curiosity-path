@@ -8,7 +8,7 @@ import {PostTag} from "@/features/posts/types";
 import {EntryPreviewContent} from "../EntryPreviewContent";
 import {ImageBordered} from "@/components/Images";
 import Highlight from "@/ui/Highlight";
-import {createSubstringMatcher, getSearchSnippets, highlightText, type Snippet, type SnippetsResult} from "@/helpers/search-snippets";
+import {createSubstringMatcher, createWordsMatcher, getSearchSnippets, highlightText} from "@/helpers/search-snippets";
 import {SearchSnippets} from "../SearchSnippets";
 
 type Props = {
@@ -21,16 +21,20 @@ type Props = {
     entryImage?: string | null;
     /** srcSet картинки (см. buildSrcSet в features/posts/api): без него на телефоне мыло. */
     entryImageSrcSet?: string;
-    /** Запрос поиска: с ним вместо анонса — фрагменты с найденными словами, заголовок с подсветкой. */
+    /**
+     * Запрос поиска WP: с ним вместо анонса — фрагменты с найденными словами, заголовок
+     * с подсветкой. Совпадение — подстрока, как ищет сам WP.
+     */
     searchQuery?: string;
+    /**
+     * Словоформы от плагина поиска (`matchedWords`): подсвечиваются только они, целыми
+     * словами. Если заданы, `searchQuery` не нужен.
+     */
+    searchWords?: string[];
     /** Полный HTML записи (`content.rendered`) — из него режутся фрагменты для поиска. */
     entryContent?: string;
-    /** Готовая подсветка заголовка от своего поиска — тогда по `searchQuery` она не считается. */
-    searchTitleParts?: Snippet;
-    /** Готовые фрагменты от своего поиска; `null` — фрагментов нет, показать анонс. */
-    searchSnippets?: SnippetsResult | null;
 }
-const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage, entryImageSrcSet, searchQuery, entryContent, searchTitleParts, searchSnippets }) => {
+const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage, entryImageSrcSet, searchQuery, searchWords, entryContent }) => {
     // Заголовок идёт в текстовый узел и в alt — нужен простой текст, не разметка.
     const title = React.useMemo(() => toPlainText(entryTitle) || 'Без названия', [entryTitle]);
     // createExcerpt запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
@@ -38,18 +42,19 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
     // Фрагменты ищем сначала в тексте, потом в анонсе: WP находит запись и по ручному анонсу.
     // Пусто — совпадение там, где его не видно (атрибут, шорткод), и остаётся обычный анонс.
     // Регекспы по всему тексту записи — тоже не бесплатно, мемоизируем по входу.
+    const matcher = React.useMemo(
+        () => (searchWords ? createWordsMatcher(searchWords) : searchQuery ? createSubstringMatcher(searchQuery) : null),
+        [searchWords, searchQuery],
+    );
     const snippets = React.useMemo(() => {
-        if (searchSnippets !== undefined) return searchSnippets;
-        if (!searchQuery) return null;
-        const matcher = createSubstringMatcher(searchQuery);
+        if (!matcher) return null;
         const fromContent = getSearchSnippets(entryContent, matcher);
         const found = fromContent.snippets.length ? fromContent : getSearchSnippets(entryPreview, matcher);
         return found.snippets.length ? found : null;
-    }, [searchSnippets, searchQuery, entryContent, entryPreview]);
+    }, [matcher, entryContent, entryPreview]);
     const titleParts = React.useMemo(
-        () => searchTitleParts
-            ?? (searchQuery ? highlightText(title, createSubstringMatcher(searchQuery)) : null),
-        [searchTitleParts, title, searchQuery],
+        () => (matcher ? highlightText(title, matcher) : null),
+        [matcher, title],
     );
     const body = snippets ? <SearchSnippets {...snippets} /> : undefined;
     const date = entryDate ? new Date(entryDate).toLocaleDateString('ru-RU') : '';

@@ -9,7 +9,7 @@
  * Что считать совпадением, решает `Matcher`. `createSubstringMatcher` повторяет
  * поведение базы WP: без регистра, «ё» = «е», подстрока внутри слова тоже совпадение
  * («лес» во «всплесках») — раз WP нашёл запись по ней, честнее её показать.
- * Поиск по основам слов подставляет свой (см. `features/search/stem.ts`).
+ * Поиск по словоформам подставляет `createWordsMatcher` со словами от плагина WP.
  *
  * Работает с простым текстом (через `toPlainText`), а не с HTML: результат идёт
  * в текстовые узлы React, `dangerouslySetInnerHTML` здесь не нужен. Без DOM —
@@ -78,6 +78,22 @@ export const createSubstringMatcher = (query: string): Matcher | null => {
         [found.index, found.index + found[0].length]);
 };
 
+const WORD = /[\p{L}\p{N}]+/gu;
+
+/**
+ * Совпадение — целое слово из списка. Список словоформ присылает плагин поиска WP
+ * (`matchedWords`): он сам решил по основам, какие слова подходят, и стеммер в
+ * браузер не едет. Сравнение — без регистра и с «ё» = «е».
+ */
+export const createWordsMatcher = (words: string[]): Matcher | null => {
+    const wanted = new Set(words.map(normalize));
+    if (!wanted.size) return null;
+
+    return (text) => Array.from(text.matchAll(WORD))
+        .filter((found) => wanted.has(normalize(found[0])))
+        .map((found): [number, number] => [found.index, found.index + found[0].length]);
+};
+
 /** Режет строку на куски «совпадение / не совпадение». */
 const splitByMatches = (text: string, matcher: Matcher): Snippet => {
     const parts: Snippet = [];
@@ -107,7 +123,7 @@ const BLOCK_BOUNDARY = /<\/(?:p|li|h[1-6]|div|figcaption|blockquote|pre|td|th|dt
 const SENTENCE_BOUNDARY = /(?<=[.!?…]["»”)]?)\s+(?=[A-ZА-ЯЁ0-9"«„(—–-])/u;
 
 /** HTML записи → предложения простым текстом. */
-export const toSentences = (html: string): string[] =>
+const toSentences = (html: string): string[] =>
     html
         .split(BLOCK_BOUNDARY)
         .map((block) => toPlainText(block))
@@ -141,7 +157,7 @@ const clip = (sentence: string, firstMatch: number): string => {
  * где его не видно (атрибут, шорткод, разметка блока), и вызывающему нужен
  * запасной вариант.
  */
-export const getSnippetsFromSentences = (
+const getSnippetsFromSentences = (
     sentences: string[],
     matcher: Matcher | null,
     limit: number = MAX_SNIPPETS,
