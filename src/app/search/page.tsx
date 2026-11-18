@@ -20,9 +20,10 @@ const SearchResults: React.FC = () => {
     const searchParams = useSearchParams();
     const query = (searchParams.get('q') || '').trim();
 
-    // Прототип: по умолчанию — свой поиск по словоформам, `&engine=wp` — поиск WP,
-    // чтобы сравнить выдачу на одном и том же запросе.
-    const useWp = searchParams.get('engine') === 'wp';
+    // По умолчанию — поиск WP. Свой поиск по словоформам (`&engine=own`) — прототип:
+    // на Vercel он не может скачать записи с хостинга WP (таймауты), включать его
+    // по умолчанию можно только после того, как это решено.
+    const useWp = searchParams.get('engine') !== 'own';
 
     const { page, setPage } = usePageParam();
 
