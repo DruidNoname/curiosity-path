@@ -7,6 +7,9 @@ import {toPlainText} from "@/helpers/wp-text";
 import {PostTag} from "@/features/posts/types";
 import {EntryPreviewContent} from "../EntryPreviewContent";
 import {ImageBordered} from "@/components/Images";
+import Highlight from "@/ui/Highlight";
+import {createSubstringMatcher, getSearchSnippets, highlightText, type Snippet, type SnippetsResult} from "@/helpers/search-snippets";
+import {SearchSnippets} from "../SearchSnippets";
 
 type Props = {
     entryId: number;
@@ -18,12 +21,37 @@ type Props = {
     entryImage?: string | null;
     /** srcSet картинки (см. buildSrcSet в features/posts/api): без него на телефоне мыло. */
     entryImageSrcSet?: string;
+    /** Запрос поиска: с ним вместо анонса — фрагменты с найденными словами, заголовок с подсветкой. */
+    searchQuery?: string;
+    /** Полный HTML записи (`content.rendered`) — из него режутся фрагменты для поиска. */
+    entryContent?: string;
+    /** Готовая подсветка заголовка от своего поиска — тогда по `searchQuery` она не считается. */
+    searchTitleParts?: Snippet;
+    /** Готовые фрагменты от своего поиска; `null` — фрагментов нет, показать анонс. */
+    searchSnippets?: SnippetsResult | null;
 }
-const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage, entryImageSrcSet }) => {
+const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage, entryImageSrcSet, searchQuery, entryContent, searchTitleParts, searchSnippets }) => {
     // Заголовок идёт в текстовый узел и в alt — нужен простой текст, не разметка.
     const title = React.useMemo(() => toPlainText(entryTitle) || 'Без названия', [entryTitle]);
     // createExcerpt запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
     const excerpt = React.useMemo(() => createExcerpt(entryPreview || ''), [entryPreview]);
+    // Фрагменты ищем сначала в тексте, потом в анонсе: WP находит запись и по ручному анонсу.
+    // Пусто — совпадение там, где его не видно (атрибут, шорткод), и остаётся обычный анонс.
+    // Регекспы по всему тексту записи — тоже не бесплатно, мемоизируем по входу.
+    const snippets = React.useMemo(() => {
+        if (searchSnippets !== undefined) return searchSnippets;
+        if (!searchQuery) return null;
+        const matcher = createSubstringMatcher(searchQuery);
+        const fromContent = getSearchSnippets(entryContent, matcher);
+        const found = fromContent.snippets.length ? fromContent : getSearchSnippets(entryPreview, matcher);
+        return found.snippets.length ? found : null;
+    }, [searchSnippets, searchQuery, entryContent, entryPreview]);
+    const titleParts = React.useMemo(
+        () => searchTitleParts
+            ?? (searchQuery ? highlightText(title, createSubstringMatcher(searchQuery)) : null),
+        [searchTitleParts, title, searchQuery],
+    );
+    const body = snippets ? <SearchSnippets {...snippets} /> : undefined;
     const date = entryDate ? new Date(entryDate).toLocaleDateString('ru-RU') : '';
 
     return (
@@ -32,7 +60,7 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
                 <Box className={styles.Heading}>
                     <Typography variant="h5" component="h5" className={styles.Title}>
                         <Link href={entrySlug}>
-                            { title }
+                            { titleParts ? <Highlight parts={titleParts} /> : title }
                         </Link>
                     </Typography>
                     { date &&
@@ -52,7 +80,8 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
                         />
                         <Box>
                             <EntryPreviewContent
-                                excerpt={excerpt || undefined}
+                                excerpt={body ? undefined : excerpt || undefined}
+                                body={body}
                                 tags={entryTags}
                             />
                         </Box>
@@ -60,7 +89,8 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
                     </>
                     :
                     <EntryPreviewContent
-                        excerpt={excerpt || undefined}
+                        excerpt={body ? undefined : excerpt || undefined}
+                        body={body}
                         tags={entryTags}
                     />
                 }
