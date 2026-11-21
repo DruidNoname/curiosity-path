@@ -1,0 +1,23 @@
+# Git-хуки проекта. Подключаются сами при `yarn install` (скрипт postinstall).
+# Срабатывают на любом коммите — от человека или агента. Обойти можно только
+# флагом --no-verify; агентам он запрещён в настройках Claude Code.
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: eslint
+      glob: "*.{js,jsx,ts,tsx,mjs,cjs}"
+      run: yarn eslint --max-warnings=0 {staged_files}
+
+    - name: типы
+      glob: "*.{ts,tsx}"
+      run: yarn tsc --noEmit
+
+    - name: тесты
+      glob: "*.{js,jsx,ts,tsx}"
+      run: yarn jest --findRelatedTests --passWithNoTests {staged_files}
+
+pre-push:
+  jobs:
+    - name: все тесты
+      run: yarn test

@@ -265,10 +265,9 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 заглянуть туда. Закрыл пункт — удали его оттуда и запиши в `CHANGELOG.md`; нашёл новый
 долг — добавь.
 
-## Skills
+## Харнесс: песочница и git-хуки
 
-`.claude/skills/`, `.claude/rules/` и `.claude/settings.json` версионируются и общие для команды,
-`.claude/settings.local.json` игнорируется как локальная настройка.
+### Песочница
 
 `.claude/settings.json` включает песочницу Claude Code (bubblewrap; на Linux нужен ещё
 `socat`) и держит то, что касается только этого проекта: домены сайта в `allowedDomains`,
@@ -287,6 +286,30 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 `/etc/claude-code/managed-settings.json` (`sandbox.bwrapPath` читается только оттуда).
 После этого — полный перезапуск Claude Code. Системный `kernel.apparmor_restrict_unprivileged_userns=0`
 не трогать: он снимает защиту со всей машины.
+
+Yarn 4 внутри песочницы: стандартный `HTTPS_PROXY` он не читает, ждёт `YARN_HTTPS_PROXY`,
+а `yarn add` вдобавок ищет `@types` на `algolia.net`, которого нет в списке доменов.
+Поэтому зависимости ставятся так:
+`YARN_TS_ENABLE_AUTO_TYPES=false YARN_HTTPS_PROXY="$HTTPS_PROXY" yarn add -D <пакет>`.
+Скрипты зависимостей в Yarn 4.18 выключены по умолчанию (`enableScripts: false`) — не включать.
+
+### Git-хуки
+
+`lefthook.yml`, подключаются скриптом `postinstall` при `yarn install`.
+- **pre-commit** (параллельно, только по застейдженным файлам): `eslint --max-warnings=0`,
+  `tsc --noEmit`, `jest --findRelatedTests`. Код сайта сейчас без единого предупреждения
+  линтера — держать так, иначе коммит не пройдёт.
+- **pre-push**: весь `yarn test`.
+
+Песочница не даёт писать в `.git/hooks` (иначе агент мог бы подложить скрипт, который
+выполнится уже без песочницы), поэтому изнутри неё `postinstall` молча ничего не делает.
+Первый раз на свежем клоне — `yarn lefthook install` вне песочницы. `--no-verify`,
+`-n` и `LEFTHOOK=0` агентам запрещены в `~/.claude/settings.json`.
+
+## Skills
+
+`.claude/skills/`, `.claude/rules/` и `.claude/settings.json` версионируются и общие для команды,
+`.claude/settings.local.json` игнорируется как локальная настройка.
 
 Здесь лежат:
 
