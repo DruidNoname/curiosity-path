@@ -267,8 +267,24 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 
 ## Skills
 
-`.claude/skills/` и `.claude/rules/` версионируются и общие для команды, `.claude/settings.local.json`
-игнорируется как локальная настройка. Здесь лежат:
+`.claude/skills/`, `.claude/rules/` и `.claude/settings.json` версионируются и общие для команды,
+`.claude/settings.local.json` игнорируется как локальная настройка.
+
+`.claude/settings.json` включает песочницу Claude Code (bubblewrap; на Linux нужен ещё
+`socat`): Bash пишет только в проект и кеш Yarn, сеть — по списку `allowedDomains`,
+env-файлы с секретами закрыты на чтение. Понадобился новый домен (например, для
+деплоя) — дописать его туда, а не выключать песочницу.
+
+На Ubuntu 24.04+ песочница сама не стартует: AppArmor-профиль `unpriv_bwrap` отнимает
+у процессов внутри bwrap право на вложенный user namespace, и каждая команда падает с
+`apply-seccomp: write /proc/self/setgroups ... Permission denied`. Чинится на машине,
+не в репозитории: копия `/usr/local/libexec/claude-bwrap` со своим профилем
+`/etc/apparmor.d/claude-bwrap` (`flags=(unconfined) { userns, }`) и путь к ней в
+`/etc/claude-code/managed-settings.json` (`sandbox.bwrapPath` читается только оттуда).
+После этого — полный перезапуск Claude Code. Системный `kernel.apparmor_restrict_unprivileged_userns=0`
+не трогать: он снимает защиту со всей машины.
+
+Здесь лежат:
 
 - `react-best-practices` — гайдлайны Vercel по перформансу React/Next. Смотреть при работе
   с загрузкой данных, бандлом и ререндерами; правила грепаются в
