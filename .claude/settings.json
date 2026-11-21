@@ -2,19 +2,6 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "sandbox": {
     "enabled": true,
-    "autoAllowBashIfSandboxed": true,
-    "allowUnsandboxedCommands": true,
-    "filesystem": {
-      "allowWrite": [
-        "~/.yarn/berry",
-        "~/.cache/node/corepack"
-      ],
-      "denyRead": [
-        "~/.ssh",
-        "~/.aws",
-        "~/.config/gh"
-      ]
-    },
     "credentials": {
       "files": [
         { "path": ".env", "mode": "deny" },
@@ -26,12 +13,6 @@
     },
     "network": {
       "allowedDomains": [
-        "registry.yarnpkg.com",
-        "registry.npmjs.org",
-        "repo.yarnpkg.com",
-        "github.com",
-        "api.github.com",
-        "*.githubusercontent.com",
         "curiosity-path.ru",
         "suffer.curiosity-path.ru"
       ]
@@ -44,27 +25,14 @@
       "Bash(yarn lint *)",
       "Bash(yarn lint)",
       "Bash(yarn tsc *)",
-      "Bash(yarn build)",
-      "Bash(git status *)",
-      "Bash(git diff *)",
-      "Bash(git log *)"
-    ],
-    "ask": [
-      "Bash(git push *)",
-      "Bash(gh pr create *)",
-      "Bash(gh pr merge *)"
+      "Bash(yarn build)"
     ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.local)",
       "Read(./.env.*.local)",
       "Read(./.env.production)",
-      "Edit(./.env*)",
-      "Bash(git push --force *)",
-      "Bash(git push -f *)",
-      "Bash(git push * --force *)",
-      "Bash(git push * -f *)",
-      "Bash(git reset --hard *)"
+      "Edit(./.env*)"
     ]
   }
 }
