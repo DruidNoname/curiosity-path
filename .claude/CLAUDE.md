@@ -32,8 +32,13 @@ yarn test              # jest
 yarn test:watch
 yarn test:coverage
 yarn lint              # eslint (flat-конфиг)
-yarn tsc --noEmit      # типы
+yarn typecheck         # типы: next typegen + tsc --noEmit
 ```
+
+Типы проверять через `yarn typecheck`, а не голым `tsc --noEmit`. Объявления для
+`*.svg` и картинок лежат в `next-env.d.ts`, а его Next генерирует сам при `dev`/`build`,
+в git он не хранится. На свежем клоне и в CI голый `tsc` падает на импортах `.svg`;
+`next typegen` создаёт файл без полной сборки.
 
 Конфиг линтера один — `eslint.config.mjs` (flat), `next/core-web-vitals` импортируется
 из `eslint-config-next` напрямую. Расширение `.mjs` — потому что `package.json` без
@@ -309,7 +314,7 @@ Yarn 4 внутри песочницы: стандартный `HTTPS_PROXY` о�
 
 `lefthook.yml`, подключаются скриптом `postinstall` при `yarn install`.
 - **pre-commit** (параллельно, только по застейдженным файлам): `eslint --max-warnings=0`,
-  `tsc --noEmit`, `jest --findRelatedTests`. Код сайта сейчас без единого предупреждения
+  `yarn typecheck`, `jest --findRelatedTests`. Код сайта сейчас без единого предупреждения
   линтера — держать так, иначе коммит не пройдёт.
 - **pre-push**: весь `yarn test`.
 
