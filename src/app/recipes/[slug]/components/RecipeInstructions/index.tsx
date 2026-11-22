@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { ImageBordered } from "@/components/Images";
 import { Recipe } from "@/features/recipes/types";
-import { getCleanEntry } from "@/helpers/wp-html";
+import WpHtml from "@/ui/WpHtml";
 
 interface RecipeInstructionsProps {
     recipe: Recipe | undefined;
@@ -10,14 +10,6 @@ interface RecipeInstructionsProps {
 
 const RecipeInstructions: React.FC<RecipeInstructionsProps> = React.memo(({ recipe }) => {
     const instructionsFlat = React.useMemo(() => recipe?.instructions_flat || [], [recipe]);
-
-    // Текст шага приходит из WP Recipe Maker готовым HTML и уходит в dangerouslySetInnerHTML —
-    // санитизация обязательна. getCleanEntry дорогой, а хук нельзя звать внутри .map,
-    // поэтому чистим весь список разом и мемоизируем.
-    const steps = React.useMemo(
-        () => instructionsFlat.map(step => getCleanEntry(step?.text || '')),
-        [instructionsFlat]
-    );
 
     const imageUrls = React.useMemo(
         () => instructionsFlat.map(step => step?.image_url).filter(Boolean) as string[],
@@ -33,9 +25,11 @@ const RecipeInstructions: React.FC<RecipeInstructionsProps> = React.memo(({ reci
             <Typography variant="h4">
                 Приготовление:
             </Typography>
-            {steps.map((step, index) => (
+            {/* Текст шага приходит из WP Recipe Maker готовым HTML — очищает и мемоизирует
+                его WpHtml, у каждого шага свой кеш. */}
+            {instructionsFlat.map((step, index) => (
                 <Box key={`instruction_step_${index}`}>
-                    <div dangerouslySetInnerHTML={{ __html: step }} />
+                    <WpHtml html={step?.text} />
                 </Box>
             ))}
             {imageUrls.length > 0 && (

@@ -2,7 +2,6 @@ import React from "react";
 import styles from './style.module.css';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Paper, Box, Typography, Link} from "@mui/material";
-import {createExcerpt} from "@/helpers/wp-html";
 import {toPlainText} from "@/helpers/wp-text";
 import {PostTag} from "@/features/posts/types";
 import {EntryPreviewContent} from "../EntryPreviewContent";
@@ -42,8 +41,6 @@ type Props = {
 const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage, entryImageSrcSet, searchQuery, searchWords, entryContent, searchSnippets }) => {
     // Заголовок идёт в текстовый узел и в alt — нужен простой текст, не разметка.
     const title = React.useMemo(() => toPlainText(entryTitle) || 'Без названия', [entryTitle]);
-    // createExcerpt запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
-    const excerpt = React.useMemo(() => createExcerpt(entryPreview || ''), [entryPreview]);
     // Фрагменты ищем сначала в тексте, потом в анонсе: WP находит запись и по ручному анонсу.
     // Пусто — совпадение там, где его не видно (атрибут, шорткод), и остаётся обычный анонс.
     // Регекспы по всему тексту записи — тоже не бесплатно, мемоизируем по входу.
@@ -91,7 +88,7 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
                         />
                         <Box>
                             <EntryPreviewContent
-                                excerpt={body ? undefined : excerpt || undefined}
+                                excerpt={body ? undefined : entryPreview}
                                 body={body}
                                 tags={entryTags}
                             />
@@ -100,7 +97,7 @@ const PostPreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entry
                     </>
                     :
                     <EntryPreviewContent
-                        excerpt={body ? undefined : excerpt || undefined}
+                        excerpt={body ? undefined : entryPreview}
                         body={body}
                         tags={entryTags}
                     />

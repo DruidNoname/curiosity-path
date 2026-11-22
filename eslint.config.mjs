@@ -61,6 +61,46 @@ export default tseslint.config(
         },
     },
     {
+        // HTML из WordPress попадает на страницу только через ui/WpHtml, который сам
+        // прогоняет его через getCleanEntry. Голый dangerouslySetInnerHTML и запись в
+        // innerHTML — мимо санитизации, так уже трижды пропускали XSS-дыру.
+        files: ['src/**/*.{ts,tsx}'],
+        // eslint-disable в коде сайта не действует: иначе запрет обходится одной
+        // строкой комментария. Исключения — только здесь, в конфиге, на виду.
+        linterOptions: {
+            noInlineConfig: true,
+        },
+        rules: {
+            'no-restricted-syntax': [
+                'error',
+                {
+                    selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+                    message: 'HTML из WordPress — через <WpHtml html={...} /> из @/ui/WpHtml: он сам вызывает getCleanEntry.',
+                },
+                {
+                    selector: "Property[key.name='dangerouslySetInnerHTML']",
+                    message: 'HTML из WordPress — через <WpHtml html={...} /> из @/ui/WpHtml: он сам вызывает getCleanEntry.',
+                },
+                {
+                    selector: "AssignmentExpression[left.property.name=/^(innerHTML|outerHTML)$/]",
+                    message: 'Запись в innerHTML идёт мимо санитизации. HTML на страницу — через <WpHtml />.',
+                },
+                {
+                    selector: "CallExpression[callee.property.name='insertAdjacentHTML']",
+                    message: 'insertAdjacentHTML идёт мимо санитизации. HTML на страницу — через <WpHtml />.',
+                },
+            ],
+        },
+    },
+    {
+        // Законные исключения: сам WpHtml (вставляет уже очищенное) и конвейер очистки,
+        // который правит разметку на отсоединённом DOM после sanitize-html.
+        files: ['src/ui/WpHtml/index.tsx', 'src/helpers/wp-html/**/*.ts'],
+        rules: {
+            'no-restricted-syntax': 'off',
+        },
+    },
+    {
         // В тестах нужен require(): модуль перечитывается после jest.resetModules(),
         // чтобы проверить поведение при разных переменных окружения.
         files: ['**/*.test.ts', '**/*.test.tsx'],

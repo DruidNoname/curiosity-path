@@ -2,23 +2,29 @@
 paths:
   - "src/helpers/wp-html/**"
   - "src/helpers/wp-text/**"
+  - "src/ui/WpHtml/**"
 ---
 
 # Работа с HTML из WordPress
 
 WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `content.rendered`.
 
-- **Любой такой HTML проходит через `getCleanEntry` из `@/helpers/wp-html`** перед подстановкой
-  в `dangerouslySetInnerHTML`. Это единственная точка санитизации: `sanitize-html` с явным
+- **На страницу такой HTML попадает только через `<WpHtml />` из `@/ui/WpHtml`**, который
+  вызывает конвейер сам; голый `dangerouslySetInnerHTML` запрещён eslint (см. CLAUDE.md).
+  Санитизация внутри — `getCleanEntry` из `@/helpers/wp-html`, единственная её точка: `sanitize-html` с явным
   белым списком тегов и атрибутов, затем доработка разметки (спойлеры → `<details>`, обёртки
   для одиночных картинок, ограничение ширины `<figure>`, чистка пустых параграфов,
   схлопывание цепочек `<br>`).
 - `createExcerpt` — то же плюс обрезка по длине. `createTips` разбирает шорткоды `[wprm-tip]`;
   содержимое советов тоже обязано пройти через `getCleanEntry`, оно уходит в
   `dangerouslySetInnerHTML`.
-- **Это дорогие функции** (`sanitize-html` + `DOMParser`). Результат обязательно мемоизировать:
-  `useMemo` по входной строке, а список превью — через `React.memo` (см. `PostPreview`).
-  В коде уже стоят комментарии, объясняющие зачем — не удалять их при рефакторинге.
+- **Это дорогие функции** (`sanitize-html` + `DOMParser`). `WpHtml` мемоизирует результат
+  `useMemo` по входу; если функция зовётся напрямую (вне `WpHtml`), мемоизировать так же.
+  Список превью — через `React.memo` (см. `PostPreview`). Комментарии в коде, объясняющие
+  зачем, — не удалять при рефакторинге.
+- **Внутри `helpers/wp-html` запись в `innerHTML` разрешена** (исключение в eslint-конфиге):
+  конвейер правит разметку на отсоединённом DOM уже после `sanitize-html`. Новый шаг
+  обязан работать только с тем, что прошло санитизацию.
 - `helpers/wp-html/index.ts` помечен `'use client'`, потому что конвейер опирается на
   `DOMParser`. Без DOM `pipeline` уходит в регекспный фолбэк.
 
@@ -42,9 +48,9 @@ WP отдаёт заголовки HTML-строкой, и от того, куд
   форматирования). Поэтому заголовок везде идёт через `toPlainText`, и ни один из них
   не попадает в `dangerouslySetInnerHTML`. Анонсы и тело записи — наоборот, разметку
   содержат всегда, там `getCleanEntry`.
-- **Всё, что уходит в `dangerouslySetInnerHTML`, обязано пройти через `getCleanEntry`** —
-  включая данные WP Recipe Maker (`recipe.summary`, `instructions_flat[].text`,
-  шорткоды `[wprm-tip]`). Это уже трижды забывали.
+- **Всё, что идёт на страницу разметкой, — через `WpHtml`**, включая данные WP Recipe Maker
+  (`recipe.summary`, `instructions_flat[].text` — `prepare="entry"`, шорткоды `[wprm-tip]` —
+  `prepare="tips"`). Раньше `getCleanEntry` трижды забывали, теперь это ловит линтер.
 
 ## Устройство `helpers/wp-html`
 
