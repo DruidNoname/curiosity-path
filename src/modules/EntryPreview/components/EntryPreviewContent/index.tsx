@@ -2,11 +2,13 @@ import {Box, Link, Typography} from "@mui/material";
 import styles from "@/modules/EntryPreview/components/PostPreview/style.module.css";
 import React from "react";
 import {PostTag} from "@/features/posts/types";
+import WpHtml from "@/ui/WpHtml";
 
 interface Props {
     title?: string;
     link?: string;
     date?: string;
+    /** Сырой анонс из WP: очистку и обрезку делает WpHtml. */
     excerpt?: string;
     /** Готовое содержимое вместо анонса (например, фрагменты поиска). */
     body?: React.ReactNode;
@@ -28,13 +30,7 @@ export const EntryPreviewContent: React.FC<Props> = ({title, link, date, excerpt
                     }
                 </Box>
             }
-            { excerpt &&
-                <Typography
-                    variant="body1"
-                    component="div"
-                    dangerouslySetInnerHTML={{ __html: excerpt }}
-                />
-            }
+            <WpHtml html={excerpt} prepare="excerpt" variant="body1" />
             { body }
             {tags && tags.length > 0 && (
                 <Typography variant="body2" component="div">

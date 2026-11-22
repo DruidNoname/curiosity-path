@@ -7,7 +7,7 @@ import Title from "@/components/Title";
 import {useCapoeiraSongsPosts} from "@/features/posts/hooks";
 import Loader from "@/ui/Loader";
 import {TransformedPost} from "@/features/posts/types";
-import {getCleanEntry} from "@/helpers/wp-html";
+import WpHtml from "@/ui/WpHtml";
 import {toPlainText} from "@/helpers/wp-text";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Image from "next/image";
@@ -27,14 +27,14 @@ const CapoeiraSongs: React.FC = () => {
         songs = [],
     } = data || {};
 
-    // getCleanEntry (sanitizeHtml + DOMParser) — дорого. Хук нельзя вызывать внутри .map,
-    // поэтому санитизируем весь список один раз и мемоизируем по songs.
+    // Заголовки раскодируем для всего списка разом и мемоизируем по songs: хук нельзя
+    // вызывать внутри .map. Анонс и текст песни чистит WpHtml, у каждого свой кеш.
     const preparedSongs = React.useMemo(
         () => songs.map((song: TransformedPost) => ({
             song,
             title: toPlainText(song?.title?.rendered) || 'Без названия',
-            excerpt: getCleanEntry(song?.excerpt?.rendered || ''),
-            content: getCleanEntry(song?.content.rendered || ''),
+            excerpt: song?.excerpt?.rendered,
+            content: song?.content?.rendered,
         })),
         [songs]
     );
@@ -86,20 +86,16 @@ const CapoeiraSongs: React.FC = () => {
                                             >
                                                 { title }
                                             </Typography>
-                                            <Typography
+                                            <WpHtml
+                                                html={excerpt}
                                                 variant="caption"
                                                 component="h5"
                                                 className={styles.SongSubtitle}
-                                                dangerouslySetInnerHTML={{__html: excerpt}}
                                             />
                                         </Box>
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Typography
-                                            variant="body1"
-                                            component="div"
-                                            dangerouslySetInnerHTML={{__html: content}}
-                                        />
+                                        <WpHtml html={content} variant="body1" />
                                     </AccordionDetails>
                                 </Accordion>
                             );

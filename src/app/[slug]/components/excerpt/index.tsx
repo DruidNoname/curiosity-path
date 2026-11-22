@@ -1,11 +1,13 @@
 import React from "react";
 import styles from "./style.module.css";
-import {Box, Typography} from "@mui/material";
+import {Box} from "@mui/material";
 import {ImageBordered} from "@/components/Images";
+import WpHtml from "@/ui/WpHtml";
 
 
 type Props = {
-    excerpt: string;
+    /** Сырой анонс из WP: очистку делает WpHtml. */
+    excerpt?: string;
     title: string;
     image?: string;
 }
@@ -20,18 +22,10 @@ export const Excerpt: React.FC<Props> = ({ excerpt, image, title }) => {
                         classNameWrapper={styles.ImageBox}
                         sx={{float: 'left'}}
                     />
-                    <Typography
-                        variant="body1"
-                        component="div"
-                        dangerouslySetInnerHTML={{__html: excerpt}}
-                    />
+                    <WpHtml html={excerpt} variant="body1" />
                     <div className={ styles.clear }></div>
                 </Box>
                 :
-                <Typography
-                    variant="body1"
-                    component="div"
-                    dangerouslySetInnerHTML={{__html: excerpt}}
-                />
+                <WpHtml html={excerpt} variant="body1" />
     );
 };

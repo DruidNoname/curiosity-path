@@ -53,7 +53,7 @@ src/
   app/           роуты App Router; локальные компоненты роута лежат рядом в components/
   modules/       составные блоки предметной области (EntryPreview, PostCalendar)
   components/    переиспользуемые компоненты (Header, Footer, Layouts, ErrorBoundary)
-  ui/            тонкие обёртки над MUI (Link, Buttons, Spoiler, Highlight, Pagination, Loader, Skeleton, Image, Select, Calendar)
+  ui/            тонкие обёртки над MUI (Link, Buttons, Spoiler, Highlight, Pagination, Loader, Skeleton, Image, Select, Calendar, WpHtml)
   features/      вертикальные срезы: posts, recipes, tags, search, breath, query, theme
   config/        urls (единая точка правды по адресам), site, pagination, graphql (Apollo client)
   helpers/       утилиты общего назначения; каждая — папкой: wp-html, wp-text, search-snippets, usePageParam, useIsClient
@@ -188,17 +188,26 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 Что из этого чем обрабатывать — правило сквозное, поэтому оно здесь; устройство
 конвейера и подробности — в `.claude/rules/wp-html.md`.
 
-- **Всё, что уходит в `dangerouslySetInnerHTML`, обязано пройти через `getCleanEntry`**
-  из `@/helpers/wp-html` — включая данные WP Recipe Maker (`recipe.summary`,
-  `instructions_flat[].text`, шорткоды `[wprm-tip]`). Это уже трижды забывали.
+- **HTML на страницу — только через `<WpHtml html={…} />` из `@/ui/WpHtml`.** Он принимает
+  сырой HTML из API и сам прогоняет его через конвейер: `prepare="entry"` (по умолчанию,
+  `getCleanEntry`), `"excerpt"` (`createExcerpt`, обрезка анонса, `maxLength`) или `"tips"`
+  (`createTips`, шорткоды `[wprm-tip]`). Чистить заранее и передавать между компонентами
+  очищенное не нужно — передаётся сырой HTML. Снаружи это `Typography` (`variant`,
+  `component`, `sx`, `className`), по умолчанию `div` без своей типографики; пустой после
+  очистки HTML не рендерит ничего.
+- **Голый `dangerouslySetInnerHTML`, запись в `innerHTML`/`outerHTML` и `insertAdjacentHTML`
+  запрещены** правилом `no-restricted-syntax` в `eslint.config.mjs`. Раньше правило
+  «не забыть `getCleanEntry`» держалось на памяти и трижды нарушалось. Исключения —
+  `ui/WpHtml` и конвейер `helpers/wp-html`, прописаны в самом конфиге. `eslint-disable`
+  в `src/` не действует (`noInlineConfig`), так что обойти запрет комментарием нельзя.
 - **Строка идёт в текст** — тултип, `alt`, `<meta>`, `document.title`, любой текстовый
   узел React → `toPlainText` из `@/helpers/wp-text`. Заголовки в этом блоге разметки
-  не содержат и везде идут через `toPlainText`; анонсы и тело записи — через `getCleanEntry`.
+  не содержат и везде идут через `toPlainText`; анонсы и тело записи — через `WpHtml`.
 - **Своих `replace(/<[^>]*>/g, '')` не писать.** Такой стрип снимает теги, но оставляет
   сущности, и `&#8230;` покажется буквально.
-- **`getCleanEntry` и `createExcerpt` дорогие** (`sanitize-html` + `DOMParser`): результат
-  мемоизировать — `useMemo` по входной строке, список превью через `React.memo`
-  (см. `PostPreview`). Комментарии в коде, объясняющие зачем, не удалять.
+- **Конвейер дорогой** (`sanitize-html` + `DOMParser`). `WpHtml` мемоизирует результат по
+  входу сам, у каждого экземпляра свой кеш; список превью при этом остаётся под
+  `React.memo` (см. `PostPreview`). Комментарии в коде, объясняющие зачем, не удалять.
 
 ## Тематические правила
 
@@ -209,7 +218,7 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 | Файл | О чём | Когда подгружается |
 |---|---|---|
 | `breather.md` | Бризер: звук, таймер, пауза, план фаз | `src/features/breath/**`, `src/app/breather/**` |
-| `wp-html.md` | конвейер `helpers/wp-html`, заголовок как текст и как разметка | `src/helpers/wp-html/**`, `src/helpers/wp-text/**` |
+| `wp-html.md` | конвейер `helpers/wp-html`, `WpHtml`, заголовок как текст и как разметка | `src/helpers/wp-html/**`, `src/helpers/wp-text/**`, `src/ui/WpHtml/**` |
 | `metadata.md` | `generateMetadata`, превью ссылок | `src/app/**/page.tsx`, `src/app/**/layout.tsx`, `wp-text`, `config/site.ts` |
 | `theme.md` | цветовые схемы без FOUC, мост MUI ↔ CSS Modules | `src/features/theme/**`, `src/app/layout.tsx`, `Header`, `src/styles/**`, `*.module.css` |
 
@@ -222,8 +231,8 @@ WP отдаёт готовый HTML в `title.rendered`, `excerpt.rendered`, `co
 в `jest.setup.env.js`. Сейчас покрыты `src/helpers/wp-html` (каждый шаг конвейера отдельно),
 `src/helpers/wp-text`, `src/helpers/search-snippets`, `src/helpers/usePageParam`, `src/helpers/useIsClient`, `src/config/urls`, `features/search/href.ts`, `modules/PostCalendar/utils.ts`,
 `features/posts/api.ts` (`fetchPostsByTag` и `buildSrcSet`), `features/recipes/api.ts`, `features/breath/plan.ts`,
-`app/about/utils.ts`, `ui/Loader/variants.ts`, `components/ErrorBoundary` и
-`modules/EntryPreview/components/PostPreview` (165 тестов, 25 сьютов). Стили `*.module.css`
+`app/about/utils.ts`, `ui/Loader/variants.ts`, `ui/WpHtml`, `components/ErrorBoundary` и
+`modules/EntryPreview/components/PostPreview` (172 теста, 26 сьютов). Стили `*.module.css`
 в тестах заменяет заглушка `jest.style-stub.js`.
 Тесты кладутся рядом с кодом, в той же папке: `clean.test.ts`, `params.test.ts`, `utils.test.ts`.
 

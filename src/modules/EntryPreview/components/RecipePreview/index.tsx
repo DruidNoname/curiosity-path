@@ -2,7 +2,6 @@ import React from "react";
 import styles from './style.module.css';
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {Paper, Box, Typography, Link, Skeleton} from "@mui/material";
-import {createExcerpt} from "@/helpers/wp-html";
 import {toPlainText} from "@/helpers/wp-text";
 import {EntryPreviewContent} from "../EntryPreviewContent";
 import {ImageBordered} from "@/components/Images";
@@ -21,8 +20,6 @@ type Props = {
 const RecipePreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, entryDate, entryTags, entryId, entrySlug, entryImage }) => {
     // Заголовок идёт в текстовый узел и в alt — нужен простой текст, не разметка.
     const title = React.useMemo(() => toPlainText(entryTitle) || 'Без названия', [entryTitle]);
-    // createExcerpt запускает sanitizeHtml + DOMParser — дорого, мемоизируем по входу.
-    const excerpt = React.useMemo(() => createExcerpt(entryPreview || ''), [entryPreview]);
     const date = entryDate ? new Date(entryDate).toLocaleDateString('ru-RU') : '';
 
     const { data: allKeywords, isLoading: keywordsLoading } = useKeywords();
@@ -42,7 +39,7 @@ const RecipePreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, ent
                                 title={title}
                                 link={entrySlug}
                                 date={date || undefined}
-                                excerpt={excerpt || undefined}
+                                excerpt={entryPreview}
                             />
                         </Box>
                         <Box sx={{clear: 'both'}}></Box>
@@ -52,7 +49,7 @@ const RecipePreviewComponent: React.FC<Props> = ({ entryTitle, entryPreview, ent
                         title={title}
                         link={entrySlug}
                         date={date || undefined}
-                        excerpt={excerpt || undefined}
+                        excerpt={entryPreview}
                     />
                 }
                 { entryTags && entryTags.length > 0 &&
