@@ -1,0 +1,70 @@
+# Проверки на каждый PR и на каждый push в main.
+# Те же, что в git-хуках (lefthook.yml), плюс сборка, аудит зависимостей и поиск
+# секретов. Хук можно не поставить или обойти, CI — нет.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Новый push в тот же PR отменяет недоделанную проверку старого.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Линтер, типы, тесты, сборка
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: corepack enable
+      - uses: actions/cache@v6
+        with:
+          path: ~/.yarn/berry/cache
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: yarn-${{ runner.os }}-
+      - run: yarn install --immutable
+      - run: yarn lint --max-warnings=0
+      - run: yarn typecheck
+      - run: yarn test
+      - run: yarn build
+
+  audit:
+    name: Уязвимые зависимости
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: corepack enable
+      # Блокирует: high и critical в том, что уезжает на сайт.
+      - name: Зависимости сайта
+        run: yarn npm audit --all --recursive --environment production --severity high
+      # Только отчёт: инструменты разработки (eslint, babel, jest) на сайт не попадают,
+      # а старых находок в них десятки. Смотреть в логе, чинить по возможности.
+      - name: Все зависимости (не блокирует)
+        continue-on-error: true
+        run: yarn npm audit --all --recursive --severity high
+
+  secrets:
+    name: Секреты в коммитах
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

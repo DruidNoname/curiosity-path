@@ -11,7 +11,7 @@ pre-commit:
 
     - name: типы
       glob: "*.{ts,tsx}"
-      run: yarn tsc --noEmit
+      run: yarn typecheck
 
     - name: тесты
       glob: "*.{js,jsx,ts,tsx}"
